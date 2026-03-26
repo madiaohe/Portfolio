@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://portfolio.example.com/</loc></url>
+  <url><loc>https://portfolio.example.com/about</loc></url>
+  <url><loc>https://portfolio.example.com/contact</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-1</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-2</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-3</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-4</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-5</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-6</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-7</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-8</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-9</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-10</loc></url>
+  <url><loc>https://portfolio.example.com/project/project-11</loc></url>
+</urlset>

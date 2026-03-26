@@ -1,0 +1,9 @@
+/* Custom styles for the portfolio website */
+
+html {
+  /* Removed scroll-behavior: smooth — conflicts with GSAP custom scroll */
+}
+
+body {
+  overflow-x: hidden;
+}
