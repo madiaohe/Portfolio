@@ -1,25 +1,12 @@
 import type { Metadata } from 'next';
-import { DesignPrinciples } from '../components/design-principles';
-import { FluidFooter } from '../components/fluid-footer';
-import { HeroVideo } from '../components/hero-video';
-import { WorkCategories } from '../components/work-category-motion';
+import { ReferenceHome } from '../components/reference-home';
+import './minimal.css';
 
 export const metadata: Metadata = {
-  title: 'Home',
+  title: 'Emil Kowalski — Local study',
+  robots: { index: false, follow: false },
 };
 
 export default function HomePage() {
-  return (
-    <>
-      <main className="home">
-        <HeroVideo />
-
-        <WorkCategories />
-
-        <DesignPrinciples />
-      </main>
-
-      <FluidFooter />
-    </>
-  );
+  return <ReferenceHome />;
 }

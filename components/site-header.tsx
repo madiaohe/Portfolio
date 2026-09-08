@@ -17,7 +17,7 @@ export function SiteHeader() {
   const scrollAnchorRef = useRef(0);
 
   useEffect(() => {
-    if (isReading) return;
+    if (isReading || pathname === '/') return;
     const directionThreshold = 6;
     const topThreshold = 8;
     let animationFrame = 0;
@@ -53,7 +53,9 @@ export function SiteHeader() {
       window.removeEventListener('scroll', handleScroll);
       window.cancelAnimationFrame(animationFrame);
     };
-  }, [isReading]);
+  }, [isReading, pathname]);
+
+  if (pathname === '/') return null;
 
   if (isReading) {
     return (
