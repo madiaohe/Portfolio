@@ -26,14 +26,14 @@
 | `--background` | `--minimal-bg` `#fdfdfc` | `--minimal-bg` `#191918` |
 | `--foreground` | `--minimal-text` `#21201c` | `--minimal-text` `#eeede8` |
 | `--muted-foreground` | `--minimal-muted` `#73736c` | `--minimal-muted` `#96958f` |
-| `--prose` | `--minimal-prose` `#3b3b36` | `--minimal-prose` `#d4d3cc` |
+| `--prose` | `--minimal-prose` `#45453f` | `--minimal-prose` `#eeede8` |
 | `--muted` | `--minimal-hover` `#f5f4f4` | `--minimal-hover` `#262624` |
 | `--surface` | `--minimal-surface` `#fff` | `--minimal-surface` `#222220` |
 | `--border` | `--minimal-border` `#e9e9e7` | `--minimal-border` `#393936` |
 | `--ring` | `--minimal-subtle` `#8d8d86` | `--minimal-subtle` `#92918b` |
 
-正文颜色用 `--prose`；次级/元信息用 `--muted-foreground`；标题用
-`--foreground`。
+正文用 `--prose`（亮色 #45453f / 深色 #eeede8）；标题用 `--foreground`；
+次级/元信息用 `--muted-foreground`。
 
 ## 间距（Spacing）
 
@@ -64,9 +64,11 @@ Tailwind 工具类：`p-md`、`mt-lg`、`gap-sm`… 由 `@theme inline` 生成
 | `--text-meta` | 14px | 日期、标签、返回/导航链接 |
 | `--text-body` | 16px | 正文、标题 |
 | `--leading-meta` | 20px | meta 行高 |
-| `--leading-body` | 27.2px | 正文行高（英文 1.7） |
+| `--leading-body` | 28px | 正文行高（英文 1.75×） |
+| `--leading-body-zh` | 32px | 正文行高（中文 2.0×） |
 | `--leading-heading` | 24px | 标题行高（1.5） |
-| `--font-weight-normal` | 400 | 正文 |
+| `--font-weight-normal` | 400 | 次要文字（日期、标签、导航） |
+| `--font-weight-body` | 450 | 正文（Reference Sans 为可变字体，可微调） |
 | `--font-weight-medium` | 500 | — |
 | `--font-weight-semibold` | 600 | 标题 |
 

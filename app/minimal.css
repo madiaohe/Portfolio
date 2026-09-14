@@ -19,7 +19,7 @@ body:has(.minimal-site) {
   --minimal-text: #21201c;
   --minimal-muted: #73736c;
   --minimal-subtle: #8d8d86;
-  --minimal-prose: #3b3b36;
+  --minimal-prose: #45453f;
   --minimal-underline: #bcbbb5;
   --minimal-hover: #f5f4f4;
   --minimal-surface: #fff;
@@ -38,7 +38,7 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
   --minimal-text: #eeede8;
   --minimal-muted: #96958f;
   --minimal-subtle: #92918b;
-  --minimal-prose: #d4d3cc;
+  --minimal-prose: #eeede8;
   --minimal-underline: #5d5c56;
   --minimal-hover: #262624;
   --minimal-surface: #222220;

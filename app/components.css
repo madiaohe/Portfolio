@@ -78,7 +78,7 @@ body {
   --secondary-foreground: var(--foreground);
   --muted: var(--minimal-hover, #f5f4f4);
   --muted-foreground: var(--minimal-muted, #63635e);
-  --prose: var(--minimal-prose, #3b3b36);
+  --prose: var(--minimal-prose, #45453f);
   --accent: var(--muted);
   --accent-foreground: var(--foreground);
   --border: var(--minimal-border, #e9e9e7);
@@ -110,9 +110,11 @@ body {
   --text-meta: 14px;
   --text-body: 16px;
   --leading-meta: 20px;
-  --leading-body: 27.2px;
+  --leading-body: 28px;
+  --leading-body-zh: 32px;
   --leading-heading: 24px;
   --font-weight-normal: 400;
+  --font-weight-body: 450;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
 
