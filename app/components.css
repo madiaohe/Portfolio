@@ -125,6 +125,17 @@ body {
   --radius-xl: 14px;
 }
 
+/* ArticleDirectory back link: directory-item style, unlayered so it beats
+   the global a { color: inherit } reset. */
+.article-directory a {
+  color: color-mix(in oklab, var(--foreground) 50%, transparent);
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+.article-directory a:hover {
+  color: var(--foreground);
+}
+
 /* Scoped baseline for downloaded components, without resetting older pages. */
 @layer base {
   :where(.ui-scope, .ui-scope *) {

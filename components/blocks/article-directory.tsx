@@ -25,7 +25,7 @@ export function ArticleDirectory({
   return (
     <div className="article-directory">
       <Link
-        className="inline-flex items-center gap-1 text-[14px] leading-5 text-muted-foreground transition-colors hover:text-foreground"
+        className="inline-flex items-center gap-1 text-[14px] leading-5"
         href={backHref}
       >
         <CornerUpLeft
