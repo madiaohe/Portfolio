@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { JournalHeading } from '../lib/journal';
+import type { JournalHeading } from '@/lib/journal';
 
 export function JournalContents({ headings }: { headings: JournalHeading[] }) {
   const [active, setActive] = useState(headings[0]?.id ?? '');

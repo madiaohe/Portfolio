@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { ContactExperience } from '../../components/contact-experience';
-import { FluidFooter } from '../../components/fluid-footer';
+import { ContactExperience } from './contact-experience';
+import { FluidFooter } from '@/components/blocks/fluid-footer';
 
 export const metadata: Metadata = {
   title: 'Contact',

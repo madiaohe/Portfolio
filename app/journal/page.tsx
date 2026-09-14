@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { JournalList } from '../../components/journal-list';
+import { JournalList } from './journal-list';
 import { journalListEntries } from '../../lib/journal-list-entries';
 import './journal.css';
 

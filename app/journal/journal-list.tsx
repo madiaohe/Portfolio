@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import type { JournalListEntry } from '../lib/journal-list-entries';
+import type { JournalListEntry } from '@/lib/journal-list-entries';
 
 export function JournalList({ entries }: { entries: JournalListEntry[] }) {
   const [activeSlug, setActiveSlug] = useState(entries[0]?.slug);

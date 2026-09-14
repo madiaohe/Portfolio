@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { AboutTimeline } from '../../components/about-timeline';
+import { AboutTimeline } from './about-timeline';
 import './about.css';
 
 export const metadata: Metadata = {

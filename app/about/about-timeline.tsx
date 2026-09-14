@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
-import { experiences, type ExperienceProject } from './about-experiences';
+import { experiences, type ExperienceProject } from '@/lib/about-experiences';
 
 function TimelineNode({ company = false }: { company?: boolean }) {
   return (
