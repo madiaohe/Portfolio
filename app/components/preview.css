@@ -1,5 +1,5 @@
 .component-gallery .minimal-header {
-  margin-bottom: 64px;
+  margin-bottom: 48px;
 }
 .component-gallery h1 {
   font-size: 24px;
@@ -9,38 +9,34 @@
   margin-top: 16px;
   color: var(--muted-foreground);
 }
-.gallery-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 24px;
-  margin-top: 24px;
-  font-size: 14px;
+
+/* Doc layout: fixed left directory (HookSidebar), single content column.
+   The layout reserves the sidebar width via padding so the centered column
+   never overlaps the rail; below 960px the page is single-column. */
+.gallery-layout {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px 24px 128px;
+  overflow-x: clip;
 }
-.gallery-nav a {
-  text-decoration: underline;
-  text-underline-offset: 4px;
+.gallery-directory {
+  margin-bottom: 32px;
 }
-.gallery-nav a:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 4px;
-}
-.gallery-group {
-  margin-top: 64px;
-  scroll-margin-top: 32px;
-}
-.gallery-group > h2 {
-  font-size: 20px;
-  font-weight: 500;
-}
-.gallery-group-description {
-  margin-top: 12px;
-  color: var(--muted-foreground);
-  font-size: 14px;
+
+.gallery-content {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
 }
 .gallery-section {
   margin-top: 48px;
   padding-top: 24px;
   border-top: 1px solid var(--border);
+}
+.gallery-section:first-of-type {
+  border-top: 0;
+  padding-top: 0;
 }
 .gallery-section > h3 {
   display: flex;
@@ -108,6 +104,146 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Article Directory block demo: back + directory, scroll pane. */
+.article-directory-demo {
+  display: flex;
+  height: 420px;
+  gap: 24px;
+  overflow: hidden;
+  padding: 0;
+}
+.article-directory-demo__aside {
+  width: 200px;
+  flex: none;
+  padding: 24px 0 24px 24px;
+  border-right: 1px solid var(--border);
+}
+.article-directory-demo .article-directory__toc {
+  display: block !important;
+}
+.article-directory-demo__pane {
+  min-width: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 24px 24px 32px;
+}
+.article-directory-demo__section + .article-directory-demo__section {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.article-directory-demo__section h4 {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+.article-directory-demo__section p {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+}
+
+/* Library Directory block demo: two-group nav + content. */
+.library-directory-demo {
+  display: flex;
+  height: 420px;
+  gap: 24px;
+  overflow: hidden;
+  padding: 0;
+}
+.library-directory-demo__aside {
+  width: 220px;
+  flex: none;
+  padding: 24px 0 24px 24px;
+  border-right: 1px solid var(--border);
+}
+.library-directory-demo__content {
+  min-width: 0;
+  flex: 1;
+  padding: 24px 24px 32px;
+}
+.library-directory-demo__content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.library-directory-demo__content p {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+}
+
+/* Hook Sidebar self-contained demo: nav + scroll pane. */
+.hook-sidebar-demo {
+  display: flex;
+  height: 420px;
+  gap: 24px;
+  overflow: hidden;
+  padding: 0;
+}
+.hook-sidebar-demo__nav {
+  width: 168px;
+  flex: none;
+  padding: 24px 0 24px 24px;
+  border-right: 1px solid var(--border);
+}
+.hook-sidebar-demo__pane {
+  min-width: 0;
+  flex: 1;
+  overflow: auto;
+  padding: 24px 24px 32px;
+}
+.hook-sidebar-demo__section + .hook-sidebar-demo__section {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.hook-sidebar-demo__section h4 {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+.hook-sidebar-demo__section p {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+}
+
+@media (min-width: 640px) {
+  .gallery-layout {
+    padding-top: 128px;
+    padding-bottom: 128px;
+  }
+}
+
+@media (min-width: 960px) {
+  .gallery-layout {
+    overflow-x: visible;
+    padding-left: 200px;
+  }
+  .gallery-directory {
+    position: fixed;
+    z-index: 10;
+    top: 128px;
+    left: 24px;
+    width: 176px;
+    margin: 0;
+  }
+}
+
+@media (min-width: 1081px) {
+  .gallery-layout {
+    padding-left: 256px;
+  }
+  .gallery-directory {
+    left: 80px;
+  }
+}
+
 @media (max-width: 479px) {
   .gallery-demo {
     padding: 24px 16px;
@@ -120,8 +256,20 @@
     min-height: 620px;
     padding: 0;
   }
-
   .gallery-prompt-input-demo {
     min-height: 360px;
+  }
+  .hook-sidebar-demo {
+    height: 420px;
+  }
+  .hook-sidebar-demo__nav,
+  .article-directory-demo__aside,
+  .library-directory-demo__aside {
+    display: none;
+  }
+  .hook-sidebar-demo__pane,
+  .article-directory-demo__pane,
+  .library-directory-demo__content {
+    padding: 24px 20px 32px;
   }
 }
