@@ -5,63 +5,59 @@
    ===================================================================== */
 
 /* Layout shell */
-.writing-shell {
+.detail-shell {
   width: 100%;
   max-width: 598px;
   margin: 0 auto;
   padding: var(--space-xl) var(--space-md) var(--space-3xl);
   overflow-x: clip;
 }
-.writing-aside {
+.detail-aside {
   margin-bottom: var(--space-lg);
 }
 
 /* Article prose */
-.writing-prose {
+.detail-prose {
   color: var(--prose);
   font-weight: var(--font-weight-body);
   line-height: var(--leading-body);
   overflow-wrap: anywhere;
 }
 /* Unified heading: no h1/h2/h3 level distinction (see design-system.md) */
-.writing-prose h1,
-.writing-prose h2,
-.writing-prose h3 {
+.detail-prose h1,
+.detail-prose h2,
+.detail-prose h3 {
   color: var(--foreground);
   font-size: var(--text-body);
   font-weight: var(--font-weight-semibold);
   line-height: var(--leading-heading);
   scroll-margin-top: var(--space-lg);
 }
-.writing-article-header {
+.detail-article-header {
   display: flex;
   flex-direction: column;
   gap: var(--space-3xs);
   margin-bottom: var(--space-md);
 }
-.writing-article-header time {
+.detail-article-header time {
   color: var(--muted-foreground);
   font-size: var(--text-meta);
   font-weight: var(--font-weight-normal);
   line-height: var(--leading-meta);
   font-variant-numeric: tabular-nums;
 }
-.writing-prose > p + p {
+.detail-prose > p + p {
   margin-top: var(--space-md);
 }
-.writing-prose h2 {
+.detail-prose h2 {
   margin: var(--space-3xl) 0 var(--space-sm);
 }
-.writing-prose h2 a {
+.detail-prose h2 a {
   text-decoration: none;
-}
-.writing-prose h2 a:hover {
-  text-decoration: underline;
-  text-underline-offset: 5px;
 }
 
 /* Component block containers (4:3) */
-.writing-block {
+.detail-block {
   width: 100%;
   aspect-ratio: 4 / 3;
   margin: var(--space-sm) 0;
@@ -71,22 +67,22 @@
   background: var(--secondary);
   overflow: hidden;
 }
-.writing-block-placeholder {
+.detail-block-placeholder {
   margin: 0;
   color: var(--muted-foreground);
   font-size: var(--text-meta);
   line-height: var(--leading-meta);
 }
-.writing-statement {
+.detail-statement {
   display: flex;
   align-items: center;
 }
 
 /* References (paper-style, before the navigation, no heading) */
-.writing-references {
+.detail-references {
   margin-top: var(--space-5xl);
 }
-.writing-references ol {
+.detail-references ol {
   margin: 0;
   padding-left: 0;
   font-size: var(--text-meta);
@@ -95,12 +91,12 @@
   color: var(--muted-foreground);
   list-style-position: inside;
 }
-.writing-references li + li {
+.detail-references li + li {
   margin-top: var(--space-xs);
 }
 
 /* Article pager: previous / next */
-.writing-navigation {
+.detail-navigation {
   display: flex;
   justify-content: space-between;
   gap: var(--space-md);
@@ -108,64 +104,64 @@
   padding-top: var(--space-lg);
   border-top: 1px solid var(--border);
 }
-.writing-pager-side {
+.detail-pager-side {
   min-width: 0;
   display: flex;
   flex-direction: column;
 }
-.writing-pager-side a {
+.detail-pager-side a {
   display: flex;
   flex-direction: column;
   gap: var(--space-3xs);
   text-decoration: none;
+  color: color-mix(in oklab, var(--foreground) 50%, transparent);
+  transition: color 120ms ease;
 }
-.writing-pager-next {
+.detail-pager-side a:hover {
+  color: var(--foreground);
+}
+.detail-pager-next {
   align-items: flex-end;
 }
-.writing-pager-next a {
+.detail-pager-next a {
   align-items: flex-end;
   text-align: right;
 }
-.writing-pager-label {
-  color: var(--muted-foreground);
+.detail-pager-label {
   font-size: var(--text-caption);
 }
-.writing-pager-title {
-  color: var(--foreground);
+.detail-pager-title {
+  color: inherit;
   font-size: var(--text-meta);
   font-weight: var(--font-weight-medium);
 }
-.writing-pager-side a:hover .writing-pager-title {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
 
 /* Language and responsive */
-.writing-site[lang='zh-CN'] .writing-prose {
+.detail-site[lang='zh-CN'] .detail-prose {
   line-height: var(--leading-body-zh);
 }
 @media (max-width: 639px) {
-  .writing-block {
+  .detail-block {
     aspect-ratio: auto;
   }
-  .writing-prose h2 {
+  .detail-prose h2 {
     margin-top: var(--space-2xl);
   }
-  .writing-navigation {
+  .detail-navigation {
     margin-top: var(--space-lg);
   }
 }
 @media (min-width: 640px) {
-  .writing-shell {
+  .detail-shell {
     padding-top: var(--space-5xl);
     padding-bottom: var(--space-4xl);
   }
 }
 @media (min-width: 768px) {
-  .writing-shell {
+  .detail-shell {
     overflow-x: visible;
   }
-  .writing-aside {
+  .detail-aside {
     position: fixed;
     z-index: 10;
     top: var(--space-5xl);
@@ -174,7 +170,7 @@
   }
 }
 @media (min-width: 1081px) {
-  .writing-aside {
+  .detail-aside {
     left: 80px;
     width: 200px;
   }

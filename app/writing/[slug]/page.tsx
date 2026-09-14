@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { WritingArticle } from './writing-article';
 import { getWritingArticle, writingArticles } from '../../../lib/writing';
 import '../../minimal.css';
-import '../writing.css';
+import '../../detail.css';
 
 type Props = { params: Promise<{ slug: string }> };
 

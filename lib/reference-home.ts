@@ -1,4 +1,5 @@
 import { writingArticles, type LocalizedText } from './writing';
+import { projects } from './projects';
 
 type ReferenceItem = {
   href: string;
@@ -20,44 +21,12 @@ export const referenceSections: readonly ReferenceSection[] = [
   {
     id: 'projects',
     title: { en: 'Projects', zh: '项目' },
-    items: [
-      {
-        href: 'https://aiforui.dev/',
-        title: { en: 'aiforui.dev', zh: 'aiforui.dev' },
-        date: '2026-04',
-        description: {
-          en: 'AI for Designers and Engineers.',
-          zh: '面向设计师与工程师的 AI。',
-        },
-      },
-      {
-        href: 'https://sonner.emilkowal.ski/',
-        title: { en: 'Sonner', zh: 'Sonner' },
-        date: '2026-03',
-        description: {
-          en: 'An opinionated toast component for React.',
-          zh: '一个有主张的 React 轻提示组件。',
-        },
-      },
-      {
-        href: 'https://animations.dev/',
-        title: { en: 'animations.dev', zh: 'animations.dev' },
-        date: '2026-02',
-        description: {
-          en: 'A course on web animations.',
-          zh: '一门关于 Web 动画的课程。',
-        },
-      },
-      {
-        href: 'https://vaul.emilkowal.ski/',
-        title: { en: 'Vaul', zh: 'Vaul' },
-        date: '2026-01',
-        description: {
-          en: 'A drawer component for React.',
-          zh: '一个 React 抽屉组件。',
-        },
-      },
-    ],
+    items: projects.map((project) => ({
+      href: `/work/${project.slug}`,
+      title: project.title,
+      description: project.description,
+      date: project.publishedAt.slice(0, 7),
+    })),
   },
   {
     id: 'writing',

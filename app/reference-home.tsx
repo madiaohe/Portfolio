@@ -104,7 +104,7 @@ export function ReferenceHome() {
             </p>
           </div>
 
-          {projects ? (
+          {projects && projects.items.length > 0 ? (
             <section
               className="minimal-section minimal-directory minimal-projects"
               aria-labelledby="projects-heading"
