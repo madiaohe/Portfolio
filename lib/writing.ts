@@ -23,6 +23,7 @@ export type WritingArticle = {
   title: LocalizedText;
   description: LocalizedText;
   blocks: WritingBlock[];
+  references?: { en: string[]; zh: string[] };
 };
 
 export const writingArticles: WritingArticle[] = [
@@ -224,8 +225,19 @@ export const writingArticles: WritingArticle[] = [
         },
       },
     ],
+  references: {
+    en: [
+      'Author, A. (2025). A place for the everyday. Publisher.',
+      'Author, B. (2024). Looking closer: observation as method. Journal of Design, 12(3), 41–58.',
+      'Author, C. (2023). Light and shadow at home. Press.',
+    ],
+    zh: [
+      '作者甲.（2025）. 日常之所在. 出版社.',
+      '作者乙.（2024）. 看得更细：把观察当作方法. 《设计学报》, 12(3), 41–58.',
+      '作者丙.（2023）. 家中的光与影. 出版社.',
+    ],
   },
-];
+}];
 
 export function getWritingArticle(slug: string) {
   return writingArticles.find((article) => article.slug === slug);

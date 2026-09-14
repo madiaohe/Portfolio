@@ -19,6 +19,7 @@
 /* Article prose */
 .writing-prose {
   color: var(--prose);
+  font-weight: var(--font-weight-body);
   line-height: var(--leading-body);
   overflow-wrap: anywhere;
 }
@@ -41,6 +42,7 @@
 .writing-article-header time {
   color: var(--muted-foreground);
   font-size: var(--text-meta);
+  font-weight: var(--font-weight-normal);
   line-height: var(--leading-meta);
   font-variant-numeric: tabular-nums;
 }
@@ -48,7 +50,7 @@
   margin-top: var(--space-md);
 }
 .writing-prose h2 {
-  margin: var(--space-3xl) 0 var(--space-md);
+  margin: var(--space-3xl) 0 var(--space-sm);
 }
 .writing-prose h2 a {
   text-decoration: none;
@@ -62,7 +64,7 @@
 .writing-block {
   width: 100%;
   aspect-ratio: 4 / 3;
-  margin: var(--space-lg) 0;
+  margin: var(--space-sm) 0;
   padding: var(--space-md);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -79,31 +81,68 @@
   display: flex;
   align-items: center;
 }
-.writing-observations {
-  margin: 0;
+
+/* References (paper-style, before the navigation, no heading) */
+.writing-references {
+  margin-top: var(--space-5xl);
 }
-.writing-exercise {
+.writing-references ol {
   margin: 0;
+  padding-left: 0;
+  font-size: var(--text-meta);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--leading-meta);
+  color: var(--muted-foreground);
+  list-style-position: inside;
+}
+.writing-references li + li {
+  margin-top: var(--space-xs);
 }
 
-/* Article navigation */
+/* Article pager: previous / next */
 .writing-navigation {
   display: flex;
   justify-content: space-between;
   gap: var(--space-md);
-  margin-top: var(--space-4xl);
-  padding-top: var(--space-md);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-lg);
   border-top: 1px solid var(--border);
-  font-size: var(--text-meta);
 }
-.writing-navigation a {
-  padding: var(--space-2xs) 0;
+.writing-pager-side {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.writing-pager-side a {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  text-decoration: none;
+}
+.writing-pager-next {
+  align-items: flex-end;
+}
+.writing-pager-next a {
+  align-items: flex-end;
+  text-align: right;
+}
+.writing-pager-label {
+  color: var(--muted-foreground);
+  font-size: var(--text-caption);
+}
+.writing-pager-title {
+  color: var(--foreground);
+  font-size: var(--text-meta);
+  font-weight: var(--font-weight-medium);
+}
+.writing-pager-side a:hover .writing-pager-title {
+  text-decoration: underline;
   text-underline-offset: 4px;
 }
 
 /* Language and responsive */
 .writing-site[lang='zh-CN'] .writing-prose {
-  line-height: 1.9;
+  line-height: var(--leading-body-zh);
 }
 @media (max-width: 639px) {
   .writing-block {
@@ -113,7 +152,7 @@
     margin-top: var(--space-2xl);
   }
   .writing-navigation {
-    margin-top: var(--space-3xl);
+    margin-top: var(--space-lg);
   }
 }
 @media (min-width: 640px) {
