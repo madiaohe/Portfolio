@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "app/components.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@/components",
+    "ui": "@/components/ui",
+    "utils": "@/lib/utils",
+    "lib": "@/lib",
+    "hooks": "@/lib/hooks"
+  },
+  "registries": {
+    "@beui": "https://beui.dev/r/{name}.json",
+    "@ncdai": "https://chanhdai.com/r/{name}.json",
+    "@unlumen-ui": "https://ui.unlumen.com/r/{name}.json"
+  }
+}

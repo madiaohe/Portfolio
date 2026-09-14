@@ -13,11 +13,15 @@ const navigationItems = [
 export function SiteHeader() {
   const pathname = usePathname();
   const isReading = pathname.startsWith('/journal/');
+  const isMinimal =
+    pathname === '/' ||
+    pathname === '/components' ||
+    pathname.startsWith('/writing/');
   const [isVisible, setIsVisible] = useState(true);
   const scrollAnchorRef = useRef(0);
 
   useEffect(() => {
-    if (isReading || pathname === '/') return;
+    if (isReading || isMinimal) return;
     const directionThreshold = 6;
     const topThreshold = 8;
     let animationFrame = 0;
@@ -53,9 +57,9 @@ export function SiteHeader() {
       window.removeEventListener('scroll', handleScroll);
       window.cancelAnimationFrame(animationFrame);
     };
-  }, [isReading, pathname]);
+  }, [isReading, isMinimal, pathname]);
 
-  if (pathname === '/') return null;
+  if (isMinimal) return null;
 
   if (isReading) {
     return (
