@@ -2,11 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { CornerUpLeft } from 'lucide-react';
+import { useReducedMotion } from 'motion/react';
 import type { WritingArticle as Article } from '@/lib/writing';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { MinimalHeader } from '@/components/blocks/minimal-header';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
+import { ArticleDirectory } from '@/components/blocks/article-directory';
 
 export function WritingArticle({ article }: { article: Article }) {
   const { language, changeLanguage } = useSiteLanguage();
@@ -15,6 +15,21 @@ export function WritingArticle({ article }: { article: Article }) {
     [article.blocks],
   );
   const [activeHeading, setActiveHeading] = useState(headings[0]?.id ?? '');
+  const reduced = useReducedMotion() ?? false;
+  const activeIndex = Math.max(
+    0,
+    headings.findIndex((heading) => heading.id === activeHeading),
+  );
+
+  const handleHeadingChange = (index: number) => {
+    const heading = headings[index];
+    if (!heading) return;
+    setActiveHeading(heading.id);
+    document
+      .getElementById(heading.id)
+      ?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+    history.replaceState(null, '', `#${heading.id}`);
+  };
 
   useEffect(() => {
     document.title = `${article.title[language]} — Xu Xianyu`;
@@ -76,31 +91,14 @@ export function WritingArticle({ article }: { article: Article }) {
       />
       <div className="writing-shell">
         <aside className="writing-aside">
-          <Link className="writing-back" href="/#writing-heading">
-            <CornerUpLeft size={14} strokeWidth={1.35} aria-hidden="true" />
-            {language === 'zh' ? '返回' : 'Back'}
-          </Link>
-          {headings.length ? (
-            <nav
-              className="writing-toc"
-              aria-label={language === 'zh' ? '文章目录' : 'Table of contents'}
-            >
-              <ul>
-                {headings.map((heading) => (
-                  <li key={heading.id}>
-                    <a
-                      href={`#${heading.id}`}
-                      aria-current={
-                        activeHeading === heading.id ? 'location' : undefined
-                      }
-                    >
-                      {heading.text[language]}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ) : null}
+          <ArticleDirectory
+            backHref="/#writing-heading"
+            backLabel={language === 'zh' ? '返回' : 'Back'}
+            tocLabel={language === 'zh' ? '文章目录' : 'Table of contents'}
+            items={headings.map((heading) => heading.text[language])}
+            value={activeIndex}
+            onChange={handleHeadingChange}
+          />
         </aside>
         <main id="main-content">
           <article className="writing-prose" aria-labelledby="article-title">
@@ -123,68 +121,32 @@ export function WritingArticle({ article }: { article: Article }) {
                 case 'statement':
                   return (
                     <aside
-                      className="writing-statement"
+                      className="writing-block writing-statement"
                       key={index}
                       aria-label={language === 'zh' ? '核心想法' : 'Key idea'}
                     >
-                      <p>{block.text[language]}</p>
+                      <p className="writing-block-placeholder">
+                        {language === 'zh' ? '内容占位' : 'Placeholder'}
+                      </p>
                     </aside>
                   );
                 case 'observations':
                   return (
-                    <figure className="writing-observations" key={index}>
-                      <Tabs defaultValue="0">
-                        <TabsList
-                          className="writing-tabs"
-                          aria-label={
-                            language === 'zh'
-                              ? '选择观察对象'
-                              : 'Choose an observation'
-                          }
-                        >
-                          {block.items.map((item, i) => (
-                            <TabsTrigger key={i} value={String(i)}>
-                              {item.title[language]}
-                            </TabsTrigger>
-                          ))}
-                        </TabsList>
-                        {block.items.map((item, i) => (
-                          <TabsContent key={i} value={String(i)}>
-                            <dl className="writing-observation-body">
-                              {(
-                                [
-                                  'observation',
-                                  'interpretation',
-                                  'application',
-                                ] as const
-                              ).map((field, j) => (
-                                <div key={field}>
-                                  <dt>
-                                    {
-                                      (language === 'zh'
-                                        ? ['看见什么', '如何理解', '带回设计']
-                                        : ['Observe', 'Interpret', 'Apply'])[j]
-                                    }
-                                  </dt>
-                                  <dd>{item[field][language]}</dd>
-                                </div>
-                              ))}
-                            </dl>
-                          </TabsContent>
-                        ))}
-                      </Tabs>
-                      <figcaption>{block.caption[language]}</figcaption>
+                    <figure
+                      className="writing-block writing-observations"
+                      key={index}
+                    >
+                      <p className="writing-block-placeholder">
+                        {language === 'zh' ? '内容占位' : 'Placeholder'}
+                      </p>
                     </figure>
                   );
                 case 'exercise':
                   return (
-                    <aside className="writing-exercise" key={index}>
-                      <h3>{block.title[language]}</h3>
-                      <ol>
-                        {block.steps.map((step, i) => (
-                          <li key={i}>{step[language]}</li>
-                        ))}
-                      </ol>
+                    <aside className="writing-block writing-exercise" key={index}>
+                      <p className="writing-block-placeholder">
+                        {language === 'zh' ? '内容占位' : 'Placeholder'}
+                      </p>
                     </aside>
                   );
               }

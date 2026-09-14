@@ -52,7 +52,7 @@ export const writingArticles: WritingArticle[] = [
       {
         type: 'heading',
         id: 'look-closer',
-        text: { zh: '先停留，再判断', en: 'Look before judging' },
+        text: { zh: '先细看', en: 'Look closer' },
       },
       {
         type: 'paragraph',
@@ -78,10 +78,7 @@ export const writingArticles: WritingArticle[] = [
       {
         type: 'heading',
         id: 'everyday-observations',
-        text: {
-          zh: '把观察变成具体的问题',
-          en: 'Turn observations into questions',
-        },
+        text: { zh: '学会提问', en: 'Ask questions' },
       },
       {
         type: 'paragraph',
@@ -147,10 +144,7 @@ export const writingArticles: WritingArticle[] = [
       {
         type: 'heading',
         id: 'question-the-beauty',
-        text: {
-          zh: '喜欢之后，还要追问',
-          en: 'Let appreciation lead to questions',
-        },
+        text: { zh: '追问美', en: 'Question beauty' },
       },
       {
         type: 'paragraph',
@@ -169,10 +163,7 @@ export const writingArticles: WritingArticle[] = [
       {
         type: 'heading',
         id: 'see-the-system',
-        text: {
-          zh: '从一个细节，看见它所在的系统',
-          en: 'See the system around a detail',
-        },
+        text: { zh: '看见系统', en: 'See the system' },
       },
       {
         type: 'paragraph',
@@ -191,7 +182,7 @@ export const writingArticles: WritingArticle[] = [
       {
         type: 'heading',
         id: 'keep-looking',
-        text: { zh: '让好奇心变成一种练习', en: 'Make curiosity a practice' },
+        text: { zh: '保持观察', en: 'Keep looking' },
       },
       {
         type: 'paragraph',
