@@ -50,10 +50,10 @@ These are reference-study assets and content. They are not represented as XIANYU
 
 ## Editing and preview
 
-- `components/reference-home.tsx`: homepage shell, bio, announcement and newsletter.
+- `app/reference-home.tsx`: homepage shell, bio, announcement and newsletter.
 - `lib/reference-home.ts`: project and writing rows.
 - `app/minimal.css`: isolated layout and styles.
-- `components/site-header.tsx`: suppresses the former navigation and scroll listener only on `/`.
+- `components/blocks/site-header.tsx`: suppresses the former navigation and scroll listener only on `/`.
 
 Run `npm run dev`; the existing dev server is available at http://localhost:3010/.
 See `design-qa.md` and `output/playwright/emil/` for verification.

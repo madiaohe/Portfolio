@@ -7,7 +7,7 @@ have been reviewed; migrate the settled design to other projects afterwards.
 ## Existing application
 
 - React 19 with Vinext, using Next-compatible App Router APIs.
-- Shared navigation: `components/site-header.tsx` in `app/layout.tsx`.
+- Shared navigation: `components/blocks/site-header.tsx` in `app/layout.tsx`.
 - Shared typography, page width and mobile gutters: `app/globals.css`.
 - Home: hero video, animated work categories with an eight-card matrix,
   design principles and a fluid footer.
@@ -19,9 +19,9 @@ have been reviewed; migrate the settled design to other projects afterwards.
   cover, section links, overview, design direction, detail crops, reflection,
   and return navigation.
 - `app/work/ambient-dial/project.css`: scoped page styles and responsive layouts.
-- `components/work-matrix.tsx`: the first card links to the pilot; the other
+- `components/blocks/work-categories/work-matrix.tsx`: the first card links to the pilot; the other
   cards keep their current placeholder treatment.
-- `components/about-timeline.tsx`: an additional case-study link inside the
+- `app/about/about-timeline.tsx`: an additional case-study link inside the
   expanded Ambient Dial summary.
 - The existing `digital-products.png` asset supplies the cover and two detail
   crops. These are views of the same concept image, not separate photographs.
@@ -50,7 +50,7 @@ pilot has settled.
 ## Approved reference implementation — 2026-09-05
 
 This supersedes the initial pilot layout described above. The live route now uses
-`components/project-index.tsx` for a sticky four-chapter directory with scroll
+`app/work/ambient-dial/project-index.tsx` for a sticky four-chapter directory with scroll
 tracking. The left sidebar contains only that directory. The right side is a
 single content column with Project, Problem, Design decisions and Outcome.
 The timeline, large display hero, separate principles grid and two-image gallery
