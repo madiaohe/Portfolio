@@ -332,9 +332,9 @@ html[data-minimal-theme='dark'] .minimal-theme-moon {
     auto;
   align-items: baseline;
   gap: var(--space-sm);
-  min-height: 44px;
+  min-height: var(--space-2xl);
   margin: 0 calc(-1 * var(--space-2xs));
-  padding: 11px var(--space-2xs) 10px;
+  padding: var(--space-xs) var(--space-2xs);
   border-radius: 4px;
   text-decoration: none;
 }
