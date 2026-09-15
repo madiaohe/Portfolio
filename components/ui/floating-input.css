@@ -97,6 +97,23 @@ html[data-minimal-theme='dark'] .floating-input-logo {
   overflow-x: hidden;
   overflow-y: auto;
   caret-color: var(--foreground);
+  /* A thin, translucent scrollbar so multiline scrolling stays subtle. */
+  scrollbar-width: thin;
+  scrollbar-color:
+    color-mix(in srgb, var(--muted-foreground) 35%, transparent) transparent;
+}
+
+.capsule-input [data-slot='capsule-input-field']::-webkit-scrollbar {
+  width: 4px;
+}
+
+.capsule-input [data-slot='capsule-input-field']::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.capsule-input [data-slot='capsule-input-field']::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--muted-foreground) 35%, transparent);
+  border-radius: 999px;
 }
 
 .capsule-input [data-slot='capsule-input-field']::placeholder {

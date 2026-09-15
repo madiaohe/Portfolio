@@ -21,6 +21,7 @@ CapsuleInput changed from a fixed single-line row into a two-phase auto-growing 
 - Shift+Enter inserts a newline (2 lines) without submitting; Enter submits; the send button submits and re-disables on empty.
 - FloatingButton composer: opens 226×50, typing widens it to 550×94 multiline with the surface radius following via `:has()`; Escape closes and returns focus.
 - Mobile (360px viewport, contained ~312px parent): long text wraps at ~278px capsule, stays inside the container, no overflow.
+- Multiline scrollbar: the textarea uses a thin, translucent scrollbar (`scrollbar-width: thin`, 4px webkit, muted-foreground 35% thumb with transparent track) so it reads as a light affordance instead of a prominent native bar; verified scrollable at scrollHeight 180 > client 160.
 - No console errors; `tsc`, targeted `oxlint`, `git diff --check`, and `npm run build` pass.
 
 final result: passed
