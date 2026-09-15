@@ -16,6 +16,13 @@ import {
 import { cn } from '@/lib/utils';
 import './floating-input.css';
 
+export interface CapsuleSize {
+  /** Desired outer (border-box) width of the capsule, including its border. */
+  width: number;
+  height: number;
+  multiline: boolean;
+}
+
 export interface CapsuleInputProps extends Omit<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
   'value' | 'defaultValue' | 'onChange' | 'onSubmit' | 'children' | 'rows'
@@ -39,6 +46,8 @@ export interface CapsuleInputProps extends Omit<
   maxWidth?: number;
   /** Maximum visible rows in the wrapped composer. */
   maxRows?: number;
+  /** Reports the measured capsule size so a host can animate its shell. */
+  onSizeChange?: (size: CapsuleSize) => void;
 }
 
 const LINE_HEIGHT = 20;
@@ -71,6 +80,7 @@ export function CapsuleInput({
   minWidth = 224,
   maxWidth = 550,
   maxRows = 8,
+  onSizeChange,
   className,
   disabled = false,
   readOnly = false,
@@ -141,7 +151,14 @@ export function CapsuleInput({
     if (textarea.style.height !== `${height}px`) {
       textarea.style.height = `${height}px`;
     }
-  }, [currentValue, effectiveMax, maxRows, minWidth]);
+    onSizeChange?.({
+      // Outer size: content width + borders, and the stacked layout height
+      // (padding 16 + text + gap 8 + bottom bar 28 + border 2).
+      width: width + 2,
+      height: isMultiline ? height + 54 : 48,
+      multiline: isMultiline,
+    });
+  }, [currentValue, effectiveMax, maxRows, minWidth, onSizeChange]);
 
   useLayoutEffect(() => {
     resize();

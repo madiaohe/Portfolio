@@ -251,6 +251,7 @@ html[data-minimal-theme='dark'] .floating-input-logo {
 
 .floating-button__surface {
   position: absolute;
+  box-sizing: border-box;
   min-inline-size: 0;
   margin: 0;
   padding: 0;
@@ -265,6 +266,9 @@ html[data-minimal-theme='dark'] .floating-input-logo {
   transition:
     width 180ms cubic-bezier(0.16, 1, 0.3, 1),
     height 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    /* min/max are transitioned too so they do not clamp the animated size. */
+    min-width 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    min-height 180ms cubic-bezier(0.16, 1, 0.3, 1),
     border-radius 180ms cubic-bezier(0.16, 1, 0.3, 1),
     bottom 320ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 200ms ease;
@@ -502,6 +506,8 @@ html[data-minimal-theme='dark']
 }
 
 .floating-button__content .capsule-input {
+  width: 100%;
+  height: 100%;
   border: 0;
   box-shadow: none;
 }

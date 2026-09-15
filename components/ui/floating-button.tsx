@@ -2,8 +2,11 @@
 
 import Image from 'next/image';
 import {
+  Children,
+  cloneElement,
   type MouseEventHandler,
   type ReactNode,
+  isValidElement,
   useCallback,
   useEffect,
   useId,
@@ -12,6 +15,7 @@ import {
   useSyncExternalStore,
 } from 'react';
 import { createPortal } from 'react-dom';
+import type { CapsuleSize } from '@/components/ui/capsule-input';
 import { useDismiss } from '@/lib/hooks/use-dismiss';
 import { useHoverCapable } from '@/lib/hooks/use-hover-capable';
 import { cn } from '@/lib/utils';
@@ -83,6 +87,9 @@ export function FloatingButton({
   const [tapOpen, setTapOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focusWithin, setFocusWithin] = useState(false);
+  // Measured size of the composer child; drives the surface as a definite
+  // length so the open/close size transition interpolates smoothly.
+  const [composerSize, setComposerSize] = useState<CapsuleSize | null>(null);
   // Whether the focus that landed inside the fan is keyboard focus. A mouse
   // click focuses a fan button too, but a hover-driven fan should still close
   // when the pointer leaves; only real keyboard focus pins it open.
@@ -125,6 +132,17 @@ export function FloatingButton({
 
   useDismiss(expanded, dismissEmpty, surfaceRef, { escape: false });
   const dismissFan = useCallback(() => setTapOpen(false), []);
+
+  const handleComposerSize = useCallback((size: CapsuleSize) => {
+    setComposerSize((prev) =>
+      prev &&
+      prev.width === size.width &&
+      prev.height === size.height &&
+      prev.multiline === size.multiline
+        ? prev
+        : size,
+    );
+  }, []);
   useDismiss(tapOpen && !expanded, dismissFan, scopeRef, { escape: false });
 
   const enterHover = useCallback(() => {
@@ -196,6 +214,14 @@ export function FloatingButton({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [expanded, changeOpen, tapOpen, focusWithin]);
 
+  const composer = children
+    ? Children.map(children, (child) =>
+        isValidElement<{ onSizeChange?: (size: CapsuleSize) => void }>(child)
+          ? cloneElement(child, { onSizeChange: handleComposerSize })
+          : child,
+      )
+    : children;
+
   const layer = (
     <div
       className={cn(
@@ -235,6 +261,14 @@ export function FloatingButton({
           className="floating-button__surface"
           aria-label={label}
           disabled={disabled}
+          style={
+            expanded && composerSize
+              ? {
+                  width: `${composerSize.width}px`,
+                  height: `${composerSize.height}px`,
+                }
+              : undefined
+          }
           onMouseEnter={enterHover}
           onMouseLeave={leaveHover}
         >
@@ -275,7 +309,7 @@ export function FloatingButton({
               aria-hidden={!expanded}
               inert={!expanded}
             >
-              {children}
+              {composer}
             </div>
           )}
         </fieldset>

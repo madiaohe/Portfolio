@@ -22,6 +22,7 @@ CapsuleInput changed from a fixed single-line row into a two-phase auto-growing 
 - FloatingButton composer: opens 226×50, typing widens it to 550×94 multiline with the surface radius following via `:has()`; Escape closes and returns focus.
 - Mobile (360px viewport, contained ~312px parent): long text wraps at ~278px capsule, stays inside the container, no overflow.
 - Multiline scrollbar: the textarea uses a thin, translucent scrollbar (`scrollbar-width: thin`, 4px webkit, muted-foreground 35% thumb with transparent track) so it reads as a light affordance instead of a prominent native bar; verified scrollable at scrollHeight 180 > client 160.
+- **Silky collapse (fixed):** the open surface used `width/height: fit-content` (keywords), which CSS cannot interpolate to the closed `60px`/`56px`, so collapse snapped. CapsuleInput now reports its measured size (`onSizeChange`), FloatingButton sets the surface to explicit px (with `box-sizing: border-box`), and the capsule inside follows the surface at 100% so nothing overflows mid-animation. `min-width`/`min-height` were added to the transition so they do not clamp the animated size. Verified via rAF frame capture: close 226→149→106→84→72→66→63→61→60 (smooth), open 60→138→180→202→214→223→226 (smooth), height and bottom animate in sync.
 - No console errors; `tsc`, targeted `oxlint`, `git diff --check`, and `npm run build` pass.
 
 final result: passed
