@@ -40,7 +40,8 @@ components/
 
 - `FloatingButton` 默认固定在视口底部居中，露出 60 × 56px 按钮的顶部 28px；悬停上浮 4px，键盘聚焦上浮 8px。触屏露出至少 44px，并适配底部安全区。以按钮为圆心向上扇形展开 `actions` 里的圆形动作按钮（默认语言右上、AI 上方、主题左上）：悬停显示、移开收起，触屏点击展开/再点收起，键盘聚焦同样展开；Esc 收起扇区。`placement="contained"` 用于有定位的裁切容器。支持 `open` / `defaultOpen` / `onOpenChange`、自定义 `icon`、`label`、`actions`、`disabled` 和独立 `onClick`。
 - 点击动作后展开为 224 × 48px 胶囊输入框（`children`），通过真实宽度、高度和底部位置过渡实现动画；展开会聚焦首个输入控件；Esc 收起并返回按钮焦点，保留草稿；输入为空时点击外部收起。收起内容保持挂载但使用 `inert` 隔离，草稿不会因切换状态丢失。
-- `CapsuleInput` 是 icon + 单行 input + voice + send 的真实表单，支持受控与非受控值、`inputRef`、自定义 icon、禁用/只读、IME 保护和回车提交，默认 `enterKeyHint="send"` 让移动键盘显示发送键（可覆盖）。右侧是语音与发送两个圆形按钮：语音为幽灵圆（`onVoiceClick` 未传入时禁用），发送为实心圆 + 上箭头（`type="submit"`，内容为空时禁用，可传 `sendLabel` / `sendIcon` 覆盖）。`onSubmit` 收到去除首尾空白的非空字符串，清空由调用方决定。
+- `CapsuleInput` 是会随文字自动展开的输入胶囊，支持受控与非受控值、`inputRef`、自定义 icon、禁用/只读、IME 保护和回车提交，默认 `enterKeyHint="send"` 让移动键盘显示发送键（可覆盖）。右侧是语音与发送两个圆形按钮：语音为幽灵圆（`onVoiceClick` 未传入时禁用），发送为实心圆 + 上箭头（`type="submit"`，内容为空时禁用，可传 `sendLabel` / `sendIcon` 覆盖）。`onSubmit` 收到去除首尾空白的非空字符串，清空由调用方决定。
+- **两阶段展开**：单行时胶囊以中心为轴向两端变宽（默认 224px → 最大 550px，与首页内容列同宽，可用 `minWidth` / `maxWidth` 调整，并受所在容器宽度限制）；到达最大宽度后文字换行，胶囊向上增高，变成文字在上、底部一行 logo 左 + 语音/发送右的布局（`data-multiline`）。Shift+Enter 插入换行、Enter 提交。
 - `onVoiceClick` 和 `voiceActive` 用于接入语音功能；未传入回调时语音按钮禁用。组件页只演示按钮状态，不录音，也不请求麦克风权限。
 - 组件自带共享样式 `components/ui/floating-input.css`，复用本站配色和字体，支持深浅主题与减少动态效果。用 `--floating-input-width`、`--floating-input-height` 调整胶囊尺寸；扇形的展开半径由 `.floating-button__fan` 上的 `--fan-radius` 控制（默认 80px），加大可让三个动作按钮彼此分开更远。
 

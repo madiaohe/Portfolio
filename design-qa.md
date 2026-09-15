@@ -1,3 +1,32 @@
+# Capsule Input auto-grow QA — 2026-09-15
+
+## Redesign
+
+CapsuleInput changed from a fixed single-line row into a two-phase auto-growing composer, matching the requested behavior:
+
+- **Phase 1 — widens to both ends:** while the text fits on one line, the capsule grows around a centred axis from its 224px rest width toward the homepage content column (550px), driven by a hidden nowrap measurement. The left logo and the right voice/send buttons keep their fixed chrome; only the editable text column grows. Radius stays a pill (`999px`).
+- **Phase 2 — wraps upward:** once the text would wrap at the max width, the capsule switches to a stacked layout (`data-multiline`): the textarea is on top and a bottom row holds the logo (left) and voice/send (right), exactly like Prompt Input. The shell radius becomes 24px. Shift+Enter inserts a newline; Enter submits.
+- **FloatingButton integration:** the open composer surface now sizes itself to the capsule (`width/height: fit-content`, min 224/48, max 550) and switches to the 24px radius via `:has(.capsule-input[data-multiline])`, so the AI-launcher composer grows in both directions too.
+
+## Details
+
+- Measurement: two hidden elements — a nowrap one for single-line text width, a pre-wrap one (width = `--capsule-input-content-width`) for wrapped height. Width = clamp(224, chrome 108 + textWidth, effectiveMax); multiline only when the wrap measure exceeds one line (20px).
+- `effectiveMax` is measured from the real containing box (FloatingButton host or parent, minus 32px) so narrow mobile containers wrap earlier and nothing overflows the viewport.
+- Textarea height animates 180ms; the surface open/close transition was shortened from 320ms to 180ms for live growth.
+- The prior `mergeRefs` immutability lint was resolved by using the repo's existing module-level `mergeRefs` helper.
+
+## Verification (browser)
+
+- Standalone: empty 224×48; ~50-char text grows to ~514×48 single-line (logo | input | voice | send in one row, pill radius); long text wraps to 550×94, `data-multiline=true`, radius 24px, bottom row logo-left + buttons-right; clearing returns to 224×48.
+- Shift+Enter inserts a newline (2 lines) without submitting; Enter submits; the send button submits and re-disables on empty.
+- FloatingButton composer: opens 226×50, typing widens it to 550×94 multiline with the surface radius following via `:has()`; Escape closes and returns focus.
+- Mobile (360px viewport, contained ~312px parent): long text wraps at ~278px capsule, stays inside the container, no overflow.
+- No console errors; `tsc`, targeted `oxlint`, `git diff --check`, and `npm run build` pass.
+
+final result: passed
+
+---
+
 # Prompt Input collapsed-width fix — 2026-09-15
 
 ## Root cause

@@ -20,13 +20,43 @@
 }
 
 .capsule-input {
+  --capsule-input-width: 224px;
+  --capsule-input-content-width: 534px;
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr) auto;
+  grid-template-areas: 'icon field actions';
   align-items: center;
-  width: min(var(--floating-input-width), 100%);
-  height: var(--floating-input-height);
+  width: min(var(--capsule-input-width), calc(100vw - 32px));
+  min-height: 48px;
   margin: 0;
   padding: 0 8px;
+  transition:
+    width 180ms ease,
+    min-height 180ms ease,
+    border-radius 180ms ease,
+    padding 180ms ease;
+}
+
+/* Once the text needs wrapping the capsule grows upward: text on top, and a
+   bottom row with the logo on the left and the two buttons on the right. */
+.capsule-input--multiline {
+  grid-template-areas:
+    'field field field'
+    'icon  .     actions';
+  grid-template-rows: auto auto;
+  row-gap: 8px;
+  align-items: end;
+  padding: 8px;
+  border-radius: 24px;
+}
+
+.capsule-input__icon {
+  grid-area: icon;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--muted-foreground);
 }
 
 .capsule-input__icon {
@@ -51,9 +81,10 @@ html[data-minimal-theme='dark'] .floating-input-logo {
 }
 
 .capsule-input [data-slot='capsule-input-field'] {
+  grid-area: field;
   width: 100%;
   min-width: 0;
-  height: 100%;
+  min-height: 0;
   margin: 0;
   padding: 0 4px;
   border: 0;
@@ -61,6 +92,10 @@ html[data-minimal-theme='dark'] .floating-input-logo {
   background: transparent;
   color: var(--foreground);
   font: inherit;
+  line-height: 20px;
+  resize: none;
+  overflow-x: hidden;
+  overflow-y: auto;
   caret-color: var(--foreground);
 }
 
@@ -70,7 +105,33 @@ html[data-minimal-theme='dark'] .floating-input-logo {
   opacity: 1;
 }
 
+.capsule-input--multiline [data-slot='capsule-input-field']::placeholder {
+  text-align: left;
+}
+
+/* Hidden single-line and wrapped measurements drive the capsule size. */
+.capsule-input__measure {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  font: inherit;
+  line-height: 20px;
+  padding: 0 4px;
+}
+
+.capsule-input__measure--nowrap {
+  white-space: nowrap;
+  width: max-content;
+}
+
+.capsule-input__measure--wrap {
+  width: var(--capsule-input-content-width);
+}
+
 .capsule-input__actions {
+  grid-area: actions;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -134,7 +195,7 @@ html[data-minimal-theme='dark'] .floating-input-logo {
   opacity: 0.38;
 }
 
-.capsule-input:has(input:focus-visible) {
+.capsule-input:has(textarea:focus-visible) {
   outline: 1px solid color-mix(in srgb, var(--border) 80%, var(--ring));
   outline-offset: 0;
 }
@@ -185,9 +246,9 @@ html[data-minimal-theme='dark'] .floating-input-logo {
   transform: translateX(-50%);
   pointer-events: auto;
   transition:
-    width 320ms cubic-bezier(0.16, 1, 0.3, 1),
-    height 320ms cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    width 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 180ms cubic-bezier(0.16, 1, 0.3, 1),
     bottom 320ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 200ms ease;
 }
@@ -251,8 +312,8 @@ html[data-minimal-theme='dark'] .floating-input-logo {
 }
 
 .floating-button__content {
-  width: 100%;
-  height: 100%;
+  width: fit-content;
+  height: fit-content;
   visibility: hidden;
   opacity: 0;
   transition:
@@ -397,9 +458,17 @@ html[data-minimal-theme='dark']
 
 .floating-button[data-state='open'] .floating-button__surface {
   bottom: 32px;
-  width: var(--floating-input-width);
-  height: var(--floating-input-height);
+  width: fit-content;
+  min-width: 224px;
+  max-width: min(550px, calc(100vw - 32px));
+  height: fit-content;
+  min-height: 48px;
   border-radius: 999px;
+}
+
+/* The composer keeps a rounded-square shell once its text wraps. */
+.floating-button__surface:has(.capsule-input[data-multiline]) {
+  border-radius: 24px;
 }
 
 .floating-button[data-state='open'] .floating-button__trigger {
@@ -416,8 +485,6 @@ html[data-minimal-theme='dark']
 }
 
 .floating-button__content .capsule-input {
-  width: 100%;
-  height: 100%;
   border: 0;
   box-shadow: none;
 }
