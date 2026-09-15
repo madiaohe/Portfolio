@@ -15,6 +15,11 @@
 | `components/ui/button/`、`select.tsx`、`popover-morph.tsx`、`magnetic.tsx`、`preview-rail.tsx`（均在 ui 内），以及 `lib/ease.ts`、`lib/hooks/`、`lib/touch.ts` | [beUI Registries](https://beui.dev/r/chat-app.json)                                                                                                                                        | 仅安装 Prompt Input 与 Message 所需的动效基础组件，没有引入完整 Chat App 的侧边栏、审批、代码差异和 Shiki                    |
 | `components/blocks/floating-agent/index.tsx`、`floating-prompt-input.tsx`                                                                                      | 本站定制，组合定制输入框、beUI Message 与 Message Scroller                                                                                                                                 | 实现默认胶囊、聚焦扩宽、多行增高、首条消息后叠层、向上展开、模拟回复、停止、焦点约束、收起和 fixed / contained 两种模式      |
 
+新增独立组件（2026-09-15）：
+
+- `components/ui/floating-button.tsx`、`components/ui/capsule-input.tsx` 与共享 `floating-input.css`：根据本次三张参考截图在本站实现，复用现有主题、字体和 dismiss Hook。后按用户要求把 FloatingButton 的交互改为悬停扇形展开（语言 / AI / 主题三个圆形动作，AI 展开胶囊输入框），参考截图里的“点击展开胶囊”不再作为默认交互，胶囊输入框本身仍与截图一致。
+- `floating-button` 的启动器默认图标、`capsule-input` 的左侧默认图标以及扇形里的 AI 动作图标，统一使用站点自有的 `/media/floating-agent-logo.svg`（与 Floating Agent 启动器同款，`currentColor` 单色 SVG，随深浅主题反色），不再引用第三方 OpenAI 标识。麦克风复用已安装的 Lucide `Mic`。
+
 第三方源码许可证：
 
 - shadcn/ui：MIT，Copyright (c) 2023 shadcn，全文见 [shadcn-MIT.txt](licenses/shadcn-MIT.txt)。

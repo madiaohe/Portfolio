@@ -133,53 +133,6 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
   color: var(--minimal-muted);
   line-height: 24px;
 }
-.minimal-controls {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  min-width: 0;
-  position: fixed;
-  z-index: 20;
-  top: max(24px, env(safe-area-inset-top));
-  right: max(24px, env(safe-area-inset-right));
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.minimal-controls button {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: var(--minimal-bg);
-  color: var(--minimal-muted);
-  transition:
-    color 160ms ease,
-    background-color 160ms ease;
-  -webkit-tap-highlight-color: transparent;
-}
-.minimal-controls button:hover {
-  background: var(--minimal-hover);
-  color: var(--minimal-text);
-}
-.minimal-theme-sun {
-  display: none;
-}
-html[data-minimal-theme='dark'] .minimal-theme-sun {
-  display: block;
-}
-html[data-minimal-theme='dark'] .minimal-theme-moon {
-  display: none;
-}
-@media (max-width: 639px) {
-  .minimal-controls {
-    top: max(12px, env(safe-area-inset-top));
-    right: max(12px, env(safe-area-inset-right));
-  }
-}
 .minimal-heading {
   font-size: 16px;
   line-height: 24px;

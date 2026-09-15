@@ -8,7 +8,7 @@ import { NotionMentionLink } from '@/components/ui/notion-mention-link';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 
 export function ReferenceHome() {
-  const { language, changeLanguage } = useSiteLanguage();
+  const { language } = useSiteLanguage();
   const copy = homeCopy[language];
   const locale = language === 'zh' ? 'zh-CN' : 'en-US';
   const monthFormatter = new Intl.DateTimeFormat(locale, {
@@ -31,11 +31,7 @@ export function ReferenceHome() {
       lang={language === 'zh' ? 'zh-CN' : 'en'}
     >
       <div className="minimal-shell">
-        <MinimalHeader
-          language={language}
-          onLanguageChange={changeLanguage}
-          avatarSrc="/media/xu-xianyu-avatar.jpg"
-        />
+        <MinimalHeader avatarSrc="/media/xu-xianyu-avatar.jpg" />
 
         <main id="main-content">
           <div>

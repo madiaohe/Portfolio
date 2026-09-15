@@ -1,13 +1,17 @@
 'use client';
 
-import { Bot, FileText, ImagePlus, Puzzle } from 'lucide-react';
+import Image from 'next/image';
+import { Bot, FileText, ImagePlus, Languages, Moon, Puzzle, Sun } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { PromptInput } from '@/components/ui/prompt-input';
+import { FloatingButton } from '@/components/ui/floating-button';
+import { CapsuleInput } from '@/components/ui/capsule-input';
 import { EASE_OUT } from '@/lib/ease';
 import { useFavicon } from '@/lib/hooks/use-favicon';
-import { MinimalHeader } from '@/components/blocks/minimal-header';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
+import { useSiteTheme } from '@/lib/hooks/use-site-theme';
+import type { HomeLanguage } from '@/lib/home-copy';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   Accordion,
@@ -121,7 +125,7 @@ function PromptInputDemo() {
   };
 
   return (
-    <div className="flex h-[360px] w-full max-w-xl flex-col justify-center">
+    <div className="flex h-[360px] w-full max-w-[36rem] flex-col justify-center">
       <PromptInput
         models={PROMPT_MODELS}
         actions={PROMPT_ACTIONS}
@@ -159,12 +163,160 @@ function PromptInputDemo() {
 
 import type { ReactNode } from 'react';
 
+function FloatingInputDemo({
+  floating,
+  zh,
+  language,
+  changeLanguage,
+  theme,
+  toggleTheme,
+}: {
+  floating: boolean;
+  zh: boolean;
+  language: HomeLanguage;
+  changeLanguage: (language: HomeLanguage) => void;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}) {
+  const [value, setValue] = useState('');
+  const [voiceActive, setVoiceActive] = useState(false);
+  const [submitted, setSubmitted] = useState('');
+  const [composerOpen, setComposerOpen] = useState(false);
+  const input = (
+    <CapsuleInput
+      value={value}
+      onValueChange={setValue}
+      placeholder={zh ? '随心输入' : 'Ask anything'}
+      voiceLabel={
+        voiceActive
+          ? zh
+            ? '结束语音演示'
+            : 'End voice demo'
+          : zh
+            ? '语音输入'
+            : 'Voice input'
+      }
+      voiceActive={voiceActive}
+      onVoiceClick={() => {
+        setVoiceActive((active) => !active);
+        setSubmitted('');
+      }}
+      onSubmit={(prompt) => {
+        setSubmitted(prompt);
+        setValue('');
+        setVoiceActive(false);
+      }}
+    />
+  );
+
+  const feedback = (
+    <output className="gallery-floating-input-feedback" aria-live="polite">
+      {voiceActive
+        ? zh
+          ? '语音按钮状态演示，再次点击结束。'
+          : 'Voice button demo. Click again to end.'
+        : submitted
+          ? `${zh ? '已提交' : 'Submitted'}: ${submitted}`
+          : null}
+    </output>
+  );
+
+  if (!floating)
+    return (
+      <div className="gallery-demo gallery-floating-input-demo ui-scope">
+        {feedback}
+        {input}
+      </div>
+    );
+
+  const languageLabel =
+    language === 'en'
+      ? zh
+        ? '切换到中文'
+        : 'Switch to Chinese'
+      : zh
+        ? '切换到英文'
+        : 'Switch to English';
+  const themeLabel =
+    theme === 'dark'
+      ? zh
+        ? '切换到浅色模式'
+        : 'Switch to light mode'
+      : zh
+        ? '切换到深色模式'
+        : 'Switch to dark mode';
+  const aiLabel = zh ? '打开输入框' : 'Open input';
+
+  return (
+    <div className="gallery-demo gallery-floating-input-demo ui-scope">
+      {feedback}
+      <FloatingButton
+        placement="contained"
+        label={zh ? '快捷操作' : 'Quick actions'}
+        actionsLabel={zh ? '快捷操作' : 'Quick actions'}
+        open={composerOpen}
+        onOpenChange={(open) => {
+          setComposerOpen(open);
+          if (!open) setVoiceActive(false);
+        }}
+        actions={[
+          {
+            id: 'language',
+            position: 'top-right',
+            label: languageLabel,
+            active: language === 'zh',
+            icon: <Languages size={16} strokeWidth={1.6} aria-hidden="true" />,
+            onSelect: () =>
+              changeLanguage(language === 'en' ? 'zh' : 'en'),
+          },
+          {
+            id: 'ai',
+            position: 'top',
+            label: aiLabel,
+            icon: (
+              <Image
+                src="/media/floating-agent-logo.svg"
+                width={16}
+                height={16}
+                alt=""
+                className="floating-input-logo"
+              />
+            ),
+            onSelect: () => setComposerOpen(true),
+          },
+          {
+            id: 'theme',
+            position: 'top-left',
+            label: themeLabel,
+            icon:
+              theme === 'dark' ? (
+                <Sun size={16} strokeWidth={1.6} aria-hidden="true" />
+              ) : (
+                <Moon size={16} strokeWidth={1.6} aria-hidden="true" />
+              ),
+            onSelect: toggleTheme,
+          },
+        ]}
+      >
+        {input}
+      </FloatingButton>
+    </div>
+  );
+}
+
+type GallerySectionHelpers = {
+  language: HomeLanguage;
+  changeLanguage: (language: HomeLanguage) => void;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+};
+
 type GallerySection = {
   id: string;
   en: string;
   zh: string;
   description: { en: string; zh: string };
-  render: (zh: boolean) => ReactNode;
+  render: (zh: boolean, helpers: GallerySectionHelpers) => ReactNode;
 };
 
 const SECTIONS: GallerySection[] = [
@@ -232,6 +384,72 @@ const SECTIONS: GallerySection[] = [
           <code>
             {
               '<PromptInput\n  models={MODELS}\n  actions={ACTIONS}\n  defaultModel="gpt-5.2"\n  defaultValue="Review the current implementation…"\n  loading={loading}\n  onSubmit={submit}\n  onStop={stop}\n  onAction={selectAction}\n/>'
+            }
+          </code>
+        </pre>
+      </section>
+    ),
+  },
+  {
+    id: 'floating-button',
+    en: 'Floating Button',
+    zh: '浮层按钮',
+    description: {
+      en: 'A quiet bottom-edge launcher. Hover to fan out language, theme and AI actions; the AI action expands a capsule composer. On touch, tap to open and tap again to close.',
+      zh: '安静停靠在底部的启动器。悬停时以它为圆心展开语言、主题与 AI 三个圆形动作；点击 AI 展开胶囊输入框。触屏上点一下展开、再点收起。',
+    },
+    render: (zh, helpers) => (
+      <section
+        id="floating-button"
+        className="gallery-section"
+        aria-label="Floating Button"
+      >
+        <FloatingInputDemo
+          key="floating-button"
+          floating
+          zh={zh}
+          language={helpers.language}
+          changeLanguage={helpers.changeLanguage}
+          theme={helpers.theme}
+          toggleTheme={helpers.toggleTheme}
+        />
+        <pre>
+          <code>
+            {
+              '<FloatingButton\n  actions={ACTIONS}\n  onOpenChange={setOpen}>\n  <CapsuleInput onSubmit={submit} />\n</FloatingButton>'
+            }
+          </code>
+        </pre>
+      </section>
+    ),
+  },
+  {
+    id: 'capsule-input',
+    en: 'Capsule Input',
+    zh: '胶囊输入框',
+    description: {
+      en: 'Icon, input, voice. A compact single-line composer; press Enter to submit. The microphone previews its active state.',
+      zh: '从左到右是 icon、input、voice。紧凑的单行输入框，回车提交；麦克风演示开启与关闭状态。',
+    },
+    render: (zh, helpers) => (
+      <section
+        id="capsule-input"
+        className="gallery-section"
+        aria-label="Capsule Input"
+      >
+        <FloatingInputDemo
+          key="capsule-input"
+          floating={false}
+          zh={zh}
+          language={helpers.language}
+          changeLanguage={helpers.changeLanguage}
+          theme={helpers.theme}
+          toggleTheme={helpers.toggleTheme}
+        />
+        <pre>
+          <code>
+            {
+              '<CapsuleInput\n  value={value}\n  onValueChange={setValue}\n  placeholder="随心输入"\n  onSubmit={submit}\n  onVoiceClick={toggleVoice}\n  voiceActive={voiceActive}\n/>'
             }
           </code>
         </pre>
@@ -380,9 +598,7 @@ const SECTIONS: GallerySection[] = [
           />
         </div>
         <pre>
-          <code>
-            {'<FloatingAgent language="zh" entryMode="launcher" />'}
-          </code>
+          <code>{'<FloatingAgent language="zh" entryMode="launcher" />'}</code>
         </pre>
       </section>
     ),
@@ -479,8 +695,11 @@ const SECTIONS: GallerySection[] = [
   },
 ];
 
-
-const BLOCK_IDS = new Set(['floating-agent', 'article-directory', 'library-directory']);
+const BLOCK_IDS = new Set([
+  'floating-agent',
+  'article-directory',
+  'library-directory',
+]);
 const COMPONENT_SECTIONS = SECTIONS.filter((s) => !BLOCK_IDS.has(s.id));
 const BLOCK_SECTIONS = SECTIONS.filter((s) => BLOCK_IDS.has(s.id));
 const ALL_SECTIONS = [...COMPONENT_SECTIONS, ...BLOCK_SECTIONS];
@@ -784,13 +1003,16 @@ function LibraryDirectoryDemo({ zh }: { zh: boolean }) {
 
 export function ComponentGallery() {
   const { language, changeLanguage } = useSiteLanguage();
+  const { theme, toggleTheme } = useSiteTheme();
   const zh = language === 'zh';
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       const match = window.location.hash.match(/^#(.+)$/);
-      const index = match ? ALL_SECTIONS.findIndex((s) => s.id === match[1]) : -1;
+      const index = match
+        ? ALL_SECTIONS.findIndex((s) => s.id === match[1])
+        : -1;
       if (index >= 0) setActiveIndex(index);
     });
     return () => window.cancelAnimationFrame(frame);
@@ -809,11 +1031,6 @@ export function ComponentGallery() {
       className="minimal-site component-gallery component-library"
       lang={zh ? 'zh-CN' : 'en'}
     >
-      <MinimalHeader
-        language={language}
-        onLanguageChange={changeLanguage}
-        showIdentity={false}
-      />
       <div className="gallery-layout">
         <aside className="gallery-directory">
           <LibraryDirectory
@@ -830,9 +1047,7 @@ export function ComponentGallery() {
                 : -1
             }
             onComponentChange={select}
-            onBlockChange={(index) =>
-              select(COMPONENT_SECTIONS.length + index)
-            }
+            onBlockChange={(index) => select(COMPONENT_SECTIONS.length + index)}
           />
         </aside>
 
@@ -841,7 +1056,7 @@ export function ComponentGallery() {
           <p className="gallery-intro">
             {zh ? active.description.zh : active.description.en}
           </p>
-          {active.render(zh)}
+          {active.render(zh, { language, changeLanguage, theme, toggleTheme })}
         </main>
       </div>
     </div>

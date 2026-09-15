@@ -98,6 +98,27 @@
   padding: 0;
 }
 
+.gallery-floating-input-demo {
+  position: relative;
+  display: flex;
+  min-height: 360px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gallery-floating-input-feedback {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  left: 24px;
+  color: var(--muted-foreground);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
 .gallery-prompt-input-demo {
   display: flex;
   min-height: 360px;

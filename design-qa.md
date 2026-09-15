@@ -1,3 +1,142 @@
+# Prompt Input collapsed-width fix — 2026-09-15
+
+## Root cause
+
+The design system registers semantic spacing tokens (`--space-3xs` … `--space-5xl`) in `@theme` (`app/components.css`, introduced in `4610586`). Tailwind v4 generates named sizing utilities from those theme keys, so `max-w-xl` compiled to `max-width: var(--space-xl)` (40px) instead of the Tailwind container width (36rem / 576px). The Prompt Input demo's `max-w-xl` wrapper collapsed to 40px, which in turn shrank the textarea to 22px and inflated it to the 8-row max.
+
+## Fixes
+
+- `app/components/component-gallery.tsx` (Prompt Input demo): `max-w-xl` → `max-w-[36rem]` (576px).
+- `components/blocks/testimonial-2.tsx`: `md:max-w-lg` → `md:max-w-[32rem]` (512px).
+- `components/ui/preview-rail.tsx` (default `previewClassName`): `max-w-sm` → `max-w-[24rem]` (384px).
+
+These are the only named-size width/max-width utilities in the repo that collide with the design-space keys.
+
+## Verification
+
+- Prompt Input: wrapper ~574px, textarea 556×48 (2 rows) — no longer collapsed.
+- Testimonial 2: blockquote `max-width: 512px` (was 32px).
+- `tsc` / `oxlint` / `git diff --check` / `npm run build` pass.
+- Separate pre-existing note: the GPT-5.2 model row in the Prompt Input demo fetches `https://openai.com/favicon.ico` which the browser blocks with `ERR_BLOCKED_BY_RESPONSE.NotSameOrigin` (a console error unrelated to layout; the other model favicons resolve).
+
+final result: passed
+
+---
+
+# Floating Button hover fan QA — 2026-09-15
+
+## Interaction redesign (user request)
+
+The launcher no longer click-expands into the capsule input. It is now a hover fan:
+
+- **Desktop:** hovering the launcher fans out three circular icon buttons around the launcher centre — language top-right, AI top, theme top-left — each 44px on a 132 × 52 fan above the launcher (radius 58 top / 41 sides). Moving the pointer away collapses them; a 120ms hover-intent window keeps them open across the gap between buttons.
+- **AI action** expands the same 224 × 48px capsule composer; Escape returns focus to the launcher; outside-click-empty closes it; draft is preserved.
+- **Touch:** tap the launcher to fan open, tap again to close, tap outside to close; tapping AI opens the composer. Hover-only behavior is gated behind `(hover: hover) and (pointer: fine)`.
+- **Keyboard:** focusing the launcher (focus-visible) fans out the actions so they are tabbable; Tab moves between them; Escape collapses the fan without it immediately reopening; a mouse click on an action does not pin the fan open when the pointer leaves.
+
+## Evidence
+
+- Routes: `http://localhost:4173/components#floating-button`, `#capsule-input`.
+- Desktop (1159 × 788 CSS px): the fan arc radius is now 80px (centre-to-centre), tunable via `--fan-radius` on `.floating-button__fan`. Measured launcher centre (756, 619) with action centres at (813, 562) / (756, 539) / (699, 562) — each exactly 80px out, 44px buttons, ~17px gaps between neighbours, no horizontal or vertical overflow.
+- Mobile (360 × 732 CSS px, coarse pointer, `canHover: false`): tap toggles the fan; buttons fit within the viewport (left 117 … right 243); tap-outside closes both the fan and an empty composer.
+- Language action flips `document.documentElement.lang` to zh-CN/en and toggles the button's `aria-pressed`; theme action flips `data-minimal-theme` and swaps the Sun/Moon icon.
+- The top-right language/theme controls are removed **site-wide**: `MinimalHeader` no longer renders the `Display preferences` fieldset (controls, `Languages`/`Sun`/`Moon` icons and the `useSiteTheme`/language props are gone), and the dead `.minimal-controls` / `.minimal-theme-*` CSS in `app/minimal.css` was deleted. Homepage and detail headers keep their identity block; theme application on load still works via the root layout's inline script; the floating button fan remains the only language/theme switch on the components page.
+- AI action opens the composer and focuses the input; Enter submits; Escape closes and returns focus to `floating-button-trigger`; fan hides while the composer is open (`data-state=open` forces the actions to opacity 0 / inert).
+- Hover in → move to a fan button (through the gap) → fan stays open; move away → closed. Mouse-click an action → move away → fan closes (`:focus-visible` distinguishes keyboard from mouse focus).
+- **Gap hover lift (fixed):** the launcher lift was bound only to `:has(.floating-button__surface:hover)`, so parking the pointer in the gap between the launcher and the fan dropped `--floating-button-bottom` from -24px back to -28px and the whole group slid down 4px while the fan stayed open. The hover lift and shadow now apply for `:has(.floating-button__surface:hover, .floating-button__fan:hover)`, so the launcher stays lifted and shadowed across the launcher, the gap, and the fan, and only settles when the pointer actually leaves. Verified at gap y=560 (launcher top stays 591, `--floating-button-bottom: -24px`, fan open).
+- **4px grid (design-system audit):** per `docs/design-system.md` every button/container size and spacing is a multiple of 4. Fixed the violations in `floating-input.css`: capsule height 46 → 48px, open-surface bottom 30 → 32px, fixed open safe-area 30 → 32px, coarse-pointer trigger padding-top 14 → 12px, and the fan's 45° side offset from `calc(radius * 0.7071)` (56.57px) to a fixed 56px. Verified rendered sizes on the grid: capsule 224×48, launcher 60×56, action buttons 44×44, side fan offsets ±56/56, fan box 160×84, open composer bottom gap 32px. Font sizes (14/16px tokens), radius (reference 22px / `999px`), focus rings and shadows are governed by their own scales and left unchanged.
+- **Click-pinned lift (fixed):** the launcher lift was bound to `:has(:hover)`, so after a click pinned the fan open and the pointer left, `--floating-button-bottom` fell from -24px back to -28px and the launcher dropped 4px while the fan stayed open. The lift (and shadow) now follow the fan state itself (`[data-fan='open']`, hover-capable only), so a click-pinned fan keeps the launcher lifted until a second click; hover still lifts on enter and settles on leave. Verified: click → `-24px`; pointer moves away → still `-24px` and fan open; click again → `-28px` and fan closed; hover in → `-24px`, hover out → `-28px` + fan closed; gap region stays lifted; keyboard focus keeps its `-20px` focus lift.
+- Keyboard: Tab to launcher opens the fan; Tab steps language → AI → theme; Escape collapses the fan, focus stays on the launcher, and it stays closed.
+- Console: no errors or warnings after full reloads (only the standard React DevTools info line).
+- `npx tsc --noEmit`, targeted `oxlint` on the touched files, `git diff --check`, and `npm run build` all pass (build reports only the existing vinext route-classification limitation).
+
+final result: passed
+
+---
+
+# Floating Button and Capsule Input follow-up optimization — 2026-09-15
+
+## Changes in this round
+
+- **Escape focus return (fixed):** Escape closed the composer but dropped focus to `BODY`. The rAF-based refocus ran while the launcher's `visibility` was still `hidden` (the old `visibility 100ms` transition keeps a hidden→visible element invisible for the whole duration), so `focus()` silently failed. The trigger now flips `visibility` instantly on close (`transition: opacity 100ms ease` only), and the close path flags the Escape intent and refocuses the trigger in an effect after the commit. Verified by keyboard flow: focus trigger → Enter opens and focuses the input → Escape closes with `document.activeElement === floating-button-trigger`; draft is preserved and a second Enter reopens it with the draft intact.
+- **Mobile keyboard hint:** `CapsuleInput` now defaults `enterKeyHint` to `"send"` so mobile keyboards offer a send action; callers can still override it through props.
+- **Close animation polish:** removing `visibility` from the trigger transition makes the launcher fade in on close instead of popping in after 100ms.
+
+## Verification
+
+- Full keyboard flow on `http://localhost:4173/components#floating-button` (open, type, submit, Escape focus return, reopen with draft, outside-click with draft keeps open, outside-click empty closes).
+- Standalone `CapsuleInput` on `http://localhost:4173/components#capsule-input` (submit feedback, voice pressed-state toggle with focus retained, `enterKeyHint="send"` present).
+- Console: no errors or warnings after a full reload (only the standard React DevTools info line).
+- `npx tsc --noEmit`, targeted `oxlint` on the two component files, `git diff --check`, and `npm run build` all pass. Build reports only the existing vinext route-classification limitation.
+
+final result: passed
+
+---
+
+# Floating Button and Capsule Input QA — 2026-09-15
+
+## Findings
+
+No actionable P0/P1/P2 findings remain in the requested two-component flow.
+
+## Source and implementation evidence
+
+- Source visual truth: the three user screenshots, preserved at `output/floating-input-20260915/source-default.png`, `source-hover.png`, and `source-expanded.png`. Original input paths were `/var/folders/hn/h5y4d6y956g0rnrdn_wn5mnh0000gn/T/codex-clipboard-8027b14e-3635-4281-99c5-ae05293b0614.png`, `codex-clipboard-a716a558-7914-485a-9e72-112bdadd9dfd.png`, and `codex-clipboard-cba7af03-fbfa-4701-8f87-1ae5736157b7.png` in that order.
+- Routes: `http://localhost:4173/components#floating-button` and `http://localhost:4173/components#capsule-input`.
+- Browser-rendered implementation screenshots: `output/floating-input-20260915/default-desktop.png`, `hover-desktop.png`, `expanded-desktop.png`, `capsule-light-desktop.png`, `capsule-dark-desktop.png`, `capsule-dark-mobile.png`, `floating-light-mobile.png`, and `floating-dark-mobile.png`.
+- Full-view comparison: `output/floating-input-20260915/full-comparison.png`. The surrounding article/Floating Agent pages in the references are context; the requested components are now in their own Components entries. This comparison is not a claim that the surrounding pages match.
+- Focused comparison: `output/floating-input-20260915/focused-comparison.png`, opened with the full-view comparison and reopened after the last shape correction. It places the actual source and implementation crops side by side for all three states.
+
+## Normalization and states
+
+- Sources: 3024 × 1748 pixels, approximately 2× desktop density. Source component crops are downsampled by 2, excluding browser chrome and using the highlighted controls as the scope. The annotation's red line is visible at the crop edge and is not part of the component.
+- Desktop: browser viewport 1159 × 788 CSS pixels, reported DPR 2; the browser tool exports 1144 × 778 image pixels. Images were normalized back to 1159 × 788 before cropping around measured DOM coordinates.
+- Mobile-width check: 390 × 844 CSS pixels; browser export 375 × 812 image pixels. The input and expanded shell measured 224 × 48 CSS pixels with no horizontal page overflow.
+- States: default, pointer hover, click-open with input focus, submitted, voice-button active, Escape return, Chinese and English copy, and light/dark themes. Component crops use Chinese copy and light theme to match the supplied controls.
+
+## Required fidelity surfaces
+
+- **Fonts and typography:** existing Reference Sans and fallback, 14px / 20px; centered “随心输入” placeholder and left-aligned entered text. Density normalization introduces minor antialiasing differences in comparison images.
+- **Spacing and layout rhythm:** 60 × 56px launcher shell with 28px visible at rest and 4px hover lift; corrected 22px launcher corner radius; 224 × 48px capsule with icon, flexible input, and two concentric 28px circular buttons on the right — a ghost voice button and a filled send (ArrowUp) button, both `border-radius: 50%` and vertically centered (0px offset from the capsule centre). The two right buttons sit in a `capsule-input__actions` flex group with an 8px gap (on the 4px grid). The shell changes its actual width, height and bottom offset without stretching its contents.
+- **Colors and tokens:** existing white surface, neutral border and soft shadow; dark mode inherits the site's palette. The focused text field uses a subtle outline; keyboard focus on buttons remains distinct. The reference's background and the gallery demo background differ slightly by design.
+- **Image fidelity:** the launcher, capsule-input and AI-action icons use the site's own `/media/floating-agent-logo.svg` (the Floating Agent logo, a `currentColor` monochrome SVG that inverts for dark mode). All are now 16px — the launcher/capsule logo went from 12px, and every fan icon (languages, theme, AI) is 16px. The microphone is the existing Lucide Mic icon at 16px. No third-party logo asset is used.
+- **Copy and content:** localized accessible names, correct placeholder, visible local submit feedback, and explicitly labeled voice-button state demonstration. No recording or model service is represented as connected.
+
+## Interaction checks
+
+- Click opens the composer and focuses its input; its measured shell is 224 × 48px.
+- Enter submits the entered text and the demo clears it; whitespace-only submission is guarded in the implementation.
+- Clicking outside with a draft preserves the open composer and its value; Escape closes it and returns focus to `floating-button-trigger`; reopening preserves the draft.
+- Clicking outside an empty input closes it.
+- Voice click toggles its accessible pressed state and demo feedback; it keeps button focus.
+- Closed content remains mounted and inert, preserving drafts while removing hidden controls from keyboard navigation.
+- Standalone Capsule Input submission and mobile-width/light/dark displays were verified in the in-app browser.
+- Console: one vinext RSC hot-update error was captured during file edits at 03:28:24 UTC; after a full reload, the final interaction checks produced no additional warning or error entries.
+- Targeted Oxlint, TypeScript checking, `git diff --check`, and production build passed. The build reports the existing vinext static route-classification limitation and Node glob experimental warning.
+
+## Comparison history
+
+1. [P2 fixed] The clipped launcher's button originally extended beyond the visible edge, making the center click unreliable. Its pointer target now matches the visible 28px region; repeated opening and closing succeeded.
+2. [P2 fixed] The initial focus outline was too dark and heavy for the reference. It now uses a subtle 1px theme-blended outline; post-fix evidence is `expanded-desktop.png` and the focused comparison.
+3. [P2 fixed] The initial launcher radius made the visible top look too circular. A 22px radius restores the reference's flatter rounded top. Revised default/hover screenshots and the final focused comparison confirm the correction.
+
+## Remaining coverage limits
+
+- Real microphone capture is intentionally owned by the caller; the gallery demonstrates callback and state behavior.
+- IME composition protection, reduced-motion CSS, touch hit targets, and safe-area rules were reviewed in source; a physical mobile keyboard, IME session and device home indicator were not exercised.
+- The gallery verifies contained placement; fixed placement uses a body portal and shares the same shell/styles.
+
+## Implementation checklist
+
+- [x] Two reusable UI components and two Components directory entries.
+- [x] Default, hover, open, focus, submission and close flow.
+- [x] Theme and narrow-width checks; source/implementation visual comparison.
+- [x] Component documentation and icon source/license record.
+
+final result: passed
+
+---
+
 # Floating Agent expanded toolbar QA — 2026-09-12
 
 ## Comparison target

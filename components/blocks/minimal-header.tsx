@@ -1,9 +1,6 @@
-import { Languages, Moon, Sun } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import type { HomeLanguage } from '@/lib/home-copy';
-import { useSiteTheme } from '@/lib/hooks/use-site-theme';
 
 const hefeiTimeFormatter = new Intl.DateTimeFormat('en-US', {
   timeZone: 'Asia/Shanghai',
@@ -19,28 +16,14 @@ function formatHefeiTime(date: Date) {
 }
 
 export function MinimalHeader({
-  language,
-  onLanguageChange,
   avatarSrc,
   showIdentity = true,
 }: {
-  language: HomeLanguage;
-  onLanguageChange: (language: HomeLanguage) => void;
   avatarSrc?: string;
   showIdentity?: boolean;
 }) {
   const [now, setNow] = useState(() => new Date());
-  const { theme, toggleTheme } = useSiteTheme();
   const localTime = formatHefeiTime(now);
-  const languageLabel = language === 'en' ? '切换到中文' : 'Switch to English';
-  const themeLabel =
-    language === 'zh'
-      ? theme === 'dark'
-        ? '切换到浅色模式'
-        : '切换到深色模式'
-      : theme === 'dark'
-        ? 'Switch to light mode'
-        : 'Switch to dark mode';
 
   useEffect(() => {
     if (!showIdentity) return;
@@ -61,42 +44,7 @@ export function MinimalHeader({
     };
   }, [showIdentity]);
 
-  const controls = (
-    <fieldset
-      className="minimal-controls"
-      aria-label={language === 'zh' ? '显示偏好' : 'Display preferences'}
-    >
-      <button
-        type="button"
-        aria-label={languageLabel}
-        title={languageLabel}
-        onClick={() => onLanguageChange(language === 'en' ? 'zh' : 'en')}
-      >
-        <Languages size={18} strokeWidth={1.6} aria-hidden="true" />
-      </button>
-      <button
-        type="button"
-        aria-label={themeLabel}
-        title={themeLabel}
-        onClick={toggleTheme}
-      >
-        <Sun
-          className="minimal-theme-sun"
-          size={18}
-          strokeWidth={1.6}
-          aria-hidden="true"
-        />
-        <Moon
-          className="minimal-theme-moon"
-          size={18}
-          strokeWidth={1.6}
-          aria-hidden="true"
-        />
-      </button>
-    </fieldset>
-  );
-
-  if (!showIdentity) return controls;
+  if (!showIdentity) return null;
 
   return (
     <header className="minimal-header">
@@ -121,7 +69,6 @@ export function MinimalHeader({
           {localTime} in Hefei, Anhui, China
         </time>
       </div>
-      {controls}
     </header>
   );
 }

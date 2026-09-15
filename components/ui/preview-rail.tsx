@@ -326,7 +326,7 @@ export function PreviewRail({
                     isHorizontal
                       ? "absolute bottom-12 left-1/2 w-72 -translate-x-1/2"
                       : cn(
-                          "w-full max-w-sm",
+                          "w-full max-w-[24rem]",
                           previewSide === "before" && "ml-auto",
                         ),
                     previewClassName,

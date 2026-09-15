@@ -1,0 +1,448 @@
+/* Two primitives sharing the same surface so expansion never scales the icons. */
+.capsule-input,
+.floating-button {
+  --floating-input-width: 224px;
+  --floating-input-height: 48px;
+  font-family: 'Reference Sans', 'Reference Sans Fallback', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.capsule-input,
+.floating-button__surface {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow:
+    0 2px 8px rgb(0 0 0 / 3%),
+    0 8px 28px rgb(0 0 0 / 4%);
+}
+
+.capsule-input {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  width: min(var(--floating-input-width), 100%);
+  height: var(--floating-input-height);
+  margin: 0;
+  padding: 0 8px;
+}
+
+.capsule-input__icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--muted-foreground);
+}
+
+.floating-input-logo {
+  display: block;
+  width: 16px;
+  height: 16px;
+  opacity: 0.38;
+  transition: opacity 180ms ease;
+}
+
+html[data-minimal-theme='dark'] .floating-input-logo {
+  filter: invert(1);
+  opacity: 0.58;
+}
+
+.capsule-input [data-slot='capsule-input-field'] {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0 4px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  caret-color: var(--foreground);
+}
+
+.capsule-input [data-slot='capsule-input-field']::placeholder {
+  color: color-mix(in srgb, var(--muted-foreground) 50%, transparent);
+  text-align: center;
+  opacity: 1;
+}
+
+.capsule-input__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.capsule-input__voice {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  place-items: center;
+  background: transparent;
+  color: color-mix(in srgb, var(--muted-foreground) 75%, transparent);
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.capsule-input__voice:enabled:hover,
+.capsule-input__voice[aria-pressed='true'] {
+  color: var(--foreground);
+  background: var(--muted);
+}
+
+.capsule-input__voice:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.capsule-input__send {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  place-items: center;
+  background: var(--foreground);
+  color: var(--background);
+  cursor: pointer;
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    opacity 160ms ease;
+}
+
+.capsule-input__send:enabled:hover {
+  background: color-mix(in srgb, var(--foreground) 84%, var(--muted));
+}
+
+.capsule-input__send:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.capsule-input__send:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+.capsule-input:has(input:focus-visible) {
+  outline: 1px solid color-mix(in srgb, var(--border) 80%, var(--ring));
+  outline-offset: 0;
+}
+
+.capsule-input[data-disabled],
+.floating-button[data-disabled] {
+  opacity: 0.45;
+}
+
+.capsule-input__voice:disabled,
+.capsule-input__send:disabled,
+.floating-button__trigger:disabled {
+  cursor: default;
+}
+
+.floating-button {
+  /* The launcher hangs below the container edge; the fan and hover lift all
+     derive from this so they track the launcher together. */
+  --floating-button-bottom: -28px;
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+}
+
+.floating-button--contained {
+  position: absolute;
+  z-index: 5;
+}
+
+.floating-button__scope {
+  /* Plain wrapper so launcher and fan share one dismiss/focus scope. */
+  position: static;
+}
+
+.floating-button__surface {
+  position: absolute;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  bottom: var(--floating-button-bottom);
+  left: 50%;
+  width: 60px;
+  max-width: calc(100% - 32px);
+  height: 56px;
+  border-radius: 22px;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  transition:
+    width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    bottom 320ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 200ms ease;
+}
+
+.floating-button__trigger {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 28px;
+  padding: 8px 0 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+  /* visibility flips instantly: hiding on open keeps the launcher out of the
+     tab order, and showing on close makes it focusable again right away so
+     Escape can hand focus back to it. */
+  transition: opacity 100ms ease;
+}
+
+.floating-button__icon {
+  display: grid;
+  width: 16px;
+  height: 16px;
+  place-items: center;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* The launcher stays lifted and shadowed while the fan is open — whether
+     by hover (leave collapses it) or by click/tap pinning (it only settles
+     on a second click). This keeps the group from dropping down while the
+     pinned fan is still visible. */
+  .floating-button[data-state='closed']:not([data-disabled])[data-fan='open'] {
+    --floating-button-bottom: -24px;
+  }
+  .floating-button[data-state='closed']:not([data-disabled])[data-fan='open']
+    .floating-button__surface {
+    box-shadow:
+      0 3px 10px rgb(0 0 0 / 5%),
+      0 10px 30px rgb(0 0 0 / 8%);
+  }
+  .floating-button__trigger:hover .floating-input-logo {
+    opacity: 0.64;
+  }
+}
+
+.floating-button[data-state='closed']:has(.floating-button__surface :focus-visible) {
+  --floating-button-bottom: -20px;
+}
+.floating-button[data-state='closed']
+  .floating-button__surface:has(:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.floating-button__trigger:focus-visible {
+  outline: none;
+}
+
+.floating-button__content {
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 100ms ease,
+    visibility 100ms;
+}
+
+
+/* The action fan: three circular buttons radiate from the launcher centre.
+   The fan sits above the launcher; each button gathers over the centre when
+   closed and travels to its arc slot when open. */
+.floating-button__fan {
+  /* Centre-to-centre radius of the action arc. Bump this to spread the
+     buttons further apart; the rest of the geometry derives from it. */
+  --fan-radius: 80px;
+  /* 45° side component of the default radius, kept on the 4px grid. */
+  --fan-offset: 56px;
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--floating-button-bottom) + 56px);
+  width: calc(var(--fan-offset) * 2 + 48px);
+  height: calc(var(--fan-radius) + 4px);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.floating-button[data-fan='open'] .floating-button__fan {
+  pointer-events: auto;
+}
+
+.floating-button__action {
+  position: absolute;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--foreground);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow:
+    0 2px 8px rgb(0 0 0 / 6%),
+    0 8px 24px rgb(0 0 0 / 12%);
+  transition:
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 180ms ease;
+}
+
+.floating-button__action[data-action='top'] {
+  bottom: calc(var(--fan-radius) - 50px);
+}
+
+.floating-button__action[data-action='top-right'],
+.floating-button__action[data-action='top-left'] {
+  bottom: calc(var(--fan-offset) - 50px);
+}
+
+.floating-button[data-fan='closed'] .floating-button__action {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Gathered at the launcher centre when closed. */
+.floating-button[data-fan='closed']
+  .floating-button__action[data-action='top'] {
+  transform: translate(-50%, calc(var(--fan-radius) * -1)) scale(0.6);
+}
+.floating-button[data-fan='closed']
+  .floating-button__action[data-action='top-right'],
+.floating-button[data-fan='closed']
+  .floating-button__action[data-action='top-left'] {
+  transform: translate(-50%, calc(var(--fan-offset) * -1)) scale(0.6);
+}
+
+/* Arc slots: language top-right, AI top, theme top-left. */
+.floating-button[data-fan='open']
+  .floating-button__action[data-action='top'] {
+  transform: translate(-50%, 0) scale(1);
+}
+.floating-button[data-fan='open']
+  .floating-button__action[data-action='top-right'] {
+  transform: translate(calc(-50% + var(--fan-offset)), 0) scale(1);
+}
+.floating-button[data-fan='open']
+  .floating-button__action[data-action='top-left'] {
+  transform: translate(calc(-50% - var(--fan-offset)), 0) scale(1);
+}
+
+.floating-button__action:enabled:hover,
+.floating-button__action[aria-pressed='true'] {
+  background: var(--muted);
+}
+
+.floating-button__action:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.floating-button__action:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.floating-button__action-icon {
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.floating-button__action-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.floating-button__action-icon .floating-input-logo {
+  width: 16px;
+  height: 16px;
+  opacity: 0.9;
+}
+
+html[data-minimal-theme='dark']
+  .floating-button__action-icon .floating-input-logo {
+  opacity: 0.85;
+}
+
+/* The composer replaces the fan when an action expands it. */
+.floating-button[data-state='open'] .floating-button__fan,
+.floating-button[data-state='open'] .floating-button__action {
+  pointer-events: none;
+}
+.floating-button[data-state='open'] .floating-button__action {
+  opacity: 0;
+}
+
+.floating-button[data-state='open'] .floating-button__surface {
+  bottom: 32px;
+  width: var(--floating-input-width);
+  height: var(--floating-input-height);
+  border-radius: 999px;
+}
+
+.floating-button[data-state='open'] .floating-button__trigger {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.floating-button[data-state='open'] .floating-button__content {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 180ms ease 80ms,
+    visibility 0ms;
+}
+
+.floating-button__content .capsule-input {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Keep the visible hit target usable on touch screens and above the home indicator. */
+@media (pointer: coarse) {
+  .floating-button[data-state='closed'] {
+    --floating-button-bottom: max(-12px, calc(env(safe-area-inset-bottom, 0px) - 12px));
+  }
+  .floating-button__trigger {
+    height: 44px;
+    padding-top: 12px;
+  }
+  .capsule-input [data-slot='capsule-input-field'] {
+    font-size: 16px;
+  }
+}
+
+.floating-button--fixed[data-state='open'] .floating-button__surface {
+  bottom: max(32px, env(safe-area-inset-bottom, 0px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floating-button *,
+  .capsule-input * {
+    transition: none !important;
+  }
+}

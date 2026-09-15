@@ -37,7 +37,7 @@ export function DetailPage({
   collection: { slug: string; title: LocalizedText }[];
   hrefPrefix: string;
 }) {
-  const { language, changeLanguage } = useSiteLanguage();
+  const { language } = useSiteLanguage();
   const headings = useMemo(
     () => item.blocks.filter((block) => block.type === 'heading'),
     [item.blocks],
@@ -123,11 +123,7 @@ export function DetailPage({
       className="minimal-site detail-site"
       lang={language === 'zh' ? 'zh-CN' : 'en'}
     >
-      <MinimalHeader
-        language={language}
-        onLanguageChange={changeLanguage}
-        showIdentity={false}
-      />
+      <MinimalHeader showIdentity={false} />
       <div className="detail-shell">
         <aside className="detail-aside">
           <ArticleDirectory

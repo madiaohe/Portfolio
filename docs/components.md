@@ -34,6 +34,32 @@ components/
 
 启动 `npm run dev` 后打开 `/components`，按「独立组件 / Blocks」两组查看现有交互示例、禁用状态和调用方式。预览页支持中英文、深浅主题，生产环境返回 404。
 
+## 底部浮层按钮与胶囊输入框
+
+`FloatingButton`（`components/ui/floating-button.tsx`）和 `CapsuleInput`（`components/ui/capsule-input.tsx`）是两个独立 UI 组件，在 `/components#floating-button` 与 `/components#capsule-input` 的 Components 分类中预览。
+
+- `FloatingButton` 默认固定在视口底部居中，露出 60 × 56px 按钮的顶部 28px；悬停上浮 4px，键盘聚焦上浮 8px。触屏露出至少 44px，并适配底部安全区。以按钮为圆心向上扇形展开 `actions` 里的圆形动作按钮（默认语言右上、AI 上方、主题左上）：悬停显示、移开收起，触屏点击展开/再点收起，键盘聚焦同样展开；Esc 收起扇区。`placement="contained"` 用于有定位的裁切容器。支持 `open` / `defaultOpen` / `onOpenChange`、自定义 `icon`、`label`、`actions`、`disabled` 和独立 `onClick`。
+- 点击动作后展开为 224 × 48px 胶囊输入框（`children`），通过真实宽度、高度和底部位置过渡实现动画；展开会聚焦首个输入控件；Esc 收起并返回按钮焦点，保留草稿；输入为空时点击外部收起。收起内容保持挂载但使用 `inert` 隔离，草稿不会因切换状态丢失。
+- `CapsuleInput` 是 icon + 单行 input + voice + send 的真实表单，支持受控与非受控值、`inputRef`、自定义 icon、禁用/只读、IME 保护和回车提交，默认 `enterKeyHint="send"` 让移动键盘显示发送键（可覆盖）。右侧是语音与发送两个圆形按钮：语音为幽灵圆（`onVoiceClick` 未传入时禁用），发送为实心圆 + 上箭头（`type="submit"`，内容为空时禁用，可传 `sendLabel` / `sendIcon` 覆盖）。`onSubmit` 收到去除首尾空白的非空字符串，清空由调用方决定。
+- `onVoiceClick` 和 `voiceActive` 用于接入语音功能；未传入回调时语音按钮禁用。组件页只演示按钮状态，不录音，也不请求麦克风权限。
+- 组件自带共享样式 `components/ui/floating-input.css`，复用本站配色和字体，支持深浅主题与减少动态效果。用 `--floating-input-width`、`--floating-input-height` 调整胶囊尺寸；扇形的展开半径由 `.floating-button__fan` 上的 `--fan-radius` 控制（默认 80px），加大可让三个动作按钮彼此分开更远。
+
+```tsx
+import { FloatingButton } from '@/components/ui/floating-button';
+import { CapsuleInput } from '@/components/ui/capsule-input';
+
+<FloatingButton
+  actions={[
+    { id: 'language', position: 'top-right', icon: <Languages />, onSelect: toggleLanguage },
+    { id: 'ai', position: 'top', icon: <AiLogo />, onSelect: () => setOpen(true) },
+    { id: 'theme', position: 'top-left', icon: <Moon />, onSelect: toggleTheme },
+  ]}
+  onOpenChange={setOpen}
+>
+  <CapsuleInput onSubmit={submit} />
+</FloatingButton>;
+```
+
 ## 添加组件
 
 项目已接入 Tailwind CSS 4，`components.json` 为 shadcn CLI 配置。`aliases.ui` 指向 `@/components/ui`，`aliases.components` 保留为组件根路径 `@/components`，`aliases.hooks` 指向 `@/lib/hooks`。`@ncdai`、`@unlumen-ui` 和 `@beui` Registry 均已配置。

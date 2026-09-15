@@ -28,7 +28,7 @@ export function Testimonial2({
         className,
       )}
     >
-      <blockquote className="relative m-0 block w-full font-serif text-xl text-foreground md:max-w-lg md:text-2xl">
+      <blockquote className="relative m-0 block w-full font-serif text-xl text-foreground md:max-w-[32rem] md:text-2xl">
         <span
           className="absolute -left-3 text-muted-foreground select-none"
           aria-hidden="true"
