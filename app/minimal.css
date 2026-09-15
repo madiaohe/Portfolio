@@ -109,12 +109,12 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
 }
 .minimal-home .minimal-shell {
   max-width: 598px;
-  padding-top: 40px;
-  padding-bottom: 64px;
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-3xl);
 }
 .minimal-home .minimal-header {
-  row-gap: 16px;
-  margin-bottom: 56px;
+  row-gap: var(--space-sm);
+  margin-bottom: var(--space-3xl);
 }
 .minimal-avatar {
   display: block;
@@ -274,17 +274,18 @@ html[data-minimal-theme='dark'] .minimal-theme-moon {
   }
 }
 
-/* Homepage rhythm: compact sections and continuous directory rows. */
+/* Homepage rhythm: unified with the design-system tokens. */
 .minimal-home .minimal-heading {
-  margin-bottom: 16px !important;
-  color: var(--minimal-muted);
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 400;
+  margin-bottom: var(--space-sm);
+  color: var(--muted-foreground);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  font-weight: var(--font-weight-normal);
 }
 .minimal-home .minimal-intro {
-  color: var(--minimal-text);
-  line-height: 24px;
+  color: var(--prose);
+  font-weight: var(--font-weight-body);
+  line-height: var(--leading-body);
 }
 .minimal-home .minimal-pending-link {
   text-decoration-line: underline;
@@ -292,15 +293,15 @@ html[data-minimal-theme='dark'] .minimal-theme-moon {
   text-underline-offset: 2px;
 }
 .minimal-home .minimal-section {
-  margin-top: 56px;
+  margin-top: var(--space-3xl);
 }
 .minimal-home .minimal-directory {
   margin-bottom: 0;
 }
 .minimal-home .minimal-directory > .minimal-heading {
   margin-bottom: 0 !important;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--minimal-divider);
+  padding-bottom: var(--space-2xs);
+  border-bottom: 1px solid var(--border);
 }
 .minimal-home .minimal-writing-list {
   --minimal-writing-year-column: 48px;
@@ -318,7 +319,7 @@ html[data-minimal-theme='dark'] .minimal-theme-moon {
   bottom: 0;
   left: var(--minimal-writing-year-column);
   height: 1px;
-  background: var(--minimal-divider);
+  background: var(--border);
   pointer-events: none;
 }
 .minimal-home .minimal-writing-list > li:last-child::after {
@@ -330,21 +331,21 @@ html[data-minimal-theme='dark'] .minimal-theme-moon {
     var(--minimal-writing-year-column) minmax(0, 1fr)
     auto;
   align-items: baseline;
-  gap: 16px;
+  gap: var(--space-sm);
   min-height: 44px;
-  margin: 0 -8px;
-  padding: 11px 8px 10px;
+  margin: 0 calc(-1 * var(--space-2xs));
+  padding: 11px var(--space-2xs) 10px;
   border-radius: 4px;
   text-decoration: none;
 }
 .minimal-home .minimal-writing-link:hover {
-  background: var(--minimal-hover);
+  background: var(--muted);
 }
 .minimal-home .minimal-writing-year,
 .minimal-home .minimal-writing-date {
-  color: var(--minimal-muted);
-  font-size: 16px;
-  line-height: 24px;
+  color: var(--muted-foreground);
+  font-size: var(--text-body);
+  line-height: var(--leading-heading);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -356,13 +357,13 @@ html[data-minimal-theme='dark'] .minimal-theme-moon {
   overflow-wrap: anywhere;
 }
 .minimal-home .minimal-more .minimal-heading {
-  margin-bottom: 16px !important;
+  margin-bottom: var(--space-sm);
 }
 
 @media (min-width: 640px) {
   .minimal-home .minimal-shell {
-    padding-top: 128px;
-    padding-bottom: 80px;
+    padding-top: var(--space-5xl);
+    padding-bottom: var(--space-4xl);
   }
   .minimal-home .minimal-writing-list {
     --minimal-writing-year-column: 96px;
