@@ -39,3 +39,7 @@ next-env.d.ts
 /.netlify/
 /.output/
 /.nitro/
+
+# local agent instructions and QA artifacts
+/AGENTS.md
+/artifacts/
