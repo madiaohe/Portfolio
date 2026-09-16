@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 
 const hefeiTimeFormatter = new Intl.DateTimeFormat('en-US', {
   timeZone: 'Asia/Shanghai',
@@ -22,8 +23,10 @@ export function MinimalHeader({
   avatarSrc?: string;
   showIdentity?: boolean;
 }) {
+  const { language } = useSiteLanguage();
   const [now, setNow] = useState(() => new Date());
   const localTime = formatHefeiTime(now);
+  const isZh = language === 'zh';
 
   useEffect(() => {
     if (!showIdentity) return;
@@ -58,15 +61,18 @@ export function MinimalHeader({
         />
       ) : null}
       <div className="minimal-identity">
-        <Link href="/" lang="en">
-          Xu Xianyu
+        <Link href="/" lang={isZh ? 'zh-CN' : 'en'}>
+          {isZh ? '徐现雨' : 'Xu Xianyu'}
         </Link>
         <time
           className="minimal-local-time"
+          lang={isZh ? 'zh-CN' : 'en'}
           dateTime={now.toISOString()}
           suppressHydrationWarning
         >
-          {localTime} in Hefei, Anhui, China
+          {isZh
+            ? `${localTime} · 合肥 · 安徽 · 中国`
+            : `${localTime} in Hefei, Anhui, China`}
         </time>
       </div>
     </header>
