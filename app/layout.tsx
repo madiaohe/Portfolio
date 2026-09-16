@@ -1,5 +1,6 @@
 import { SiteHeader } from '@/components/blocks/site-header';
 import { SiteQuickActions } from '@/components/blocks/site-quick-actions';
+import { SiteLanguageProvider } from '@/components/blocks/site-language-provider';
 import './globals.css';
 import './components.css';
 
@@ -18,9 +19,11 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <SiteHeader />
-        {children}
-        <SiteQuickActions />
+        <SiteLanguageProvider>
+          <SiteHeader />
+          {children}
+          <SiteQuickActions />
+        </SiteLanguageProvider>
       </body>
     </html>
   );
