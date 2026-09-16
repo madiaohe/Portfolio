@@ -1,14 +1,17 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { WritingArticle } from './writing-article';
-import { getWritingArticle, writingArticles } from '../../../lib/writing';
+import {
+  getWritingArticle,
+  publishedWritingArticles,
+} from '../../../lib/writing';
 import '../../minimal.css';
 import '../../detail.css';
 
 type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return writingArticles.map(({ slug }) => ({ slug }));
+  return publishedWritingArticles.map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -2,6 +2,7 @@ export type HomeLanguage = 'en' | 'zh';
 
 const english = {
   languageLabel: 'Language',
+  comingSoon: 'Soon',
   location: 'I was born in Bengbu and now live in Hefei.',
   workPrefix: 'I currently work on the HMI team at ',
   workSuffix:
@@ -25,6 +26,7 @@ export const homeCopy: Record<
   en: english,
   zh: {
     languageLabel: '语言',
+    comingSoon: '准备中',
     location: '我出生在蚌埠，现在居住在合肥。',
     workPrefix: '我目前在 ',
     workSuffix:

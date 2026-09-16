@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import type { LocalizedText, WritingBlock } from '@/lib/writing';
 import { MinimalHeader } from '@/components/blocks/minimal-header';
@@ -206,26 +205,26 @@ export function DetailPage({
             >
               <div className="detail-pager-side detail-pager-prev">
                 {prev ? (
-                  <Link href={`${hrefPrefix}${prev.slug}`}>
+                  <a href={`${hrefPrefix}${prev.slug}`}>
                     <span className="detail-pager-label">
                       {language === 'zh' ? '上一篇' : 'Previous'}
                     </span>
                     <span className="detail-pager-title">
                       {prev.title[language]}
                     </span>
-                  </Link>
+                  </a>
                 ) : null}
               </div>
               <div className="detail-pager-side detail-pager-next">
                 {next ? (
-                  <Link href={`${hrefPrefix}${next.slug}`}>
+                  <a href={`${hrefPrefix}${next.slug}`}>
                     <span className="detail-pager-label">
                       {language === 'zh' ? '下一篇' : 'Next'}
                     </span>
                     <span className="detail-pager-title">
                       {next.title[language]}
                     </span>
-                  </Link>
+                  </a>
                 ) : null}
               </div>
             </nav>

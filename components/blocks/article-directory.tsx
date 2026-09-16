@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { CornerUpLeft } from 'lucide-react';
 import { HookSidebar } from '@/components/ui/hook-sidebar';
 
@@ -24,7 +23,8 @@ export function ArticleDirectory({
 }) {
   return (
     <div className="article-directory">
-      <Link
+      {/* Native anchor keeps this cross-route link working in the Vinext production bundle. */}
+      <a
         className="inline-flex items-center gap-1 text-[14px] leading-5"
         href={backHref}
       >
@@ -35,7 +35,7 @@ export function ArticleDirectory({
           className="shrink-0"
         />
         {backLabel}
-      </Link>
+      </a>
       <div className="article-directory__toc mt-6 hidden min-[1081px]:block">
         <HookSidebar
           items={items}

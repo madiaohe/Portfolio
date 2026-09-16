@@ -1,25 +1,14 @@
 'use client';
 
-import Image from 'next/image';
-import { Languages, Moon, Sun } from 'lucide-react';
-import { useState } from 'react';
-import { referenceSections } from '@/lib/reference-home';
+import { referenceSections, type ReferenceItem } from '@/lib/reference-home';
 import { homeCopy } from '@/lib/home-copy';
 import { MinimalHeader } from '@/components/blocks/minimal-header';
 import { NotionMentionLink } from '@/components/ui/notion-mention-link';
 import { Tooltip } from '@/components/ui/tooltip';
-import { FloatingButton } from '@/components/ui/floating-button';
-import { CapsuleInput } from '@/components/ui/capsule-input';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
-import { useSiteTheme } from '@/lib/hooks/use-site-theme';
 
 export function ReferenceHome() {
-  const { language, changeLanguage } = useSiteLanguage();
-  const { theme, toggleTheme } = useSiteTheme();
-  const [composerOpen, setComposerOpen] = useState(false);
-  const [composerValue, setComposerValue] = useState('');
-  const [voiceActive, setVoiceActive] = useState(false);
-  const zh = language === 'zh';
+  const { language } = useSiteLanguage();
   const copy = homeCopy[language];
   const locale = language === 'zh' ? 'zh-CN' : 'en-US';
   const monthFormatter = new Intl.DateTimeFormat(locale, {
@@ -31,21 +20,83 @@ export function ReferenceHome() {
     year: 'numeric',
     timeZone: 'UTC',
   });
-  const projectDateFormatter = new Intl.DateTimeFormat(locale, {
-    month: 'short',
-    day: 'numeric',
-    timeZone: 'UTC',
-  });
-  const fullDateFormatter = new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC',
-  });
+  const parseItemDate = (date: string) =>
+    new Date(`${date.length === 7 ? `${date}-01` : date}T00:00:00Z`);
   const projects = referenceSections.find(
     (section) => section.id === 'projects',
   );
   const writing = referenceSections.find((section) => section.id === 'writing');
+
+  const renderReferenceItem = (
+    item: ReferenceItem,
+    index: number,
+    items: readonly ReferenceItem[],
+  ) => {
+    const isDraft = item.status === 'draft';
+    let previousPublishedYear: string | null = null;
+    for (
+      let previousIndex = index - 1;
+      previousIndex >= 0;
+      previousIndex -= 1
+    ) {
+      const previous = items[previousIndex];
+      if (previous.status !== 'draft' && previous.date) {
+        previousPublishedYear = previous.date.slice(0, 4);
+        break;
+      }
+    }
+
+    const year = item.date?.slice(0, 4) ?? '';
+    const startsYear =
+      !isDraft && Boolean(item.date) && year !== previousPublishedYear;
+    const className = `minimal-writing-link${
+      isDraft ? ' minimal-writing-link--disabled' : ''
+    }`;
+    const itemDate = item.date ? parseItemDate(item.date) : null;
+    const dateLabel = isDraft
+      ? copy.comingSoon
+      : itemDate
+        ? monthFormatter.format(itemDate)
+        : '';
+    const fullDateLabel =
+      !isDraft && itemDate
+        ? monthYearFormatter.format(itemDate)
+        : copy.comingSoon;
+
+    const content = (
+      <>
+        <span className="minimal-writing-year" aria-hidden="true">
+          {startsYear ? year : ''}
+        </span>
+        <span className="minimal-writing-title">{item.title[language]}</span>
+        {isDraft || !item.date ? (
+          <span className="minimal-writing-date">{dateLabel}</span>
+        ) : (
+          <time
+            className="minimal-writing-date"
+            dateTime={item.date}
+            aria-label={fullDateLabel}
+          >
+            {dateLabel}
+          </time>
+        )}
+      </>
+    );
+
+    return (
+      <li key={item.href ?? item.title.en}>
+        {isDraft ? (
+          <div className={className} aria-disabled="true">
+            {content}
+          </div>
+        ) : (
+          <a className={className} href={item.href}>
+            {content}
+          </a>
+        )}
+      </li>
+    );
+  };
 
   return (
     <div
@@ -141,44 +192,7 @@ export function ReferenceHome() {
                 {projects.title[language]}
               </h2>
               <ul className="minimal-writing-list">
-                {projects.items.map((item, index) => {
-                  const year = item.date.slice(0, 4);
-                  const previousYear =
-                    index > 0
-                      ? projects.items[index - 1].date.slice(0, 4)
-                      : null;
-                  const startsYear = year !== previousYear;
-
-                  return (
-                    <li key={item.href}>
-                      <a
-                        className="minimal-writing-link"
-                        href={item.href}
-                      >
-                        <span
-                          className="minimal-writing-year"
-                          aria-hidden="true"
-                        >
-                          {startsYear ? year : ''}
-                        </span>
-                        <span className="minimal-writing-title">
-                          {item.title[language]}
-                        </span>
-                        <time
-                          className="minimal-writing-date"
-                          dateTime={item.date}
-                          aria-label={fullDateFormatter.format(
-                            new Date(`${item.date}T00:00:00Z`),
-                          )}
-                        >
-                          {projectDateFormatter.format(
-                            new Date(`${item.date}T00:00:00Z`),
-                          )}
-                        </time>
-                      </a>
-                    </li>
-                  );
-                })}
+                {projects.items.map(renderReferenceItem)}
               </ul>
             </section>
           ) : null}
@@ -192,41 +206,7 @@ export function ReferenceHome() {
                 {writing.title[language]}
               </h2>
               <ul className="minimal-writing-list">
-                {writing.items.map((item, index) => {
-                  const year = item.date.slice(0, 4);
-                  const previousYear =
-                    index > 0
-                      ? writing.items[index - 1].date.slice(0, 4)
-                      : null;
-                  const startsYear = year !== previousYear;
-
-                  return (
-                    <li key={item.href}>
-                      <a className="minimal-writing-link" href={item.href}>
-                        <span
-                          className="minimal-writing-year"
-                          aria-hidden="true"
-                        >
-                          {startsYear ? year : ''}
-                        </span>
-                        <span className="minimal-writing-title">
-                          {item.title[language]}
-                        </span>
-                        <time
-                          className="minimal-writing-date"
-                          dateTime={item.date}
-                          aria-label={monthYearFormatter.format(
-                            new Date(`${item.date}-01T00:00:00Z`),
-                          )}
-                        >
-                          {monthFormatter.format(
-                            new Date(`${item.date}-01T00:00:00Z`),
-                          )}
-                        </time>
-                      </a>
-                    </li>
-                  );
-                })}
+                {writing.items.map(renderReferenceItem)}
               </ul>
             </section>
           ) : null}
@@ -254,72 +234,6 @@ export function ReferenceHome() {
           </footer>
         </main>
       </div>
-      <FloatingButton
-        placement="fixed"
-        label={zh ? '快捷操作' : 'Quick actions'}
-        actionsLabel={zh ? '快捷操作' : 'Quick actions'}
-        open={composerOpen}
-        onOpenChange={setComposerOpen}
-        actions={[
-          {
-            id: 'language',
-            position: 'top-right',
-            label: zh ? '切换到英文' : 'Switch to Chinese',
-            active: language === 'zh',
-            icon: <Languages size={16} strokeWidth={1.6} aria-hidden="true" />,
-            onSelect: () => changeLanguage(language === 'en' ? 'zh' : 'en'),
-          },
-          {
-            id: 'ai',
-            position: 'top',
-            label: zh ? '打开输入框' : 'Open input',
-            icon: (
-              <Image
-                src="/media/floating-agent-logo.svg"
-                width={16}
-                height={16}
-                alt=""
-                className="floating-input-logo"
-              />
-            ),
-            onSelect: () => setComposerOpen(true),
-          },
-          {
-            id: 'theme',
-            position: 'top-left',
-            label:
-              theme === 'dark'
-                ? zh
-                  ? '切换到浅色模式'
-                  : 'Switch to light mode'
-                : zh
-                  ? '切换到深色模式'
-                  : 'Switch to dark mode',
-            icon:
-              theme === 'dark' ? (
-                <Sun size={16} strokeWidth={1.6} aria-hidden="true" />
-              ) : (
-                <Moon size={16} strokeWidth={1.6} aria-hidden="true" />
-              ),
-            onSelect: toggleTheme,
-          },
-        ]}
-      >
-        <CapsuleInput
-          value={composerValue}
-          onValueChange={setComposerValue}
-          placeholder={zh ? '随心输入' : 'Ask anything'}
-          voiceLabel={zh ? '语音输入' : 'Voice input'}
-          voiceActive={voiceActive}
-          onVoiceClick={() => setVoiceActive((active) => !active)}
-          sendLabel={zh ? '发送' : 'Send'}
-          onSubmit={(_prompt) => {
-            setComposerValue('');
-            setVoiceActive(false);
-            setComposerOpen(false);
-          }}
-        />
-      </FloatingButton>
     </div>
   );
 }

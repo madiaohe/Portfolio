@@ -302,8 +302,15 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
   border-radius: 4px;
   text-decoration: none;
 }
-.minimal-home .minimal-writing-link:hover {
+.minimal-home a.minimal-writing-link:hover {
   background: var(--muted);
+}
+.minimal-home .minimal-writing-link--disabled {
+  color: var(--muted-foreground);
+  cursor: default;
+}
+.minimal-home .minimal-writing-link--disabled .minimal-writing-title {
+  color: var(--muted-foreground);
 }
 .minimal-home .minimal-writing-year,
 .minimal-home .minimal-writing-date {

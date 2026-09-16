@@ -1,17 +1,16 @@
 'use client';
 
-import { projects } from '@/lib/projects';
+import { publishedProjects, type PublishedProject } from '@/lib/projects';
 import { DetailPage } from '@/components/blocks/detail-page';
-import type { Project } from '@/lib/projects';
 
-export function ProjectDetail({ project }: { project: Project }) {
+export function ProjectDetail({ project }: { project: PublishedProject }) {
   return (
     <DetailPage
       item={project}
       backHref="/#projects-heading"
       backLabel={{ zh: '返回', en: 'Back' }}
       tocLabel={{ zh: '项目目录', en: 'Contents' }}
-      collection={projects}
+      collection={publishedProjects}
       hrefPrefix="/work/"
     />
   );

@@ -3,7 +3,7 @@
 `components/` 只保留两个一级目录，按对外提供的能力分类，不再按来源、动效或 AI 场景分组。
 
 - `components/ui/`：提供一项独立的展示或交互能力。包括 Button、Tabs、Tooltip、Action Swap Cascade、Accordion、Hover Card、Skeleton、Select、MorphPopover、Magnetic、PreviewRail、PromptInput、Message 和 NotionMentionLink。内部可以组合其他 UI 组件；例如 PromptInput 组合按钮与选择器，对外仍是一项输入能力。
-- `components/blocks/`：组织布局、内容和交互，形成可放入页面的完整模块。包括 FloatingAgent、Testimonial2、MinimalHeader、SiteHeader、FluidFooter、HeroVideo、DesignPrinciples 和 WorkCategories。
+- `components/blocks/`：组织布局、内容和交互，形成可放入页面的完整模块。包括 FloatingAgent、Testimonial2、MinimalHeader、SiteHeader、SiteQuickActions、FluidFooter、HeroVideo、DesignPrinciples 和 WorkCategories。
 
 依赖方向为：页面 → blocks → ui。页面也可以直接使用 ui；ui 不依赖 blocks 或 app，blocks 不依赖 app。共享逻辑放在 lib。
 
@@ -23,6 +23,7 @@ components/
     ├── testimonial-2.tsx
     ├── minimal-header.tsx
     ├── site-header.tsx
+    ├── site-quick-actions.tsx
     └── ...
 ```
 
@@ -51,15 +52,36 @@ import { CapsuleInput } from '@/components/ui/capsule-input';
 
 <FloatingButton
   actions={[
-    { id: 'language', position: 'top-right', icon: <Languages />, onSelect: toggleLanguage },
-    { id: 'ai', position: 'top', icon: <AiLogo />, onSelect: () => setOpen(true) },
-    { id: 'theme', position: 'top-left', icon: <Moon />, onSelect: toggleTheme },
+    {
+      id: 'language',
+      position: 'top-right',
+      icon: <Languages />,
+      onSelect: toggleLanguage,
+    },
+    {
+      id: 'ai',
+      position: 'top',
+      icon: <AiLogo />,
+      onSelect: () => setOpen(true),
+    },
+    {
+      id: 'theme',
+      position: 'top-left',
+      icon: <Moon />,
+      onSelect: toggleTheme,
+    },
   ]}
   onOpenChange={setOpen}
 >
   <CapsuleInput onSubmit={submit} />
 </FloatingButton>;
 ```
+
+## 首页 Projects / Writing 列表状态
+
+首页 Projects 与 Writing 列表统一由 `lib/reference-home.ts` 配置。普通条目使用 `href` 和 `date`，渲染为原生 `<a>`；未发布条目标记 `status: 'draft'`，即使数据中保留了备用 `href` / `date`，首页也会忽略它们并渲染为非交互占位行，标题降低对比度，右侧显示「准备中 / Soon」，不能点击或通过 Tab 聚焦。
+
+本地项目和文章的草稿还需要分别在 `lib/projects.ts`、`lib/writing.ts` 中标记 `status: 'draft'`。这些草稿会出现在首页列表中，但不会生成详情路由，直接访问 URL 返回 404，也不会出现在详情页上一篇 / 下一篇中。已发布条目的列表日期只显示月份；年份仍按上一条已发布内容分组显示。
 
 ## 添加组件
 
@@ -112,4 +134,4 @@ Testimonial2 预览使用明确标记的占位文字；实际展示时传入真�
 
 Notion Mention Link 默认通过同源 API 读取标题、描述、图片和站点图标。对内容固定或不希望在预览时发起网络请求的场景，可传入可信的 `metadata`；首页使用预设信息，组件预览页演示实时读取。
 
-Floating Agent 现在只在组件页作为 Blocks 演示（contained + `entryMode="launcher"`）。组件页通过 `entryMode="launcher"` 先显示 56px 圆形入口，并使用 `/public/media/floating-agent-logo.svg`；点击后直接展开到组件内容区宽度的单行工具栏，不保留窄输入栏中间状态，也不渲染权限授予控件。展开栏统一使用 16px 图标、32px 点击区和 4px 控件间距，输入文字与相邻控件保持 8px 视觉间距。输入为空时点击悬浮栏外部会自动折叠；已有输入内容时保持展开。折叠时内容会先快速淡出，外壳再通过真实宽度过渡恢复到 56px 圆形，不使用横向缩放；Logo 位于独立图层中，在收缩开始时淡入并旋转 360°。首页的浮窗已由 FloatingButton 接管（fixed 底部居中，语言 / AI / 主题扇形动作，AI 展开自动增长的 CapsuleInput）；原 FloatingAgent 从首页移除，保留在组件页作为 Blocks 演示。输入多行文字时工具栏会自动增高，发送第一条消息后才显示叠层并向上展开完整对话。当前响应为本地模拟，后续接入模型时只需替换 `onSubmit` 之后的模拟回复逻辑。
+Floating Agent 现在只在组件页作为 Blocks 演示（contained + `entryMode="launcher"`）。组件页通过 `entryMode="launcher"` 先显示 56px 圆形入口，并使用 `/public/media/floating-agent-logo.svg`；点击后直接展开到组件内容区宽度的单行工具栏，不保留窄输入栏中间状态，也不渲染权限授予控件。展开栏统一使用 16px 图标、32px 点击区和 4px 控件间距，输入文字与相邻控件保持 8px 视觉间距。输入为空时点击悬浮栏外部会自动折叠；已有输入内容时保持展开。折叠时内容会先快速淡出，外壳再通过真实宽度过渡恢复到 56px 圆形，不使用横向缩放；Logo 位于独立图层中，在收缩开始时淡入并旋转 360°。全站底部浮窗由 SiteQuickActions 接管（fixed 底部居中，语言 / AI / 主题扇形动作，AI 展开自动增长的 CapsuleInput）；原 FloatingAgent 从首页移除，保留在组件页作为 Blocks 演示。输入多行文字时工具栏会自动增高，发送第一条消息后才显示叠层并向上展开完整对话。当前响应为本地模拟，后续接入模型时只需替换 `onSubmit` 之后的模拟回复逻辑。

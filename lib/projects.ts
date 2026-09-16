@@ -1,13 +1,27 @@
 import type { LocalizedText, WritingBlock } from './writing';
 
-export type Project = {
+export type PublishedProject = {
   slug: string;
   publishedAt: string;
+  status?: 'published';
   title: LocalizedText;
   description: LocalizedText;
   blocks: WritingBlock[];
   references?: { en: string[]; zh: string[] };
 };
+
+export type DraftProject = {
+  slug: string;
+  status: 'draft';
+  title: LocalizedText;
+  description?: LocalizedText;
+  // Draft content may be prepared locally, but it is excluded from routes and paging.
+  publishedAt?: string;
+  blocks?: WritingBlock[];
+  references?: { en: string[]; zh: string[] };
+};
+
+export type Project = PublishedProject | DraftProject;
 
 function createProjectTemplateBlocks(): WritingBlock[] {
   return [
@@ -68,6 +82,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'filter-cartridge-lifecycle',
+    status: 'draft',
     publishedAt: '2026-06-09',
     title: {
       zh: '滤盒全生命周期管理系统',
@@ -81,6 +96,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'laminator-hmi',
+    status: 'draft',
     publishedAt: '2026-01-15',
     title: { zh: '复合机 HMI', en: 'Laminator HMI' },
     description: {
@@ -91,6 +107,10 @@ export const projects: Project[] = [
   },
 ];
 
+export const publishedProjects = projects.filter(
+  (project): project is PublishedProject => project.status !== 'draft',
+);
+
 export function getProject(slug: string) {
-  return projects.find((project) => project.slug === slug);
+  return publishedProjects.find((project) => project.slug === slug);
 }

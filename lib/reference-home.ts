@@ -1,13 +1,25 @@
 import { writingArticles, type LocalizedText } from './writing';
 import { projects } from './projects';
 
-type ReferenceItem = {
+type PublishedReferenceItem = {
+  status?: 'published';
   href: string;
   title: LocalizedText;
-  description: LocalizedText;
+  description?: LocalizedText;
   // Projects use a full date; writing entries currently use a publication month.
   date: string;
 };
+
+type DraftReferenceItem = {
+  status: 'draft';
+  // Draft rows keep source metadata for later, but the homepage ignores links/dates.
+  href?: string;
+  title: LocalizedText;
+  description?: LocalizedText;
+  date?: string;
+};
+
+export type ReferenceItem = PublishedReferenceItem | DraftReferenceItem;
 
 type ReferenceSection = {
   id: 'projects' | 'writing';
@@ -15,30 +27,47 @@ type ReferenceSection = {
   items: readonly ReferenceItem[];
 };
 
-// Projects use their real publication dates. Some writing entries below remain
-// demo data for layout preview.
+// Published project and writing entries link to local detail pages or external
+// references. Draft entries stay in the list as non-interactive placeholders.
 export const referenceSections: readonly ReferenceSection[] = [
   {
     id: 'projects',
     title: { en: 'Projects', zh: '项目' },
-    items: projects.map((project) => ({
-      href: `/work/${project.slug}`,
-      title: project.title,
-      description: project.description,
-      date: project.publishedAt,
-    })),
+    items: projects.map((project) =>
+      project.status === 'draft'
+        ? {
+            status: 'draft' as const,
+            title: project.title,
+          }
+        : {
+            status: 'published' as const,
+            href: `/work/${project.slug}`,
+            title: project.title,
+            description: project.description,
+            date: project.publishedAt,
+          },
+    ),
   },
   {
     id: 'writing',
     title: { en: 'Writing', zh: '文章' },
     items: [
-      ...writingArticles.map((article) => ({
-        href: `/writing/${article.slug}`,
-        title: article.title,
-        description: article.description,
-        date: article.publishedAt.slice(0, 7),
-      })),
+      ...writingArticles.map((article) =>
+        article.status === 'draft'
+          ? {
+              status: 'draft' as const,
+              title: article.title,
+            }
+          : {
+              status: 'published' as const,
+              href: `/writing/${article.slug}`,
+              title: article.title,
+              description: article.description,
+              date: article.publishedAt.slice(0, 7),
+            },
+      ),
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/friction-as-a-feature',
         date: '2026-08',
         title: { en: 'Friction as a Feature', zh: '把阻力变成一种功能' },
@@ -48,6 +77,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/you-dont-need-animations',
         date: '2026-07',
         title: { en: 'You Don’t Need Animations', zh: '你并不需要那么多动画' },
@@ -57,6 +87,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/agents-with-taste',
         date: '2026-06',
         title: { en: 'Agents with Taste', zh: '有品位的智能体' },
@@ -66,6 +97,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/building-a-toast-component',
         date: '2026-05',
         title: { en: 'Building a Toast Component', zh: '构建一个 Toast 组件' },
@@ -75,6 +107,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/developing-taste',
         date: '2026-04',
         title: { en: 'Developing Taste', zh: '培养品位' },
@@ -84,6 +117,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/the-magic-of-clip-path',
         date: '2026-03',
         title: { en: 'The Magic of Clip Path', zh: 'Clip Path 的魔力' },
@@ -93,6 +127,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/7-practical-animation-tips',
         date: '2026-02',
         title: { en: '7 Practical Animation Tips', zh: '7 个实用的动画技巧' },
@@ -102,6 +137,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/train-your-judgement',
         date: '2026-01',
         title: { en: 'Train Your Judgement', zh: '训练你的判断力' },
@@ -111,6 +147,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/building-an-animation-course',
         date: '2025-12',
         title: { en: 'Building an animation course', zh: '打造一门动画课程' },
@@ -120,6 +157,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         },
       },
       {
+        status: 'draft',
         href: 'https://emilkowal.ski/ui/building-a-drawer-component',
         date: '2025-11',
         title: { en: 'Building a Drawer Component', zh: '构建一个抽屉组件' },

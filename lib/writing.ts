@@ -17,14 +17,28 @@ export type WritingBlock =
     }
   | { type: 'exercise'; title: LocalizedText; steps: LocalizedText[] };
 
-export type WritingArticle = {
+export type PublishedWritingArticle = {
   slug: string;
   publishedAt: string;
+  status?: 'published';
   title: LocalizedText;
   description: LocalizedText;
   blocks: WritingBlock[];
   references?: { en: string[]; zh: string[] };
 };
+
+export type DraftWritingArticle = {
+  slug: string;
+  status: 'draft';
+  title: LocalizedText;
+  description?: LocalizedText;
+  // Draft content may be prepared locally, but it is excluded from routes and paging.
+  publishedAt?: string;
+  blocks?: WritingBlock[];
+  references?: { en: string[]; zh: string[] };
+};
+
+export type WritingArticle = PublishedWritingArticle | DraftWritingArticle;
 
 export const writingArticles: WritingArticle[] = [
   {
@@ -225,20 +239,25 @@ export const writingArticles: WritingArticle[] = [
         },
       },
     ],
-  references: {
-    en: [
-      'Author, A. (2025). A place for the everyday. Publisher.',
-      'Author, B. (2024). Looking closer: observation as method. Journal of Design, 12(3), 41–58.',
-      'Author, C. (2023). Light and shadow at home. Press.',
-    ],
-    zh: [
-      '作者甲.（2025）. 日常之所在. 出版社.',
-      '作者乙.（2024）. 看得更细：把观察当作方法. 《设计学报》, 12(3), 41–58.',
-      '作者丙.（2023）. 家中的光与影. 出版社.',
-    ],
+    references: {
+      en: [
+        'Author, A. (2025). A place for the everyday. Publisher.',
+        'Author, B. (2024). Looking closer: observation as method. Journal of Design, 12(3), 41–58.',
+        'Author, C. (2023). Light and shadow at home. Press.',
+      ],
+      zh: [
+        '作者甲.（2025）. 日常之所在. 出版社.',
+        '作者乙.（2024）. 看得更细：把观察当作方法. 《设计学报》, 12(3), 41–58.',
+        '作者丙.（2023）. 家中的光与影. 出版社.',
+      ],
+    },
   },
-}];
+];
+
+export const publishedWritingArticles = writingArticles.filter(
+  (article): article is PublishedWritingArticle => article.status !== 'draft',
+);
 
 export function getWritingArticle(slug: string) {
-  return writingArticles.find((article) => article.slug === slug);
+  return publishedWritingArticles.find((article) => article.slug === slug);
 }
