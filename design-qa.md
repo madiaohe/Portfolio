@@ -1,3 +1,26 @@
+# FloatingButton on homepage QA — 2026-09-16
+
+## Change
+
+Replaced the homepage FloatingAgent with the FloatingButton (the original floating window was removed from the homepage):
+
+- `app/reference-home.tsx`: removed `<FloatingAgent language={language} />`; added `FloatingButton placement="fixed"` (viewport bottom centre) with the language / AI / theme fan actions and a `CapsuleInput` composer.
+- Language action calls `changeLanguage` (whole-page copy switches, verified `zh-CN`); theme action calls `toggleTheme` (verified `data-minimal-theme=dark`); AI opens the auto-growing capsule; send/Enter clears the draft and collapses the composer back to the launcher.
+- Fixed a sizing feedback bug surfaced on the homepage: `.floating-button__content` was `fit-content`, which is circular with the capsule's `width: 100%` once the surface carries a definite measured size, producing mismatched shell/content widths (surface 314 vs content 287). Content now fills the surface (`100%`), so shell, content and capsule stay in sync (verified surface 384 / content 382 / capsule 382).
+- FloatingAgent stays in the Components gallery as a Blocks demo; docs updated.
+
+## Verification (homepage)
+
+- Launcher fixed at bottom centre (`trigger center x == viewport/2`).
+- Hover fans out language / AI / theme; language flips the page copy, theme flips dark mode.
+- AI opens the composer; typing widens it (single-line), a long prompt wraps to multiline (capsule 548×112, surface 550×114, radius 24px); Enter clears and closes.
+- Collapse animation re-verified smooth on the homepage: width frames 226 → 148 → 106 → 84 → 72 → 66 → 63 → 61 → 60.
+- No console errors; `tsc`, targeted `oxlint`, `git diff --check`, and `npm run build` pass.
+
+final result: passed
+
+---
+
 # Capsule Input auto-grow QA — 2026-09-15
 
 ## Redesign

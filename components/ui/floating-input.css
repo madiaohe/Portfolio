@@ -333,8 +333,10 @@ html[data-minimal-theme='dark'] .floating-input-logo {
 }
 
 .floating-button__content {
-  width: fit-content;
-  height: fit-content;
+  /* Fill the surface (which carries a definite size from the measured
+     capsule) so the capsule's 100% is not circular with fit-content. */
+  width: 100%;
+  height: 100%;
   visibility: hidden;
   opacity: 0;
   transition:

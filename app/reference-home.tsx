@@ -1,14 +1,24 @@
 'use client';
 
+import Image from 'next/image';
+import { Languages, Moon, Sun } from 'lucide-react';
+import { useState } from 'react';
 import { referenceSections } from '@/lib/reference-home';
 import { homeCopy } from '@/lib/home-copy';
-import { FloatingAgent } from '@/components/blocks/floating-agent';
 import { MinimalHeader } from '@/components/blocks/minimal-header';
 import { NotionMentionLink } from '@/components/ui/notion-mention-link';
+import { FloatingButton } from '@/components/ui/floating-button';
+import { CapsuleInput } from '@/components/ui/capsule-input';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
+import { useSiteTheme } from '@/lib/hooks/use-site-theme';
 
 export function ReferenceHome() {
-  const { language } = useSiteLanguage();
+  const { language, changeLanguage } = useSiteLanguage();
+  const { theme, toggleTheme } = useSiteTheme();
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [composerValue, setComposerValue] = useState('');
+  const [voiceActive, setVoiceActive] = useState(false);
+  const zh = language === 'zh';
   const copy = homeCopy[language];
   const locale = language === 'zh' ? 'zh-CN' : 'en-US';
   const monthFormatter = new Intl.DateTimeFormat(locale, {
@@ -230,7 +240,72 @@ export function ReferenceHome() {
           </footer>
         </main>
       </div>
-      <FloatingAgent language={language} />
+      <FloatingButton
+        placement="fixed"
+        label={zh ? '快捷操作' : 'Quick actions'}
+        actionsLabel={zh ? '快捷操作' : 'Quick actions'}
+        open={composerOpen}
+        onOpenChange={setComposerOpen}
+        actions={[
+          {
+            id: 'language',
+            position: 'top-right',
+            label: zh ? '切换到英文' : 'Switch to Chinese',
+            active: language === 'zh',
+            icon: <Languages size={16} strokeWidth={1.6} aria-hidden="true" />,
+            onSelect: () => changeLanguage(language === 'en' ? 'zh' : 'en'),
+          },
+          {
+            id: 'ai',
+            position: 'top',
+            label: zh ? '打开输入框' : 'Open input',
+            icon: (
+              <Image
+                src="/media/floating-agent-logo.svg"
+                width={16}
+                height={16}
+                alt=""
+                className="floating-input-logo"
+              />
+            ),
+            onSelect: () => setComposerOpen(true),
+          },
+          {
+            id: 'theme',
+            position: 'top-left',
+            label:
+              theme === 'dark'
+                ? zh
+                  ? '切换到浅色模式'
+                  : 'Switch to light mode'
+                : zh
+                  ? '切换到深色模式'
+                  : 'Switch to dark mode',
+            icon:
+              theme === 'dark' ? (
+                <Sun size={16} strokeWidth={1.6} aria-hidden="true" />
+              ) : (
+                <Moon size={16} strokeWidth={1.6} aria-hidden="true" />
+              ),
+            onSelect: toggleTheme,
+          },
+        ]}
+      >
+        <CapsuleInput
+          value={composerValue}
+          onValueChange={setComposerValue}
+          placeholder={zh ? '随心输入' : 'Ask anything'}
+          voiceLabel={zh ? '语音输入' : 'Voice input'}
+          voiceActive={voiceActive}
+          onVoiceClick={() => setVoiceActive((active) => !active)}
+          sendLabel={zh ? '发送' : 'Send'}
+          onSubmit={(_prompt) => {
+            setComposerValue('');
+            setVoiceActive(false);
+            setComposerOpen(false);
+          }}
+        />
+      </FloatingButton>
     </div>
   );
 }
