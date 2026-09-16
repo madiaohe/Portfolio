@@ -189,10 +189,6 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
 .minimal-muted {
   color: var(--minimal-muted);
 }
-.minimal-more .minimal-heading {
-  margin-bottom: 24px !important;
-}
-
 @media (min-width: 640px) {
   .minimal-home .minimal-shell {
     padding-top: 128px;
@@ -309,10 +305,6 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
   min-width: 0;
   overflow-wrap: anywhere;
 }
-.minimal-home .minimal-more .minimal-heading {
-  margin-bottom: var(--space-sm);
-}
-
 @media (min-width: 640px) {
   .minimal-home .minimal-shell {
     padding-top: var(--space-5xl);

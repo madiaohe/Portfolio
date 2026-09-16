@@ -211,13 +211,7 @@ export function ReferenceHome() {
             </section>
           ) : null}
 
-          <footer
-            className="minimal-section minimal-more"
-            aria-labelledby="more-heading"
-          >
-            <h2 className="minimal-heading" id="more-heading">
-              {copy.more}
-            </h2>
+          <footer className="minimal-section minimal-more">
             <div className="minimal-muted">
               {copy.socialBefore}
               <a
