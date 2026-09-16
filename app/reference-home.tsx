@@ -7,6 +7,7 @@ import { referenceSections } from '@/lib/reference-home';
 import { homeCopy } from '@/lib/home-copy';
 import { MinimalHeader } from '@/components/blocks/minimal-header';
 import { NotionMentionLink } from '@/components/ui/notion-mention-link';
+import { Tooltip } from '@/components/ui/tooltip';
 import { FloatingButton } from '@/components/ui/floating-button';
 import { CapsuleInput } from '@/components/ui/capsule-input';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
@@ -28,6 +29,17 @@ export function ReferenceHome() {
   const monthYearFormatter = new Intl.DateTimeFormat(locale, {
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC',
+  });
+  const projectDateFormatter = new Intl.DateTimeFormat(locale, {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+  const fullDateFormatter = new Intl.DateTimeFormat(locale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
     timeZone: 'UTC',
   });
   const projects = referenceSections.find(
@@ -99,13 +111,23 @@ export function ReferenceHome() {
             </p>
             <p className="minimal-intro">
               {copy.profileSocialPrefix}
-              <span className="minimal-pending-link">X</span>
+              <Tooltip content="xianyu555555@gmail.com" side="top">
+                <button type="button" className="minimal-pending-link">
+                  X
+                </button>
+              </Tooltip>
               {copy.profileSocialJoin}
-              <span className="minimal-pending-link">Xiaohongshu</span>
+              <Tooltip content="9493694295" side="top">
+                <button type="button" className="minimal-pending-link">
+                  Xiaohongshu
+                </button>
+              </Tooltip>
               {copy.profileEmailPrefix}
-              <span className="minimal-pending-link">
-                {copy.profileEmailLabel}
-              </span>
+              <Tooltip content="572987849@qq.com" side="top">
+                <button type="button" className="minimal-pending-link">
+                  {copy.profileEmailLabel}
+                </button>
+              </Tooltip>
               {copy.profileSocialSuffix}
             </p>
           </div>
@@ -132,8 +154,6 @@ export function ReferenceHome() {
                       <a
                         className="minimal-writing-link"
                         href={item.href}
-                        target="_blank"
-                        rel="noreferrer"
                       >
                         <span
                           className="minimal-writing-year"
@@ -147,12 +167,12 @@ export function ReferenceHome() {
                         <time
                           className="minimal-writing-date"
                           dateTime={item.date}
-                          aria-label={monthYearFormatter.format(
-                            new Date(`${item.date}-01T00:00:00Z`),
+                          aria-label={fullDateFormatter.format(
+                            new Date(`${item.date}T00:00:00Z`),
                           )}
                         >
-                          {monthFormatter.format(
-                            new Date(`${item.date}-01T00:00:00Z`),
+                          {projectDateFormatter.format(
+                            new Date(`${item.date}T00:00:00Z`),
                           )}
                         </time>
                       </a>

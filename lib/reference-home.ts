@@ -5,7 +5,7 @@ type ReferenceItem = {
   href: string;
   title: LocalizedText;
   description: LocalizedText;
-  // Demo month (YYYY-MM), to be replaced with the actual publication date.
+  // Projects use a full date; writing entries currently use a publication month.
   date: string;
 };
 
@@ -15,8 +15,8 @@ type ReferenceSection = {
   items: readonly ReferenceItem[];
 };
 
-// Dates below are fictional demo data for layout preview.
-// Original writing is added first; the remaining outbound references belong to Emil.
+// Projects use their real publication dates. Some writing entries below remain
+// demo data for layout preview.
 export const referenceSections: readonly ReferenceSection[] = [
   {
     id: 'projects',
@@ -25,7 +25,7 @@ export const referenceSections: readonly ReferenceSection[] = [
       href: `/work/${project.slug}`,
       title: project.title,
       description: project.description,
-      date: project.publishedAt.slice(0, 7),
+      date: project.publishedAt,
     })),
   },
   {

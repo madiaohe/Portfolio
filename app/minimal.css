@@ -241,6 +241,21 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
   text-decoration-color: var(--minimal-underline);
   text-underline-offset: 2px;
 }
+.minimal-home button.minimal-pending-link {
+  appearance: none;
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: help;
+}
+.minimal-home .minimal-pending-link:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: 2px solid var(--ring);
+  outline-offset: var(--space-3xs);
+}
 .minimal-home .minimal-section {
   margin-top: var(--space-3xl);
 }

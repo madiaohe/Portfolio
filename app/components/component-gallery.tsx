@@ -1,7 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { Bot, FileText, ImagePlus, Languages, Moon, Puzzle, Sun } from 'lucide-react';
+import {
+  Bot,
+  Check,
+  Eye,
+  FileText,
+  ImagePlus,
+  Languages,
+  Moon,
+  Puzzle,
+  Sun,
+} from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { PromptInput } from '@/components/ui/prompt-input';
@@ -13,6 +23,8 @@ import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 import { useSiteTheme } from '@/lib/hooks/use-site-theme';
 import type { HomeLanguage } from '@/lib/home-copy';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Tooltip } from '@/components/ui/tooltip';
+import { ActionSwapCascadeButton } from '@/components/ui/action-swap-cascade';
 import {
   Accordion,
   AccordionItem,
@@ -266,8 +278,7 @@ function FloatingInputDemo({
             label: languageLabel,
             active: language === 'zh',
             icon: <Languages size={16} strokeWidth={1.6} aria-hidden="true" />,
-            onSelect: () =>
-              changeLanguage(language === 'en' ? 'zh' : 'en'),
+            onSelect: () => changeLanguage(language === 'en' ? 'zh' : 'en'),
           },
           {
             id: 'ai',
@@ -357,6 +368,122 @@ const SECTIONS: GallerySection[] = [
           <code>
             {
               '<Tabs defaultValue="observe">\n  <TabsList aria-label="Examples">\n    <TabsTrigger value="observe">Observe</TabsTrigger>\n  </TabsList>\n  <TabsContent value="observe">Content</TabsContent>\n</Tabs>'
+            }
+          </code>
+        </pre>
+      </section>
+    ),
+  },
+  {
+    id: 'tooltip',
+    en: 'Tooltip',
+    zh: '工具提示',
+    description: {
+      en: 'A lightweight label for compact controls. Hover, focus, or tap a trigger to reveal it.',
+      zh: '为紧凑控件补充说明标签。悬停、聚焦或轻触触发器即可显示。',
+    },
+    render: (zh) => (
+      <section id="tooltip" className="gallery-section" aria-label="Tooltip">
+        <div className="gallery-demo gallery-tooltip-demo ui-scope">
+          <Tooltip content={zh ? '切换语言' : 'Change language'} side="top">
+            <button
+              type="button"
+              className="gallery-tooltip-trigger"
+              aria-label={zh ? '切换语言' : 'Change language'}
+            >
+              <Languages aria-hidden="true" />
+            </button>
+          </Tooltip>
+          <Tooltip content={zh ? '浅色主题' : 'Light theme'} side="right">
+            <button
+              type="button"
+              className="gallery-tooltip-trigger"
+              aria-label={zh ? '浅色主题' : 'Light theme'}
+            >
+              <Sun aria-hidden="true" />
+            </button>
+          </Tooltip>
+          <Tooltip content={zh ? '深色主题' : 'Dark theme'} side="bottom">
+            <button
+              type="button"
+              className="gallery-tooltip-trigger"
+              aria-label={zh ? '深色主题' : 'Dark theme'}
+            >
+              <Moon aria-hidden="true" />
+            </button>
+          </Tooltip>
+          <Tooltip content={zh ? '添加技能' : 'Add a skill'} side="left">
+            <button
+              type="button"
+              className="gallery-tooltip-trigger"
+              aria-label={zh ? '添加技能' : 'Add a skill'}
+            >
+              <Puzzle aria-hidden="true" />
+            </button>
+          </Tooltip>
+        </div>
+        <pre>
+          <code>
+            {
+              '<Tooltip content="Change language" side="top">\n  <button aria-label="Change language">…</button>\n</Tooltip>'
+            }
+          </code>
+        </pre>
+      </section>
+    ),
+  },
+  {
+    id: 'action-swap-cascade',
+    en: 'Action Swap Cascade',
+    zh: '级联动作切换',
+    description: {
+      en: 'A button that cycles through actions while its icon and label transition in a letter-by-letter cascade.',
+      zh: '在多个动作间循环切换，并以逐字级联动画更新图标与标签。',
+    },
+    render: (zh) => (
+      <section
+        id="action-swap-cascade"
+        className="gallery-section"
+        aria-label="Action Swap Cascade"
+      >
+        <div className="gallery-demo gallery-action-swap-demo">
+          <ActionSwapCascadeButton
+            aria-label={zh ? '切换发布状态' : 'Cycle publication status'}
+            items={[
+              {
+                id: 'draft',
+                label: zh ? '草稿' : 'Draft',
+                icon: <FileText aria-hidden="true" />,
+              },
+              {
+                id: 'review',
+                label: zh ? '审阅' : 'Review',
+                icon: <Eye aria-hidden="true" />,
+              },
+              {
+                id: 'published',
+                label: zh ? '已发布' : 'Published',
+                icon: <Check aria-hidden="true" />,
+              },
+            ]}
+            defaultValue="draft"
+          />
+          <ActionSwapCascadeButton
+            items={[
+              {
+                id: 'published',
+                label: zh ? '已发布' : 'Published',
+                icon: <Check aria-hidden="true" />,
+              },
+            ]}
+            defaultValue="published"
+            disabled
+          />
+        </div>
+        <pre>
+          <code>
+            {
+              '<ActionSwapCascadeButton\n  items={[\n    { id: "draft", label: "Draft", icon: <FileText /> },\n    { id: "review", label: "Review", icon: <Eye /> },\n    { id: "published", label: "Published", icon: <Check /> },\n  ]}\n/>'
             }
           </code>
         </pre>

@@ -16,6 +16,7 @@ export function SiteHeader() {
   const isMinimal =
     pathname === '/' ||
     pathname === '/components' ||
+    pathname.startsWith('/work/') ||
     pathname.startsWith('/writing/');
   const [isVisible, setIsVisible] = useState(true);
   const scrollAnchorRef = useRef(0);
