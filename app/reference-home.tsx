@@ -33,22 +33,13 @@ export function ReferenceHome() {
     items: readonly ReferenceItem[],
   ) => {
     const isDraft = item.status === 'draft';
-    let previousPublishedYear: string | null = null;
-    for (
-      let previousIndex = index - 1;
-      previousIndex >= 0;
-      previousIndex -= 1
-    ) {
-      const previous = items[previousIndex];
-      if (previous.status !== 'draft' && previous.date) {
-        previousPublishedYear = previous.date.slice(0, 4);
-        break;
-      }
-    }
-
+    const previous = index > 0 ? items[index - 1] : undefined;
+    const previousYear = previous?.date?.slice(0, 4) ?? null;
     const year = item.date?.slice(0, 4) ?? '';
-    const startsYear =
-      !isDraft && Boolean(item.date) && year !== previousPublishedYear;
+    const startsYear = Boolean(item.date) && year !== previousYear;
+    const next = items[index + 1];
+    const nextYear = next?.date?.slice(0, 4) ?? null;
+    const endsYear = Boolean(next?.date) && nextYear !== year;
     const className = `minimal-writing-link${
       isDraft ? ' minimal-writing-link--disabled' : ''
     }`;
@@ -84,7 +75,10 @@ export function ReferenceHome() {
     );
 
     return (
-      <li key={item.href ?? item.title.en}>
+      <li
+        key={item.href ?? item.title.en}
+        className={endsYear ? 'minimal-writing-list-item--year-end' : undefined}
+      >
         {isDraft ? (
           <div className={className} aria-disabled="true">
             {content}

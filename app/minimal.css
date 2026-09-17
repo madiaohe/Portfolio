@@ -17,9 +17,9 @@
 body:has(.minimal-site) {
   --minimal-bg: #fdfdfc;
   --minimal-text: #21201c;
+  --minimal-prose: #45453f;
   --minimal-muted: #73736c;
   --minimal-subtle: #8d8d86;
-  --minimal-prose: #45453f;
   --minimal-underline: #bcbbb5;
   --minimal-hover: #f5f4f4;
   --minimal-surface: #fff;
@@ -36,9 +36,9 @@ body:has(.minimal-site) {
 html[data-minimal-theme='dark'] body:has(.minimal-site) {
   --minimal-bg: #191918;
   --minimal-text: #eeede8;
+  --minimal-prose: #eeede8;
   --minimal-muted: #96958f;
   --minimal-subtle: #92918b;
-  --minimal-prose: #eeede8;
   --minimal-underline: #5d5c56;
   --minimal-hover: #262624;
   --minimal-surface: #222220;
@@ -232,7 +232,7 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
   font-weight: var(--font-weight-normal);
 }
 .minimal-home .minimal-intro {
-  color: var(--prose);
+  color: var(--foreground);
   font-weight: var(--font-weight-body);
   line-height: var(--leading-body);
 }
@@ -289,6 +289,9 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
 .minimal-home .minimal-writing-list > li:last-child::after {
   display: none;
 }
+.minimal-home .minimal-writing-list > li.minimal-writing-list-item--year-end::after {
+  left: 0;
+}
 .minimal-home .minimal-writing-link {
   display: grid;
   grid-template-columns:
@@ -326,6 +329,7 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
 .minimal-home .minimal-writing-title {
   min-width: 0;
   overflow-wrap: anywhere;
+  font-weight: var(--font-weight-body);
 }
 @media (min-width: 640px) {
   .minimal-home .minimal-shell {

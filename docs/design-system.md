@@ -32,8 +32,8 @@
 | `--border` | `--minimal-border` `#e9e9e7` | `--minimal-border` `#393936` |
 | `--ring` | `--minimal-subtle` `#8d8d86` | `--minimal-subtle` `#92918b` |
 
-正文用 `--prose`（亮色 #45453f / 深色 #eeede8）；标题用 `--foreground`；
-次级/元信息用 `--muted-foreground`。
+通用详情页正文用 `--prose`；首页简介正文用 `--foreground`；标题用
+`--foreground`；次级/元信息用 `--muted-foreground`。
 
 ## 间距（Spacing）
 

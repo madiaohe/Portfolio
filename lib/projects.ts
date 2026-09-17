@@ -105,6 +105,64 @@ export const projects: Project[] = [
     },
     blocks: createProjectTemplateBlocks(),
   },
+  {
+    slug: 'pack-pilot',
+    status: 'draft',
+    publishedAt: '2025-06-09',
+    title: { zh: 'PackPilot', en: 'PackPilot' },
+    description: {
+      zh: '面向包装机 HMI 的生产 Agent。',
+      en: 'A production agent for packaging-machine HMI.',
+    },
+    blocks: [
+      {
+        type: 'paragraph',
+        text: {
+          zh: 'PackPilot（包装领航员）— 将传统 HMI 改造为面向生产的智能体。项目关注如何把包装机 HMI 中的状态、操作与生产上下文，重新组织进真实生产流程。',
+          en: 'PackPilot — turning a traditional HMI into a production agent. The project explores how status, controls, and production context on packaging-machine HMIs can be reorganised around real production flows.',
+        },
+      },
+      {
+        type: 'heading',
+        id: 'from-hmi-to-production-agent',
+        text: {
+          zh: '从传统 HMI 到可协同生产',
+          en: 'From HMI to production collaboration',
+        },
+      },
+      {
+        type: 'paragraph',
+        text: {
+          zh: 'PackPilot 的出发点，是从传统 HMI 走向可协同生产的智能体：界面不只呈现设备状态，也帮助操作者在生产流程中理解当前处境与下一步。',
+          en: 'PackPilot starts by moving from a traditional HMI toward a production agent: the interface does not only show equipment status, it also helps operators understand the current situation and the next step in production.',
+        },
+      },
+      {
+        type: 'heading',
+        id: 'production-first-expression',
+        text: { zh: '生产优先的表达', en: 'Production-first expression' },
+      },
+      {
+        type: 'paragraph',
+        text: {
+          zh: '界面优先呈现与当前生产相关的上下文，保持操作清晰、反馈明确，并让智能体建议停留在可以被人确认和执行的范围内。',
+          en: 'The interface prioritises production context, keeps actions clear and feedback explicit, and keeps agent suggestions within a scope that people can review and execute.',
+        },
+      },
+      {
+        type: 'heading',
+        id: 'current-status',
+        text: { zh: '当前状态', en: 'Current status' },
+      },
+      {
+        type: 'paragraph',
+        text: {
+          zh: '项目仍在准备中。这里记录的是改造方向，不把尚未验证的能力描述为已完成成果。',
+          en: 'The project is still in preparation. These notes describe the direction of the transformation and do not present unverified capabilities as completed outcomes.',
+        },
+      },
+    ],
+  },
 ];
 
 export const publishedProjects = projects.filter(

@@ -38,6 +38,7 @@ export const referenceSections: readonly ReferenceSection[] = [
         ? {
             status: 'draft' as const,
             title: project.title,
+            date: project.publishedAt,
           }
         : {
             status: 'published' as const,
