@@ -21,6 +21,10 @@ type DraftReferenceItem = {
 
 export type ReferenceItem = PublishedReferenceItem | DraftReferenceItem;
 
+export type DetailPagerItem =
+  | { status: 'draft'; title: LocalizedText }
+  | { status: 'published'; slug: string; title: LocalizedText };
+
 type ReferenceSection = {
   id: 'projects' | 'writing';
   title: LocalizedText;
@@ -170,3 +174,28 @@ export const referenceSections: readonly ReferenceSection[] = [
     ],
   },
 ];
+
+function toDetailPagerItems(
+  items: readonly ReferenceItem[],
+  hrefPrefix: string,
+): DetailPagerItem[] {
+  return items.map((item) =>
+    item.status === 'draft'
+      ? { status: 'draft', title: item.title }
+      : {
+          status: 'published',
+          slug: item.href.slice(hrefPrefix.length),
+          title: item.title,
+        },
+  );
+}
+
+export const projectPagerItems = toDetailPagerItems(
+  referenceSections.find((section) => section.id === 'projects')?.items ?? [],
+  '/work/',
+);
+
+export const writingPagerItems = toDetailPagerItems(
+  referenceSections.find((section) => section.id === 'writing')?.items ?? [],
+  '/writing/',
+);

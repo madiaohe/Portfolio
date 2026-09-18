@@ -6,6 +6,7 @@ import type { LocalizedText, WritingBlock } from '@/lib/writing';
 import { MinimalHeader } from '@/components/blocks/minimal-header';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 import { ArticleDirectory } from '@/components/blocks/article-directory';
+import type { DetailPagerItem } from '@/lib/reference-home';
 
 export type DetailItem = {
   slug: string;
@@ -33,7 +34,7 @@ export function DetailPage({
   backHref: string;
   backLabel: LocalizedText;
   tocLabel: LocalizedText;
-  collection: { slug: string; title: LocalizedText }[];
+  collection: readonly DetailPagerItem[];
   hrefPrefix: string;
 }) {
   const { language } = useSiteLanguage();
@@ -45,10 +46,9 @@ export function DetailPage({
   const reduced = useReducedMotion() ?? false;
 
   const currentIndex = collection.findIndex(
-    (entry) => entry.slug === item.slug,
+    (entry) => entry.status === 'published' && entry.slug === item.slug,
   );
-  const prev =
-    currentIndex > 0 ? collection[currentIndex - 1] : undefined;
+  const prev = currentIndex > 0 ? collection[currentIndex - 1] : undefined;
   const next =
     currentIndex >= 0 && currentIndex < collection.length - 1
       ? collection[currentIndex + 1]
@@ -63,9 +63,10 @@ export function DetailPage({
     const heading = headings[index];
     if (!heading) return;
     setActiveHeading(heading.id);
-    document
-      .getElementById(heading.id)
-      ?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+    document.getElementById(heading.id)?.scrollIntoView({
+      behavior: reduced ? 'auto' : 'smooth',
+      block: 'start',
+    });
     history.replaceState(null, '', `#${heading.id}`);
   };
 
@@ -177,10 +178,7 @@ export function DetailPage({
                   );
                 case 'exercise':
                   return (
-                    <aside
-                      className="detail-block detail-exercise"
-                      key={index}
-                    >
+                    <aside className="detail-block detail-exercise" key={index}>
                       <p className="detail-block-placeholder">
                         {language === 'zh' ? '内容占位' : 'Placeholder'}
                       </p>
@@ -205,26 +203,48 @@ export function DetailPage({
             >
               <div className="detail-pager-side detail-pager-prev">
                 {prev ? (
-                  <a href={`${hrefPrefix}${prev.slug}`}>
-                    <span className="detail-pager-label">
-                      {language === 'zh' ? '上一篇' : 'Previous'}
-                    </span>
-                    <span className="detail-pager-title">
-                      {prev.title[language]}
-                    </span>
-                  </a>
+                  prev.status === 'draft' ? (
+                    <div className="detail-pager-disabled" aria-disabled="true">
+                      <span className="detail-pager-label">
+                        {language === 'zh' ? '上一篇' : 'Previous'}
+                      </span>
+                      <span className="detail-pager-title">
+                        {prev.title[language]}
+                      </span>
+                    </div>
+                  ) : (
+                    <a href={`${hrefPrefix}${prev.slug}`}>
+                      <span className="detail-pager-label">
+                        {language === 'zh' ? '上一篇' : 'Previous'}
+                      </span>
+                      <span className="detail-pager-title">
+                        {prev.title[language]}
+                      </span>
+                    </a>
+                  )
                 ) : null}
               </div>
               <div className="detail-pager-side detail-pager-next">
                 {next ? (
-                  <a href={`${hrefPrefix}${next.slug}`}>
-                    <span className="detail-pager-label">
-                      {language === 'zh' ? '下一篇' : 'Next'}
-                    </span>
-                    <span className="detail-pager-title">
-                      {next.title[language]}
-                    </span>
-                  </a>
+                  next.status === 'draft' ? (
+                    <div className="detail-pager-disabled" aria-disabled="true">
+                      <span className="detail-pager-label">
+                        {language === 'zh' ? '下一篇' : 'Next'}
+                      </span>
+                      <span className="detail-pager-title">
+                        {next.title[language]}
+                      </span>
+                    </div>
+                  ) : (
+                    <a href={`${hrefPrefix}${next.slug}`}>
+                      <span className="detail-pager-label">
+                        {language === 'zh' ? '下一篇' : 'Next'}
+                      </span>
+                      <span className="detail-pager-title">
+                        {next.title[language]}
+                      </span>
+                    </a>
+                  )
                 ) : null}
               </div>
             </nav>

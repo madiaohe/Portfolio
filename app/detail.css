@@ -120,10 +120,18 @@
 .detail-pager-side a:hover {
   color: var(--foreground);
 }
+.detail-pager-disabled {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  color: var(--muted-foreground);
+  cursor: default;
+}
 .detail-pager-next {
   align-items: flex-end;
 }
-.detail-pager-next a {
+.detail-pager-next a,
+.detail-pager-next .detail-pager-disabled {
   align-items: flex-end;
   text-align: right;
 }
