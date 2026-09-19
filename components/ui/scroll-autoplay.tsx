@@ -16,7 +16,6 @@ interface ScrollAutoplayProps extends HTMLMotionProps<'div'> {
 interface ScrollAutoPlayItemProps extends HTMLMotionProps<'div'> {
   index: number;
   totalImages: number;
-  opacityRange?: unknown[];
 }
 interface ScrollAutoplayContextValue {
   scrollYProgress: MotionValue<number>;
@@ -35,7 +34,7 @@ function useScrollAutoplayContext() {
 }
 
 export function ScrollAutoplay({
-  offset = ['0% 50%', '100% 50%'],
+  offset = ['start start', 'end end'],
   className,
   ...props
 }: ScrollAutoplayProps) {
@@ -71,24 +70,28 @@ export function ScrollAutoplayContainer({
 export function ScrollAutoplayItem({
   index,
   totalImages,
-  opacityRange = [0, 1],
   className,
   style,
   ...props
 }: ScrollAutoPlayItemProps) {
   const { scrollYProgress } = useScrollAutoplayContext();
-  const start = index / (totalImages + 1);
-  const end = (index + 1) / (totalImages + 1);
-  const range = [start, end];
 
-  const opacity = useTransform(scrollYProgress, range, opacityRange);
+  // Horizontal rail: images sit side by side (left: index * 100%) and the
+  // whole rail translates left as the page scrolls, so each frame slides in
+  // from the right and out to the left — a right-to-left carousel.
+  const x = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ['0%', `${-(totalImages - 1) * 100}%`],
+  );
 
   return (
     <motion.div
-      className={cn('absolute inset-0 size-full', className)}
+      className={cn('absolute inset-y-0 left-0 size-full', className)}
       style={{
-        opacity,
-        willChange: 'opacity',
+        left: `${index * 100}%`,
+        x,
+        willChange: 'transform',
         ...style,
       }}
       {...props}
