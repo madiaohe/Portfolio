@@ -13,8 +13,14 @@ import type {
   ShowcaseChapter,
   ShowcaseCover,
   ShowcaseFact,
+  ShowcaseGalleryImage,
   ShowcaseLogo,
 } from '@/lib/writing';
+import {
+  ScrollAutoplay,
+  ScrollAutoplayContainer,
+  ScrollAutoplayItem,
+} from '@/components/ui/scroll-autoplay';
 
 export type ShowcaseItem = {
   slug: string;
@@ -24,6 +30,7 @@ export type ShowcaseItem = {
   logo?: ShowcaseLogo;
   cover?: ShowcaseCover;
   facts?: ShowcaseFact[];
+  gallery?: ShowcaseGalleryImage[];
   chapters?: ShowcaseChapter[];
 };
 
@@ -125,10 +132,13 @@ export function ShowcasePage({
         <main id="main-content">
           <header className="showcase-header">
             {item.logo ? (
-              <img
+              <Image
                 className="showcase-logo"
                 src={item.logo.src}
                 alt={item.logo.alt}
+                width={200}
+                height={40}
+                unoptimized
               />
             ) : null}
             <h1 id="showcase-title">{item.title[language]}</h1>
@@ -169,6 +179,32 @@ export function ShowcasePage({
                 </div>
               ))}
             </dl>
+          ) : null}
+
+          {item.gallery && item.gallery.length > 1 ? (
+            <div className="showcase-gallery">
+              <ScrollAutoplay className="showcase-gallery__scroll">
+                <ScrollAutoplayContainer className="showcase-gallery__stage">
+                  <div className="showcase-gallery__frame">
+                    {item.gallery.map((image, index) => (
+                      <ScrollAutoplayItem
+                        key={image.src}
+                        index={index}
+                        totalImages={item.gallery!.length}
+                      >
+                        <Image
+                          fill
+                          src={image.src}
+                          alt={image.alt}
+                          className="showcase-gallery__image"
+                          priority={index === 0}
+                        />
+                      </ScrollAutoplayItem>
+                    ))}
+                  </div>
+                </ScrollAutoplayContainer>
+              </ScrollAutoplay>
+            </div>
           ) : null}
 
           {chapters.length > 0 ? (

@@ -4,6 +4,7 @@ import type {
   ShowcaseChapter,
   ShowcaseCover,
   ShowcaseFact,
+  ShowcaseGalleryImage,
   ShowcaseLogo,
   WritingBlock,
 } from './writing';
@@ -20,6 +21,7 @@ export type PublishedProject = {
   blocks: WritingBlock[];
   cover?: ShowcaseCover;
   logo?: ShowcaseLogo;
+  gallery?: ShowcaseGalleryImage[];
   facts?: ShowcaseFact[];
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
@@ -208,16 +210,34 @@ export const projects: Project[] = [
     blocks: createProjectTemplateBlocks(),
     facts: [
       {
+        label: { zh: '时间', en: 'Date' },
+        value: { zh: '2025 年 3 月', en: 'March 2025' },
+      },
+      {
         label: { zh: '角色', en: 'Role' },
         value: { zh: '待补充', en: 'TBD' },
       },
       {
-        label: { zh: '时间', en: 'Year' },
-        value: { zh: '2025', en: '2025' },
-      },
-      {
         label: { zh: '类型', en: 'Type' },
         value: { zh: '待补充', en: 'TBD' },
+      },
+    ],
+    gallery: [
+      {
+        src: '/media/work-categories/digital-products.png',
+        alt: 'Schneider Electric project image 1',
+      },
+      {
+        src: '/media/work-categories/brand-systems.png',
+        alt: 'Schneider Electric project image 2',
+      },
+      {
+        src: '/media/work-categories/experiments.png',
+        alt: 'Schneider Electric project image 3',
+      },
+      {
+        src: '/media/work-categories/selected-objects.png',
+        alt: 'Schneider Electric project image 4',
       },
     ],
     chapters: [
