@@ -37,7 +37,7 @@
   padding: var(--space-sm);
   overflow: hidden;
   border: var(--space-2xs) solid #27272a;
-  border-radius: var(--radius-md);
+  border-radius: calc(var(--radius-lg) * 2 - var(--space-2xs));
   background: #000;
   box-shadow: 0 0 0 1px color-mix(in oklab, #000 60%, transparent);
 }
@@ -65,7 +65,7 @@
   top: 0;
   width: 24px;
   height: 24px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-xs);
   border: 1px solid var(--border);
   overflow: hidden;
 }

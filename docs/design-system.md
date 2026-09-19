@@ -80,6 +80,7 @@ Tailwind 工具类：`p-md`、`mt-lg`、`gap-sm`… 由 `@theme inline` 生成
 
 | Token | 值 |
 | --- | --- |
+| `--radius-xs` | 4px |
 | `--radius-sm` | 6px |
 | `--radius-md` | 8px |
 | `--radius-lg` | 10px |
