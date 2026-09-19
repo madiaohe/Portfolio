@@ -165,15 +165,15 @@ export function ReferenceHome() {
             </p>
             <p className="minimal-intro">
               {copy.profileSocialPrefix}
-              <Tooltip content="xianyu555555@gmail.com" side="top">
+              <Tooltip content="MaDiaohe" side="top">
                 <button type="button" className="minimal-pending-link">
-                  X
+                  GitHub
                 </button>
               </Tooltip>
               {copy.profileSocialJoin}
               <Tooltip content="9493694295" side="top">
                 <button type="button" className="minimal-pending-link">
-                  Xiaohongshu
+                  RedNote
                 </button>
               </Tooltip>
               {copy.profileEmailPrefix}
