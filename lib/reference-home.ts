@@ -19,7 +19,18 @@ type DraftReferenceItem = {
   date?: string;
 };
 
-export type ReferenceItem = PublishedReferenceItem | DraftReferenceItem;
+type ExternalReferenceItem = {
+  status: 'external';
+  href: string;
+  title: LocalizedText;
+  description?: LocalizedText;
+  date: string;
+};
+
+export type ReferenceItem =
+  | PublishedReferenceItem
+  | DraftReferenceItem
+  | ExternalReferenceItem;
 
 export type DetailPagerItem =
   | { status: 'draft'; title: LocalizedText }
@@ -44,34 +55,40 @@ export const referenceSections: readonly ReferenceSection[] = [
             title: project.title,
             date: project.publishedAt,
           }
-        : {
-            status: 'published' as const,
-            href: `/work/${project.slug}`,
-            title: project.title,
-            description: project.description,
-            date: project.publishedAt,
-          },
+        : project.status === 'external'
+          ? {
+              status: 'external' as const,
+              href: project.href,
+              title: project.title,
+              description: project.description,
+              date: project.publishedAt,
+            }
+          : {
+              status: 'published' as const,
+              href: `/work/${project.slug}`,
+              title: project.title,
+              description: project.description,
+              date: project.publishedAt,
+            },
     ),
   },
   {
     id: 'writing',
     title: { en: 'Writing', zh: '文章' },
-    items: [
-      ...writingArticles.map((article) =>
-        article.status === 'draft'
-          ? {
-              status: 'draft' as const,
-              title: article.title,
-            }
-          : {
-              status: 'published' as const,
-              href: `/writing/${article.slug}`,
-              title: article.title,
-              description: article.description,
-              date: article.publishedAt.slice(0, 7),
-            },
-      ),
-    ],
+    items: writingArticles.map((article) =>
+      article.status === 'draft'
+        ? {
+            status: 'draft' as const,
+            title: article.title,
+          }
+        : {
+            status: 'published' as const,
+            href: `/writing/${article.slug}`,
+            title: article.title,
+            description: article.description,
+            date: article.publishedAt.slice(0, 7),
+          },
+    ),
   },
 ];
 
@@ -79,15 +96,21 @@ function toDetailPagerItems(
   items: readonly ReferenceItem[],
   hrefPrefix: string,
 ): DetailPagerItem[] {
-  return items.map((item) =>
-    item.status === 'draft'
-      ? { status: 'draft', title: item.title }
-      : {
+  return items.flatMap((item): DetailPagerItem[] => {
+    if (item.status === 'draft') {
+      return [{ status: 'draft', title: item.title }];
+    }
+    if (item.status === 'published' && item.href.startsWith(hrefPrefix)) {
+      return [
+        {
           status: 'published',
           slug: item.href.slice(hrefPrefix.length),
           title: item.title,
         },
-  );
+      ];
+    }
+    return [];
+  });
 }
 
 export const projectPagerItems = toDetailPagerItems(

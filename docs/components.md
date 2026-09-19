@@ -80,7 +80,7 @@ import { CapsuleInput } from '@/components/ui/capsule-input';
 
 首页 Projects 与 Writing 列表统一由 `lib/reference-home.ts` 配置。普通条目使用 `href` 和 `date`，渲染为原生 `<a>`；未发布条目标记 `status: 'draft'`，即使数据中保留了备用 `href` / `date`，首页也会忽略它们并渲染为非交互占位行，标题降低对比度，右侧显示「准备中 / Soon」，不能点击或通过 Tab 聚焦。
 
-本地项目和文章的草稿还需要分别在 `lib/projects.ts`、`lib/writing.ts` 中标记 `status: 'draft'`。这些草稿会出现在首页列表中，但不会生成详情路由，直接访问 URL 返回 404，也不会出现在详情页上一篇 / 下一篇中。已发布条目的列表日期只显示月份；年份仍按上一条已发布内容分组显示。
+本地项目和文章的草稿还需要分别在 `lib/projects.ts`、`lib/writing.ts` 中标记 `status: 'draft'`。这些草稿会出现在首页列表中，但不会生成详情路由，直接访问 URL 返回 404，也不会出现在详情页上一篇 / 下一篇中。项目也可以标记 `status: 'external'` 并提供 `href`；首页会在新标签页打开外部链接，但不会生成详情页，也不会进入详情页翻页。已发布条目的列表日期只显示月份；年份仍按上一条已发布内容分组显示。
 
 ## 添加组件
 

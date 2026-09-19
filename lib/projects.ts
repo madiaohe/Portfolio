@@ -21,7 +21,15 @@ export type DraftProject = {
   references?: { en: string[]; zh: string[] };
 };
 
-export type Project = PublishedProject | DraftProject;
+export type ExternalProject = {
+  href: string;
+  publishedAt: string;
+  status: 'external';
+  title: LocalizedText;
+  description?: LocalizedText;
+};
+
+export type Project = PublishedProject | DraftProject | ExternalProject;
 
 function createProjectTemplateBlocks(): WritingBlock[] {
   return [
@@ -106,6 +114,12 @@ export const projects: Project[] = [
     blocks: createProjectTemplateBlocks(),
   },
   {
+    href: 'https://www.tesko.com.cn/',
+    publishedAt: '2025-11-24',
+    status: 'external',
+    title: { zh: 'TESKO', en: 'TESKO' },
+  },
+  {
     slug: 'pack-pilot',
     status: 'draft',
     publishedAt: '2025-06-09',
@@ -166,7 +180,8 @@ export const projects: Project[] = [
 ];
 
 export const publishedProjects = projects.filter(
-  (project): project is PublishedProject => project.status !== 'draft',
+  (project): project is PublishedProject =>
+    project.status !== 'draft' && project.status !== 'external',
 );
 
 export function getProject(slug: string) {

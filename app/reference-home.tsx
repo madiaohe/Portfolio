@@ -83,6 +83,15 @@ export function ReferenceHome() {
           <div className={className} aria-disabled="true">
             {content}
           </div>
+        ) : item.status === 'external' ? (
+          <a
+            className={className}
+            href={item.href}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {content}
+          </a>
         ) : (
           <a className={className} href={item.href}>
             {content}
