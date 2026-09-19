@@ -22,13 +22,13 @@ const samples: {
     slug: 'learning-through-materials',
     title: 'Learning through materials.',
     category: 'Making',
-    image: 1,
+    image: 0,
   },
   {
     slug: 'objects-that-quietly-belong',
     title: 'Objects that quietly belong.',
     category: 'Notes',
-    image: 2,
+    image: 0,
   },
   {
     slug: 'one-less-step',
@@ -40,13 +40,13 @@ const samples: {
     slug: 'before-the-first-prototype',
     title: 'Before the first prototype.',
     category: 'Making',
-    image: 1,
+    image: 0,
   },
   {
     slug: 'a-softer-kind-of-light',
     title: 'A softer kind of light.',
     category: 'Notes',
-    image: 2,
+    image: 0,
   },
   {
     slug: 'where-an-interaction-begins',
@@ -58,13 +58,13 @@ const samples: {
     slug: 'working-with-a-constraint',
     title: 'Working with a constraint.',
     category: 'Making',
-    image: 1,
+    image: 0,
   },
   {
     slug: 'noticing-the-ordinary',
     title: 'Noticing the ordinary.',
     category: 'Notes',
-    image: 2,
+    image: 0,
   },
   {
     slug: 'what-a-detail-can-do',
@@ -76,13 +76,13 @@ const samples: {
     slug: 'from-a-sketch-to-something-real',
     title: 'From a sketch to something real.',
     category: 'Making',
-    image: 1,
+    image: 0,
   },
   {
     slug: 'knowing-when-to-stop',
     title: 'Knowing when to stop.',
     category: 'Notes',
-    image: 2,
+    image: 0,
   },
 ];
 

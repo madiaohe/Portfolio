@@ -3,7 +3,7 @@
 `components/` 只保留两个一级目录，按对外提供的能力分类，不再按来源、动效或 AI 场景分组。
 
 - `components/ui/`：提供一项独立的展示或交互能力。包括 Button、Tabs、Tooltip、Action Swap Cascade、Accordion、Hover Card、Skeleton、Select、MorphPopover、Magnetic、PreviewRail、PromptInput、Message 和 NotionMentionLink。内部可以组合其他 UI 组件；例如 PromptInput 组合按钮与选择器，对外仍是一项输入能力。
-- `components/blocks/`：组织布局、内容和交互，形成可放入页面的完整模块。包括 FloatingAgent、Testimonial2、MinimalHeader、SiteHeader、SiteQuickActions、FluidFooter、HeroVideo、DesignPrinciples 和 WorkCategories。
+- `components/blocks/`：组织布局、内容和交互，形成可放入页面的完整模块。包括 FloatingAgent、Testimonial2、MinimalHeader、SiteHeader、SiteQuickActions、FluidFooter、HeroVideo 和 DesignPrinciples。
 
 依赖方向为：页面 → blocks → ui。页面也可以直接使用 ui；ui 不依赖 blocks 或 app，blocks 不依赖 app。共享逻辑放在 lib。
 
@@ -19,7 +19,6 @@ components/
     ├── floating-agent/
     │   ├── index.tsx
     │   └── floating-prompt-input.tsx
-    ├── work-categories/       # 分类模块及其矩阵、封面、3D 场景实现
     ├── testimonial-2.tsx
     ├── minimal-header.tsx
     ├── site-header.tsx
@@ -29,9 +28,9 @@ components/
 
 复杂组件允许使用同名目录聚合文件。只有所属组件使用的实现跟随组件放置，不单独提升为公共组件。FloatingAgent 的定制输入框位于其目录内；通用 PromptInput 位于 ui。既有但尚未挂载的模块继续保留，不因目录整理而删除。
 
-页面专属实现放在对应路由附近：`app/reference-home.tsx`、`app/writing/[slug]/writing-article.tsx`、`app/components/component-gallery.tsx`，以及 About、Contact、Journal 和 Ambient Dial 路由中的页面实现。文章目录、项目章节导航等绑定具体页面的组件也留在对应路由内。
+页面专属实现放在对应路由附近：`app/reference-home.tsx`、`app/writing/[slug]/writing-article.tsx`、`app/components/component-gallery.tsx`，以及 About、Contact、Journal 路由中的页面实现。文章目录、项目章节导航等绑定具体页面的组件也留在对应路由内。
 
-共享 Hooks 统一位于 `lib/hooks/`，包括站点语言、主题与 Popover 定位；经历数据位于 `lib/about-experiences.ts`。模块私有的辅助逻辑可以就近放置，例如 WorkCategories 的 3D 场景。
+共享 Hooks 统一位于 `lib/hooks/`，包括站点语言、主题与 Popover 定位；经历数据位于 `lib/about-experiences.ts`。模块私有的辅助逻辑可以就近放置，例如 FloatingAgent 的定制输入框。
 
 启动 `npm run dev` 后打开 `/components`，按「独立组件 / Blocks」两组查看现有交互示例、禁用状态和调用方式。预览页支持中英文、深浅主题，生产环境返回 404。
 

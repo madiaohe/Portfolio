@@ -1,11 +1,7 @@
-import everyday from '../content/journal/a-place-for-the-everyday.md?raw';
-import prototype from '../content/journal/make-it-move-to-understand-it.md?raw';
 import space from '../content/journal/leave-a-little-space.md?raw';
 import { journalEntries } from './journal-meta';
 
 const bodies: Record<string, string> = {
-  'a-place-for-the-everyday': everyday,
-  'make-it-move-to-understand-it': prototype,
   'leave-a-little-space': space,
 };
 

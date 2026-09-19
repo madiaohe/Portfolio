@@ -11,7 +11,7 @@ The existing app uses React 19, Vinext, Vite, CSS, Markdown journal content, and
 - Working branch: `codex/emil-minimal`.
 - Previous source snapshot: `6802ce9` on `codex/personal-site-v3-snapshot`.
 - Original branch `redesign/personal-site-v3` was not rewritten.
-- Existing About, Contact, Journal, article and Ambient Dial routes remain available.
+- Existing About, Contact, Journal and article routes remain available.
 - Existing untracked `artifacts/` and `tsconfig.tsbuildinfo` were left in place.
 
 ## Implemented surface

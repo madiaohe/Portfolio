@@ -38,22 +38,6 @@ export const experiences: Experience[] = [
       'Shaping products from the first question to the final interaction: research, information architecture, interface design and working prototypes.',
     projects: [
       {
-        id: 'ambient-dial',
-        name: 'Ambient Dial',
-        year: '2025',
-        summary:
-          'A quieter way to understand and adjust the spaces we live in.',
-        image: '/media/work-categories/digital-products.png',
-        imageAlt:
-          'Concept product photography for the Ambient Dial example project',
-        context:
-          'Home controls often separate information from action. This concept explores how one physical interface could make the room’s conditions easier to understand.',
-        contribution:
-          'Mapped everyday scenarios, simplified the control hierarchy and prototyped the relationship between a physical dial and its digital feedback.',
-        outcome:
-          'An interaction prototype and a set of interface states covering adjustment, confirmation and recovery. The concept remains an exploration, not a shipped product.',
-      },
-      {
         id: 'field-notes',
         name: 'Field Notes',
         year: '2025',

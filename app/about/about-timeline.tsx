@@ -73,11 +73,6 @@ function ProjectDetail({ project }: { project: ExperienceProject }) {
             />
             <figcaption>Concept imagery / Illustrative project</figcaption>
           </figure>
-          {project.id === 'ambient-dial' ? (
-            <Link href="/work/ambient-dial" className="about-project__case-link">
-              Read the full case study <span aria-hidden="true">↗</span>
-            </Link>
-          ) : null}
         </div>
       </details>
     </li>
@@ -232,7 +227,6 @@ export function AboutTimeline() {
         }
         node.dataset.passed = String(motionPreference.matches || passed);
       }
-
     };
 
     const scheduleUpdate = () => {
