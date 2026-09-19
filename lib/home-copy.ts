@@ -3,7 +3,7 @@ export type HomeLanguage = 'en' | 'zh';
 const english = {
   languageLabel: 'Language',
   comingSoon: 'Soon',
-  location: 'I was born in Bengbu and now live in Hefei.',
+  location: 'I was based in Beijing and now work and live in Hefei.',
   workPrefix: 'I currently work on the HMI team at ',
   workSuffix:
     '. I stay curious, find beauty in everyday life, and build & create through critical thinking and systems thinking.',
@@ -27,7 +27,7 @@ export const homeCopy: Record<
   zh: {
     languageLabel: '语言',
     comingSoon: '准备中',
-    location: '我出生在蚌埠，现在居住在合肥。',
+    location: '我此前在北京工作，目前在合肥工作与生活。',
     workPrefix: '我目前在 ',
     workSuffix:
       ' 的 HMI 团队工作。我始终保持着好奇心，从日常生活中发现美，用批判性思维和系统思维去建造与创造。',
