@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { WritingArticle } from './writing-article';
+import { WritingShowcase } from './writing-showcase';
 import {
   getWritingArticle,
   publishedWritingArticles,
 } from '../../../lib/writing';
 import '../../minimal.css';
 import '../../detail.css';
+import '../../showcase.css';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -29,5 +31,9 @@ export default async function WritingPage({ params }: Props) {
   const { slug } = await params;
   const article = getWritingArticle(slug);
   if (!article) notFound();
-  return <WritingArticle article={article} />;
+  return article.layout === 'showcase' ? (
+    <WritingShowcase article={article} />
+  ) : (
+    <WritingArticle article={article} />
+  );
 }

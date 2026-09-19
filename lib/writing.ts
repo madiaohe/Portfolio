@@ -1,6 +1,34 @@
 import type { HomeLanguage } from './home-copy';
 
 export type LocalizedText = Record<HomeLanguage, string>;
+
+/**
+ * Template selection shared by projects and writing articles.
+ * 'article' (default) uses DetailPage: prose-led with a directory,
+ * references and 4:3 blocks. 'showcase' uses ShowcasePage: cover,
+ * optional facts and image-led chapters.
+ */
+export type DetailLayout = 'article' | 'showcase';
+
+export type ShowcaseBlock =
+  | { type: 'paragraph'; text: LocalizedText }
+  | { type: 'heading'; id: string; text: LocalizedText }
+  | { type: 'image'; src: string; alt: string; caption?: LocalizedText };
+
+export type ShowcaseCover = {
+  src: string;
+  alt: string;
+  caption?: LocalizedText;
+};
+
+export type ShowcaseFact = { label: LocalizedText; value: LocalizedText };
+
+export type ShowcaseChapter = {
+  id: string;
+  heading: LocalizedText;
+  blocks: ShowcaseBlock[];
+};
+
 export type WritingBlock =
   | { type: 'paragraph'; text: LocalizedText }
   | { type: 'heading'; id: string; text: LocalizedText }
@@ -21,9 +49,12 @@ export type PublishedWritingArticle = {
   slug: string;
   publishedAt: string;
   status?: 'published';
+  layout?: DetailLayout;
   title: LocalizedText;
   description: LocalizedText;
   blocks: WritingBlock[];
+  cover?: ShowcaseCover;
+  chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
 };
 

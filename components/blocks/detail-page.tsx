@@ -6,6 +6,7 @@ import type { LocalizedText, WritingBlock } from '@/lib/writing';
 import { MinimalHeader } from '@/components/blocks/minimal-header';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 import { ArticleDirectory } from '@/components/blocks/article-directory';
+import { DetailPager } from '@/components/blocks/detail-pager';
 import type { DetailPagerItem } from '@/lib/reference-home';
 
 export type DetailItem = {
@@ -44,15 +45,6 @@ export function DetailPage({
   );
   const [activeHeading, setActiveHeading] = useState(headings[0]?.id ?? '');
   const reduced = useReducedMotion() ?? false;
-
-  const currentIndex = collection.findIndex(
-    (entry) => entry.status === 'published' && entry.slug === item.slug,
-  );
-  const prev = currentIndex > 0 ? collection[currentIndex - 1] : undefined;
-  const next =
-    currentIndex >= 0 && currentIndex < collection.length - 1
-      ? collection[currentIndex + 1]
-      : undefined;
 
   const activeIndex = Math.max(
     0,
@@ -196,69 +188,11 @@ export function DetailPage({
               </section>
             ) : null}
           </article>
-          <nav
-            className="detail-navigation"
-            aria-label={language === 'zh' ? '文章导航' : 'Article navigation'}
-          >
-            <div className="detail-pager-side detail-pager-prev">
-              {prev ? (
-                prev.status === 'draft' ? (
-                  <div className="detail-pager-disabled" aria-disabled="true">
-                    <span className="detail-pager-label">
-                      {language === 'zh' ? '上一篇' : 'Previous'}
-                    </span>
-                    <span className="detail-pager-title">
-                      {prev.title[language]}
-                    </span>
-                  </div>
-                ) : (
-                  <a href={`${hrefPrefix}${prev.slug}`}>
-                    <span className="detail-pager-label">
-                      {language === 'zh' ? '上一篇' : 'Previous'}
-                    </span>
-                    <span className="detail-pager-title">
-                      {prev.title[language]}
-                    </span>
-                  </a>
-                )
-              ) : (
-                <div className="detail-pager-disabled" aria-disabled="true">
-                  <span className="detail-pager-label">
-                    {language === 'zh' ? '上一篇' : 'Previous'}
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="detail-pager-side detail-pager-next">
-              {next ? (
-                next.status === 'draft' ? (
-                  <div className="detail-pager-disabled" aria-disabled="true">
-                    <span className="detail-pager-label">
-                      {language === 'zh' ? '下一篇' : 'Next'}
-                    </span>
-                    <span className="detail-pager-title">
-                      {next.title[language]}
-                    </span>
-                  </div>
-                ) : (
-                  <a href={`${hrefPrefix}${next.slug}`}>
-                    <span className="detail-pager-label">
-                      {language === 'zh' ? '下一篇' : 'Next'}
-                    </span>
-                    <span className="detail-pager-title">
-                      {next.title[language]}
-                    </span>
-                  </a>
-                )
-              ) : (
-                <div className="detail-pager-disabled" aria-disabled="true">
-                  <span className="detail-pager-label">
-                    {language === 'zh' ? '下一篇' : 'Next'}
-                  </span>
-                </div>
-              )}
-            </div>
-          </nav>
+          <DetailPager
+            collection={collection}
+            currentSlug={item.slug}
+            hrefPrefix={hrefPrefix}
+          />
         </main>
       </div>
     </div>

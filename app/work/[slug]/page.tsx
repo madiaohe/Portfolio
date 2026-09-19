@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProjectDetail } from './project-detail';
+import { ProjectShowcase } from './project-showcase';
 import { getProject, publishedProjects } from '../../../lib/projects';
 import '../../minimal.css';
 import '../../detail.css';
+import '../../showcase.css';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -26,5 +28,9 @@ export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
-  return <ProjectDetail project={project} />;
+  return project.layout === 'showcase' ? (
+    <ProjectShowcase project={project} />
+  ) : (
+    <ProjectDetail project={project} />
+  );
 }

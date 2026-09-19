@@ -1,12 +1,25 @@
-import type { LocalizedText, WritingBlock } from './writing';
+import type {
+  DetailLayout,
+  LocalizedText,
+  ShowcaseChapter,
+  ShowcaseCover,
+  ShowcaseFact,
+  WritingBlock,
+} from './writing';
 
 export type PublishedProject = {
   slug: string;
   publishedAt: string;
   status?: 'published';
+  // 'article' (default) uses DetailPage; 'showcase' uses the image-led
+  // ShowcasePage. Swap this field to switch templates without moving data.
+  layout?: DetailLayout;
   title: LocalizedText;
   description: LocalizedText;
   blocks: WritingBlock[];
+  cover?: ShowcaseCover;
+  facts?: ShowcaseFact[];
+  chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
 };
 

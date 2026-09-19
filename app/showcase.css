@@ -1,0 +1,140 @@
+/* =====================================================================
+   Showcase template — image-led page shared by projects and writing.
+   All spacing/typography/colors come from the design-system tokens
+   (docs/design-system.md); insets follow the 4px grid.
+   ===================================================================== */
+
+.showcase-shell {
+  width: 100%;
+  max-width: 598px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md) var(--space-3xl);
+  overflow-x: clip;
+}
+
+.showcase-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  margin-bottom: var(--space-3xl);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  color: var(--muted-foreground);
+  text-decoration: none;
+}
+.showcase-back:hover {
+  color: var(--foreground);
+}
+
+.showcase-header h1 {
+  margin: 0 0 var(--space-sm);
+  color: var(--foreground);
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-heading);
+}
+.showcase-deck {
+  margin: 0 0 var(--space-xs);
+  color: var(--prose);
+  font-weight: var(--font-weight-body);
+  line-height: var(--leading-body);
+  overflow-wrap: anywhere;
+}
+.showcase-date {
+  display: block;
+  font-size: var(--text-caption);
+  color: var(--muted-foreground);
+}
+
+.showcase-cover {
+  margin: var(--space-3xl) 0 0;
+}
+.showcase-cover img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.showcase-cover figcaption,
+.showcase-chapter__image figcaption {
+  margin-top: var(--space-2xs);
+  font-size: var(--text-caption);
+  color: var(--muted-foreground);
+}
+
+.showcase-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-sm);
+  margin: var(--space-3xl) 0 0;
+}
+.showcase-fact dt {
+  font-size: var(--text-caption);
+  color: var(--muted-foreground);
+}
+.showcase-fact dd {
+  margin: var(--space-2xs) 0 0;
+  color: var(--foreground);
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+}
+
+.showcase-chapters {
+  margin-top: var(--space-4xl);
+}
+.showcase-chapter + .showcase-chapter {
+  margin-top: var(--space-4xl);
+}
+.showcase-chapter__heading {
+  margin: 0 0 var(--space-md);
+  color: var(--foreground);
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-heading);
+  scroll-margin-top: var(--space-lg);
+}
+.showcase-chapter__heading a {
+  text-decoration: none;
+}
+.showcase-chapter__body > p {
+  margin: 0;
+  color: var(--prose);
+  font-weight: var(--font-weight-body);
+  line-height: var(--leading-body);
+  overflow-wrap: anywhere;
+}
+.showcase-chapter__body > p + p {
+  margin-top: var(--space-md);
+}
+.showcase-chapter__body > h3 {
+  margin: var(--space-3xl) 0 var(--space-sm);
+  color: var(--foreground);
+  font-size: var(--text-body);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--leading-heading);
+}
+.showcase-chapter__image {
+  margin: var(--space-lg) 0 0;
+}
+.showcase-chapter__image img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.showcase-site[lang='zh-CN'] .showcase-chapter__body > p {
+  line-height: var(--leading-body-zh);
+}
+
+@media (max-width: 760px) {
+  .showcase-shell {
+    padding: var(--space-lg) var(--space-md) var(--space-2xl);
+  }
+  .showcase-back {
+    margin-bottom: var(--space-2xl);
+  }
+  .showcase-cover {
+    margin-top: var(--space-2xl);
+  }
+}
