@@ -17,11 +17,7 @@ import type {
   ShowcaseGalleryImage,
   ShowcaseLogo,
 } from '@/lib/writing';
-import {
-  ScrollAutoplay,
-  ScrollAutoplayContainer,
-  ScrollAutoplayItem,
-} from '@/components/ui/scroll-autoplay';
+import { ScrollAutoplayDevice } from '@/components/ui/scroll-autoplay-device';
 
 export type ShowcaseItem = {
   slug: string;
@@ -184,40 +180,10 @@ export function ShowcasePage({
           ) : null}
 
           {item.gallery && item.gallery.length > 1 ? (
-            <div className="showcase-gallery">
-              <ScrollAutoplay className="showcase-gallery__scroll">
-                <ScrollAutoplayContainer className="showcase-gallery__stage">
-                  <div
-                    className="showcase-gallery__device"
-                    style={
-                      {
-                        '--gallery-aspect': (
-                          item.galleryAspect ?? '4:3'
-                        ).replace(':', ' / '),
-                      } as React.CSSProperties
-                    }
-                  >
-                    <div className="showcase-gallery__screen">
-                      {item.gallery.map((image, index) => (
-                        <ScrollAutoplayItem
-                          key={image.src}
-                          index={index}
-                          totalImages={item.gallery!.length}
-                        >
-                          <Image
-                            fill
-                            src={image.src}
-                            alt={image.alt}
-                            className="showcase-gallery__image"
-                            priority={index === 0}
-                          />
-                        </ScrollAutoplayItem>
-                      ))}
-                    </div>
-                  </div>
-                </ScrollAutoplayContainer>
-              </ScrollAutoplay>
-            </div>
+            <ScrollAutoplayDevice
+              images={item.gallery}
+              aspect={item.galleryAspect ?? '4:3'}
+            />
           ) : null}
 
           {chapters.length > 0 ? (

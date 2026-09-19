@@ -37,11 +37,7 @@ import { NotionMentionLink } from '@/components/ui/notion-mention-link';
 import { HookSidebar } from '@/components/ui/hook-sidebar';
 import { ArticleDirectory } from '@/components/blocks/article-directory';
 import { LibraryDirectory } from '@/components/blocks/library-directory';
-import {
-  ScrollAutoplay,
-  ScrollAutoplayContainer,
-  ScrollAutoplayItem,
-} from '@/components/ui/scroll-autoplay';
+import { ScrollAutoplayDevice } from '@/components/ui/scroll-autoplay-device';
 
 /* oxlint-disable react/react-compiler, next/no-img-element -- Mirrors the official beUI preview's remote provider favicon helper. */
 function ModelLogo({ url }: { url: string }) {
@@ -845,7 +841,7 @@ const SECTIONS: GallerySection[] = [
         <pre>
           <code>
             {
-              '<ScrollAutoplay className="h-[200vh]">\n  <ScrollAutoplayContainer>\n    <ScrollAutoplayItem index={0} totalImages={4}>\n      <Image fill src="..." />\n    </ScrollAutoplayItem>\n    ...\n  </ScrollAutoplayContainer>\n</ScrollAutoplay>'
+              '<ScrollAutoplayDevice\n  images={[{ src, alt }, ...]}\n  aspect="16 / 9"\n/>'
             }
           </code>
         </pre>
@@ -1225,39 +1221,23 @@ export function ComponentGallery() {
 
 function ScrollAutoplayDemo({ zh }: { zh: boolean }) {
   const IMAGES = [
-    '/media/work-categories/digital-products.png',
-    '/media/work-categories/brand-systems.png',
-    '/media/work-categories/experiments.png',
-    '/media/work-categories/selected-objects.png',
+    {
+      src: '/media/work-categories/digital-products.png',
+      alt: 'Digital products',
+    },
+    { src: '/media/work-categories/brand-systems.png', alt: 'Brand systems' },
+    { src: '/media/work-categories/experiments.png', alt: 'Experiments' },
+    {
+      src: '/media/work-categories/selected-objects.png',
+      alt: 'Selected objects',
+    },
   ];
   return (
-    <ScrollAutoplay className="h-[200vh]">
-      <ScrollAutoplayContainer className="sticky top-0 left-0 w-full h-screen place-content-center">
-        <div className="scroll-autoplay-demo__device">
-          <div className="scroll-autoplay-demo__screen">
-            {IMAGES.map((src, index) => (
-              <ScrollAutoplayItem
-                key={src}
-                index={index}
-                totalImages={IMAGES.length}
-              >
-                <Image
-                  fill
-                  src={src}
-                  alt={zh ? '滚动轮播示例图' : 'Scroll autoplay demo image'}
-                  className="object-cover"
-                  priority={index === 0}
-                />
-              </ScrollAutoplayItem>
-            ))}
-          </div>
-        </div>
-        <p className="scroll-autoplay-demo__caption">
-          {zh
-            ? '滚动下方区域播放图片'
-            : 'Scroll this area to play the images'}
-        </p>
-      </ScrollAutoplayContainer>
-    </ScrollAutoplay>
+    <ScrollAutoplayDevice
+      images={IMAGES}
+      caption={
+        zh ? '滚动下方区域播放图片' : 'Scroll this area to play the images'
+      }
+    />
   );
 }
