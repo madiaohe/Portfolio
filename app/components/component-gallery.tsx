@@ -37,6 +37,11 @@ import { NotionMentionLink } from '@/components/ui/notion-mention-link';
 import { HookSidebar } from '@/components/ui/hook-sidebar';
 import { ArticleDirectory } from '@/components/blocks/article-directory';
 import { LibraryDirectory } from '@/components/blocks/library-directory';
+import {
+  ScrollAutoplay,
+  ScrollAutoplayContainer,
+  ScrollAutoplayItem,
+} from '@/components/ui/scroll-autoplay';
 
 /* oxlint-disable react/react-compiler, next/no-img-element -- Mirrors the official beUI preview's remote provider favicon helper. */
 function ModelLogo({ url }: { url: string }) {
@@ -820,12 +825,40 @@ const SECTIONS: GallerySection[] = [
       </section>
     ),
   },
+  {
+    id: 'scroll-autoplay',
+    en: 'Scroll Autoplay',
+    zh: '滚动自动播放',
+    description: {
+      en: 'A scroll-driven image crossfade: images switch in sequence as the page scrolls.',
+      zh: '滚动驱动的图片轮播：页面滚动时图片按顺序交叉切换。',
+    },
+    render: (zh) => (
+      <section
+        id="scroll-autoplay"
+        className="gallery-section"
+        aria-label="Scroll Autoplay"
+      >
+        <div className="gallery-demo scroll-autoplay-demo ui-scope">
+          <ScrollAutoplayDemo zh={zh} />
+        </div>
+        <pre>
+          <code>
+            {
+              '<ScrollAutoplay className="h-[200vh]">\n  <ScrollAutoplayContainer>\n    <ScrollAutoplayItem index={0} totalImages={4}>\n      <Image fill src="..." />\n    </ScrollAutoplayItem>\n    ...\n  </ScrollAutoplayContainer>\n</ScrollAutoplay>'
+            }
+          </code>
+        </pre>
+      </section>
+    ),
+  },
 ];
 
 const BLOCK_IDS = new Set([
   'floating-agent',
   'article-directory',
   'library-directory',
+  'scroll-autoplay',
 ]);
 const COMPONENT_SECTIONS = SECTIONS.filter((s) => !BLOCK_IDS.has(s.id));
 const BLOCK_SECTIONS = SECTIONS.filter((s) => BLOCK_IDS.has(s.id));
@@ -1187,5 +1220,42 @@ export function ComponentGallery() {
         </main>
       </div>
     </div>
+  );
+}
+
+function ScrollAutoplayDemo({ zh }: { zh: boolean }) {
+  const IMAGES = [
+    '/media/work-categories/digital-products.png',
+    '/media/work-categories/brand-systems.png',
+    '/media/work-categories/experiments.png',
+    '/media/work-categories/selected-objects.png',
+  ];
+  return (
+    <ScrollAutoplay className="h-[200vh]">
+      <ScrollAutoplayContainer className="sticky top-0 left-0 w-full h-screen place-content-center">
+        <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)]">
+          {IMAGES.map((src, index) => (
+            <ScrollAutoplayItem
+              key={src}
+              index={index}
+              totalImages={IMAGES.length}
+            >
+              <Image
+                fill
+                src={src}
+                alt={zh ? '滚动轮播示例图' : 'Scroll autoplay demo image'}
+                className="object-cover"
+                priority={index === 0}
+              />
+            </ScrollAutoplayItem>
+          ))}
+          <p className="absolute bottom-3 left-0 right-0 text-center text-[var(--text-caption)] text-[var(--muted-foreground)]">
+            {zh
+              ? '滚动下方区域播放图片'
+              : 'Scroll this area to play the images'}
+          </p>
+        </div>
+      </ScrollAutoplayContainer>
+    </ScrollAutoplay>
   );
 }

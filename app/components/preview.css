@@ -299,11 +299,14 @@
 }
 
 @media (min-width: 1081px) {
-  .gallery-layout {
-    padding-left: 256px;
-  }
   .gallery-directory {
     left: 80px;
+  }
+}
+@media (min-width: 1152px) {
+  .gallery-layout {
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
