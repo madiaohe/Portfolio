@@ -190,6 +190,46 @@ export const projects: Project[] = [
       },
     ],
   },
+  {
+    slug: 'schneider-electric',
+    publishedAt: '2025-03-03',
+    layout: 'showcase',
+    title: { zh: '施耐德', en: 'Schneider Electric' },
+    description: {
+      zh: '施耐德电气项目——具体内容待补充。',
+      en: 'Schneider Electric project — content to be added.',
+    },
+    blocks: createProjectTemplateBlocks(),
+    facts: [
+      {
+        label: { zh: '角色', en: 'Role' },
+        value: { zh: '待补充', en: 'TBD' },
+      },
+      {
+        label: { zh: '时间', en: 'Year' },
+        value: { zh: '2025', en: '2025' },
+      },
+      {
+        label: { zh: '类型', en: 'Type' },
+        value: { zh: '待补充', en: 'TBD' },
+      },
+    ],
+    chapters: [
+      {
+        id: 'overview',
+        heading: { zh: '概览', en: 'Overview' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '这是 showcase 模板的占位章节。项目真实内容（背景、设计方向、关键决策与结果）整理好后会替换这里。',
+              en: 'This is a placeholder chapter for the showcase template. Real project content (context, design direction, decisions and outcomes) will replace this once it is ready.',
+            },
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export const publishedProjects = projects.filter(
