@@ -196,59 +196,69 @@ export function DetailPage({
               </section>
             ) : null}
           </article>
-          {prev || next ? (
-            <nav
-              className="detail-navigation"
-              aria-label={language === 'zh' ? '文章导航' : 'Article navigation'}
-            >
-              <div className="detail-pager-side detail-pager-prev">
-                {prev ? (
-                  prev.status === 'draft' ? (
-                    <div className="detail-pager-disabled" aria-disabled="true">
-                      <span className="detail-pager-label">
-                        {language === 'zh' ? '上一篇' : 'Previous'}
-                      </span>
-                      <span className="detail-pager-title">
-                        {prev.title[language]}
-                      </span>
-                    </div>
-                  ) : (
-                    <a href={`${hrefPrefix}${prev.slug}`}>
-                      <span className="detail-pager-label">
-                        {language === 'zh' ? '上一篇' : 'Previous'}
-                      </span>
-                      <span className="detail-pager-title">
-                        {prev.title[language]}
-                      </span>
-                    </a>
-                  )
-                ) : null}
-              </div>
-              <div className="detail-pager-side detail-pager-next">
-                {next ? (
-                  next.status === 'draft' ? (
-                    <div className="detail-pager-disabled" aria-disabled="true">
-                      <span className="detail-pager-label">
-                        {language === 'zh' ? '下一篇' : 'Next'}
-                      </span>
-                      <span className="detail-pager-title">
-                        {next.title[language]}
-                      </span>
-                    </div>
-                  ) : (
-                    <a href={`${hrefPrefix}${next.slug}`}>
-                      <span className="detail-pager-label">
-                        {language === 'zh' ? '下一篇' : 'Next'}
-                      </span>
-                      <span className="detail-pager-title">
-                        {next.title[language]}
-                      </span>
-                    </a>
-                  )
-                ) : null}
-              </div>
-            </nav>
-          ) : null}
+          <nav
+            className="detail-navigation"
+            aria-label={language === 'zh' ? '文章导航' : 'Article navigation'}
+          >
+            <div className="detail-pager-side detail-pager-prev">
+              {prev ? (
+                prev.status === 'draft' ? (
+                  <div className="detail-pager-disabled" aria-disabled="true">
+                    <span className="detail-pager-label">
+                      {language === 'zh' ? '上一篇' : 'Previous'}
+                    </span>
+                    <span className="detail-pager-title">
+                      {prev.title[language]}
+                    </span>
+                  </div>
+                ) : (
+                  <a href={`${hrefPrefix}${prev.slug}`}>
+                    <span className="detail-pager-label">
+                      {language === 'zh' ? '上一篇' : 'Previous'}
+                    </span>
+                    <span className="detail-pager-title">
+                      {prev.title[language]}
+                    </span>
+                  </a>
+                )
+              ) : (
+                <div className="detail-pager-disabled" aria-disabled="true">
+                  <span className="detail-pager-label">
+                    {language === 'zh' ? '上一篇' : 'Previous'}
+                  </span>
+                </div>
+              )}
+            </div>
+            <div className="detail-pager-side detail-pager-next">
+              {next ? (
+                next.status === 'draft' ? (
+                  <div className="detail-pager-disabled" aria-disabled="true">
+                    <span className="detail-pager-label">
+                      {language === 'zh' ? '下一篇' : 'Next'}
+                    </span>
+                    <span className="detail-pager-title">
+                      {next.title[language]}
+                    </span>
+                  </div>
+                ) : (
+                  <a href={`${hrefPrefix}${next.slug}`}>
+                    <span className="detail-pager-label">
+                      {language === 'zh' ? '下一篇' : 'Next'}
+                    </span>
+                    <span className="detail-pager-title">
+                      {next.title[language]}
+                    </span>
+                  </a>
+                )
+              ) : (
+                <div className="detail-pager-disabled" aria-disabled="true">
+                  <span className="detail-pager-label">
+                    {language === 'zh' ? '下一篇' : 'Next'}
+                  </span>
+                </div>
+              )}
+            </div>
+          </nav>
         </main>
       </div>
     </div>
