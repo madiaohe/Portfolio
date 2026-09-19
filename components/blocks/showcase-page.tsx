@@ -13,6 +13,7 @@ import type {
   ShowcaseChapter,
   ShowcaseCover,
   ShowcaseFact,
+  ShowcaseGalleryAspect,
   ShowcaseGalleryImage,
   ShowcaseLogo,
 } from '@/lib/writing';
@@ -31,6 +32,7 @@ export type ShowcaseItem = {
   cover?: ShowcaseCover;
   facts?: ShowcaseFact[];
   gallery?: ShowcaseGalleryImage[];
+  galleryAspect?: ShowcaseGalleryAspect;
   chapters?: ShowcaseChapter[];
 };
 
@@ -185,22 +187,33 @@ export function ShowcasePage({
             <div className="showcase-gallery">
               <ScrollAutoplay className="showcase-gallery__scroll">
                 <ScrollAutoplayContainer className="showcase-gallery__stage">
-                  <div className="showcase-gallery__frame">
-                    {item.gallery.map((image, index) => (
-                      <ScrollAutoplayItem
-                        key={image.src}
-                        index={index}
-                        totalImages={item.gallery!.length}
-                      >
-                        <Image
-                          fill
-                          src={image.src}
-                          alt={image.alt}
-                          className="showcase-gallery__image"
-                          priority={index === 0}
-                        />
-                      </ScrollAutoplayItem>
-                    ))}
+                  <div
+                    className="showcase-gallery__device"
+                    style={
+                      {
+                        '--gallery-aspect': (
+                          item.galleryAspect ?? '4:3'
+                        ).replace(':', ' / '),
+                      } as React.CSSProperties
+                    }
+                  >
+                    <div className="showcase-gallery__screen">
+                      {item.gallery.map((image, index) => (
+                        <ScrollAutoplayItem
+                          key={image.src}
+                          index={index}
+                          totalImages={item.gallery!.length}
+                        >
+                          <Image
+                            fill
+                            src={image.src}
+                            alt={image.alt}
+                            className="showcase-gallery__image"
+                            priority={index === 0}
+                          />
+                        </ScrollAutoplayItem>
+                      ))}
+                    </div>
                   </div>
                 </ScrollAutoplayContainer>
               </ScrollAutoplay>

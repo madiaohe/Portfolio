@@ -1233,28 +1233,30 @@ function ScrollAutoplayDemo({ zh }: { zh: boolean }) {
   return (
     <ScrollAutoplay className="h-[200vh]">
       <ScrollAutoplayContainer className="sticky top-0 left-0 w-full h-screen place-content-center">
-        <div className="relative aspect-video w-full max-w-2xl mx-auto overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)]">
-          {IMAGES.map((src, index) => (
-            <ScrollAutoplayItem
-              key={src}
-              index={index}
-              totalImages={IMAGES.length}
-            >
-              <Image
-                fill
-                src={src}
-                alt={zh ? '滚动轮播示例图' : 'Scroll autoplay demo image'}
-                className="object-cover"
-                priority={index === 0}
-              />
-            </ScrollAutoplayItem>
-          ))}
-          <p className="absolute bottom-3 left-0 right-0 text-center text-[var(--text-caption)] text-[var(--muted-foreground)]">
-            {zh
-              ? '滚动下方区域播放图片'
-              : 'Scroll this area to play the images'}
-          </p>
+        <div className="scroll-autoplay-demo__device">
+          <div className="scroll-autoplay-demo__screen">
+            {IMAGES.map((src, index) => (
+              <ScrollAutoplayItem
+                key={src}
+                index={index}
+                totalImages={IMAGES.length}
+              >
+                <Image
+                  fill
+                  src={src}
+                  alt={zh ? '滚动轮播示例图' : 'Scroll autoplay demo image'}
+                  className="object-cover"
+                  priority={index === 0}
+                />
+              </ScrollAutoplayItem>
+            ))}
+          </div>
         </div>
+        <p className="scroll-autoplay-demo__caption">
+          {zh
+            ? '滚动下方区域播放图片'
+            : 'Scroll this area to play the images'}
+        </p>
       </ScrollAutoplayContainer>
     </ScrollAutoplay>
   );

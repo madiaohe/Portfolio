@@ -4,6 +4,7 @@ import type {
   ShowcaseChapter,
   ShowcaseCover,
   ShowcaseFact,
+  ShowcaseGalleryAspect,
   ShowcaseGalleryImage,
   ShowcaseLogo,
   WritingBlock,
@@ -22,6 +23,7 @@ export type PublishedProject = {
   cover?: ShowcaseCover;
   logo?: ShowcaseLogo;
   gallery?: ShowcaseGalleryImage[];
+  galleryAspect?: ShowcaseGalleryAspect;
   facts?: ShowcaseFact[];
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
@@ -222,6 +224,7 @@ export const projects: Project[] = [
         value: { zh: '待补充', en: 'TBD' },
       },
     ],
+    galleryAspect: '16 / 9',
     gallery: [
       {
         src: '/media/work-categories/digital-products.png',

@@ -31,6 +31,10 @@ export type ShowcaseGalleryImage = {
   alt: string;
 };
 
+// Accept any CSS aspect-ratio value, e.g. '4 / 3', '16 / 9' or '1024 / 600'.
+// Legacy '4:3' / '16:9' forms are also accepted and normalized at render time.
+export type ShowcaseGalleryAspect = string;
+
 export type ShowcaseFact = { label: LocalizedText; value: LocalizedText };
 
 export type ShowcaseChapter = {
@@ -66,6 +70,7 @@ export type PublishedWritingArticle = {
   cover?: ShowcaseCover;
   logo?: ShowcaseLogo;
   gallery?: ShowcaseGalleryImage[];
+  galleryAspect?: ShowcaseGalleryAspect;
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
 };

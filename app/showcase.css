@@ -131,19 +131,39 @@
   left: 0;
   width: 100%;
   height: 100svh;
-  display: grid;
-  place-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-md);
 }
-.showcase-gallery__frame {
+.showcase-gallery__device {
+  position: relative;
+  width: min(100%, 640px);
+  aspect-ratio: var(--gallery-aspect, 4 / 3);
+  padding: var(--space-2xs);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius-lg) * 2);
+  background: linear-gradient(
+    120deg,
+    color-mix(in oklab, var(--muted-foreground) 30%, transparent),
+    color-mix(in oklab, var(--muted) 40%, transparent)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, #fff 30%, transparent),
+    0 12px 36px color-mix(in oklab, var(--foreground) 12%, transparent);
+}
+/* Screen bezel: a fixed dark frame so the images read as a touchscreen,
+   regardless of the active theme. */
+.showcase-gallery__screen {
   position: relative;
   width: 100%;
-  max-width: 640px;
-  aspect-ratio: 4 / 3;
-  margin: 0 auto;
+  height: 100%;
+  padding: var(--space-sm);
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: var(--space-2xs) solid #27272a;
   border-radius: var(--radius-md);
-  background: var(--surface);
+  background: #000;
+  box-shadow: 0 0 0 1px color-mix(in oklab, #000 60%, transparent);
 }
 .showcase-gallery__image {
   object-fit: cover;
