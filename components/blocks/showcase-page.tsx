@@ -13,6 +13,7 @@ import type {
   ShowcaseChapter,
   ShowcaseCover,
   ShowcaseFact,
+  ShowcaseLogo,
 } from '@/lib/writing';
 
 export type ShowcaseItem = {
@@ -20,6 +21,7 @@ export type ShowcaseItem = {
   publishedAt: string;
   title: LocalizedText;
   description?: LocalizedText;
+  logo?: ShowcaseLogo;
   cover?: ShowcaseCover;
   facts?: ShowcaseFact[];
   chapters?: ShowcaseChapter[];
@@ -122,6 +124,13 @@ export function ShowcasePage({
         </aside>
         <main id="main-content">
           <header className="showcase-header">
+            {item.logo ? (
+              <img
+                className="showcase-logo"
+                src={item.logo.src}
+                alt={item.logo.alt}
+              />
+            ) : null}
             <h1 id="showcase-title">{item.title[language]}</h1>
             {item.description ? (
               <p className="showcase-deck">{item.description[language]}</p>

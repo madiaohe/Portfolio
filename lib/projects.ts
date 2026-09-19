@@ -4,6 +4,7 @@ import type {
   ShowcaseChapter,
   ShowcaseCover,
   ShowcaseFact,
+  ShowcaseLogo,
   WritingBlock,
 } from './writing';
 
@@ -18,6 +19,7 @@ export type PublishedProject = {
   description: LocalizedText;
   blocks: WritingBlock[];
   cover?: ShowcaseCover;
+  logo?: ShowcaseLogo;
   facts?: ShowcaseFact[];
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
@@ -194,6 +196,10 @@ export const projects: Project[] = [
     slug: 'schneider-electric',
     publishedAt: '2025-03-03',
     layout: 'showcase',
+    logo: {
+      src: '/media/schneider-electric-logo.png',
+      alt: 'Schneider Electric logo',
+    },
     title: { zh: '施耐德', en: 'Schneider Electric' },
     description: {
       zh: '施耐德电气项目——具体内容待补充。',

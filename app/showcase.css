@@ -5,6 +5,18 @@
    All spacing/typography/colors come from the design-system tokens.
    ===================================================================== */
 
+.showcase-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
+.showcase-logo {
+  display: block;
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
 .showcase-header h1 {
   margin: 0 0 var(--space-sm);
   color: var(--foreground);

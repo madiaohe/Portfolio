@@ -21,6 +21,11 @@ export type ShowcaseCover = {
   caption?: LocalizedText;
 };
 
+export type ShowcaseLogo = {
+  src: string;
+  alt: string;
+};
+
 export type ShowcaseFact = { label: LocalizedText; value: LocalizedText };
 
 export type ShowcaseChapter = {
@@ -54,6 +59,7 @@ export type PublishedWritingArticle = {
   description: LocalizedText;
   blocks: WritingBlock[];
   cover?: ShowcaseCover;
+  logo?: ShowcaseLogo;
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
 };
