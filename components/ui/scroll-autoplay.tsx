@@ -33,6 +33,11 @@ function useScrollAutoplayContext() {
   return context;
 }
 
+/** Expose the shared scroll progress for consumers like thumbnail rails. */
+export function useScrollAutoplayProgress() {
+  return useScrollAutoplayContext().scrollYProgress;
+}
+
 export function ScrollAutoplay({
   offset = ['start start', 'end end'],
   className,
