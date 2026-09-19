@@ -14,6 +14,7 @@ export function WritingShowcase({
       item={article}
       backHref="/#writing-heading"
       backLabel={{ zh: '返回', en: 'Back' }}
+      tocLabel={{ zh: '章节', en: 'Chapters' }}
       collection={writingPagerItems}
       hrefPrefix="/writing/"
     />

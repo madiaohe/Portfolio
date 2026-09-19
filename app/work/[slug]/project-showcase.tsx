@@ -10,6 +10,7 @@ export function ProjectShowcase({ project }: { project: PublishedProject }) {
       item={project}
       backHref="/#projects-heading"
       backLabel={{ zh: '返回', en: 'Back' }}
+      tocLabel={{ zh: '章节', en: 'Chapters' }}
       collection={projectPagerItems}
       hrefPrefix="/work/"
     />

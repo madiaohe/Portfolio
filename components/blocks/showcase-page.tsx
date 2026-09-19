@@ -1,7 +1,11 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useMemo, useState } from 'react';
+import { useReducedMotion } from 'motion/react';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
+import { MinimalHeader } from '@/components/blocks/minimal-header';
+import { ArticleDirectory } from '@/components/blocks/article-directory';
 import { DetailPager } from '@/components/blocks/detail-pager';
 import type { DetailPagerItem } from '@/lib/reference-home';
 import type {
@@ -22,37 +26,100 @@ export type ShowcaseItem = {
 };
 
 /**
- * Image-led template shared by projects and writing articles: back link,
- * title, optional cover, facts and image-led chapters, then the always
- * visible pager. No directory or references. Swap `layout` back to
- * 'article' in the data source to use the full DetailPage template.
- * Styles come from app/showcase.css.
+ * Image-led template shared by projects and writing articles: a scroll-linked
+ * chapter directory on the left (fixed on wide viewports, like DetailPage),
+ * then title, cover, facts and image-led chapters, then the always visible
+ * pager. No references or 4:3 blocks. Swap `layout` back to 'article' in the
+ * data source to use the full DetailPage template. Styles: app/showcase.css.
  */
 export function ShowcasePage({
   item,
   backHref,
   backLabel,
+  tocLabel,
   collection,
   hrefPrefix,
 }: {
   item: ShowcaseItem;
   backHref: string;
   backLabel: LocalizedText;
+  tocLabel: LocalizedText;
   collection: readonly DetailPagerItem[];
   hrefPrefix: string;
 }) {
   const { language } = useSiteLanguage();
+  const reduced = useReducedMotion() ?? false;
+  const chapters = useMemo(() => item.chapters ?? [], [item.chapters]);
+  const headings = chapters.map((chapter) => chapter.heading);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleChapterChange = (index: number) => {
+    const chapter = chapters[index];
+    if (!chapter) return;
+    setActiveIndex(index);
+    document.getElementById(chapter.id)?.scrollIntoView({
+      behavior: reduced ? 'auto' : 'smooth',
+      block: 'start',
+    });
+    history.replaceState(null, '', `#${chapter.id}`);
+  };
+
+  useEffect(() => {
+    document.title = `${item.title[language]} — Xu Xianyu`;
+  }, [item, language]);
+
+  useEffect(() => {
+    if (!chapters.length) return;
+    let frame = 0;
+    const updateActiveChapter = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const targets = chapters
+          .map(({ id }) => document.getElementById(id))
+          .filter((node): node is HTMLElement => node !== null);
+        if (!targets.length) return;
+
+        const threshold = window.scrollY + 160;
+        const current = targets.reduce(
+          (active, node) => (node.offsetTop <= threshold ? node : active),
+          targets[0],
+        );
+        setActiveIndex(
+          Math.max(
+            0,
+            targets.findIndex((node) => node === current),
+          ),
+        );
+      });
+    };
+
+    updateActiveChapter();
+    window.addEventListener('scroll', updateActiveChapter, { passive: true });
+    window.addEventListener('resize', updateActiveChapter);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateActiveChapter);
+      window.removeEventListener('resize', updateActiveChapter);
+    };
+  }, [chapters]);
 
   return (
     <div
       className="minimal-site showcase-site"
       lang={language === 'zh' ? 'zh-CN' : 'en'}
     >
-      <div className="showcase-shell">
-        <a className="showcase-back" href={backHref}>
-          <span aria-hidden="true">←</span> {backLabel[language]}
-        </a>
-
+      <MinimalHeader showIdentity={false} />
+      <div className="detail-shell showcase-shell">
+        <aside className="detail-aside">
+          <ArticleDirectory
+            backHref={backHref}
+            backLabel={backLabel[language]}
+            tocLabel={tocLabel[language]}
+            items={headings.map((heading) => heading[language])}
+            value={activeIndex}
+            onChange={handleChapterChange}
+          />
+        </aside>
         <main id="main-content">
           <header className="showcase-header">
             <h1 id="showcase-title">{item.title[language]}</h1>
@@ -95,9 +162,9 @@ export function ShowcasePage({
             </dl>
           ) : null}
 
-          {item.chapters && item.chapters.length > 0 ? (
+          {chapters.length > 0 ? (
             <div className="showcase-chapters">
-              {item.chapters.map((chapter) => (
+              {chapters.map((chapter) => (
                 <section
                   key={chapter.id}
                   id={chapter.id}
