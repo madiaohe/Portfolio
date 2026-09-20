@@ -36,7 +36,9 @@
   width: 100%;
   aspect-ratio: var(--gallery-aspect, 4 / 3);
   overflow: hidden;
-  border-radius: calc(var(--radius-lg) * 2 - var(--space-2xs));
+  /* Concentric with the shell: shell radius minus padding (8px) and
+     border (1px). */
+  border-radius: calc(var(--radius-lg) * 2 - var(--space-2xs) - 1px);
   background: #000;
   box-shadow:
     0 0 0 var(--space-2xs) #27272a,
@@ -52,7 +54,7 @@
 .scroll-autoplay-device__fullscreen-trigger {
   position: absolute;
   z-index: 2;
-  right: -1px;
+  right: 0;
   bottom: calc(100% + var(--space-2xs) + 1px);
   display: grid;
   width: var(--space-lg);
@@ -254,7 +256,9 @@
   width: 100%;
   aspect-ratio: var(--gallery-aspect, 4 / 3);
   overflow: hidden;
-  border-radius: calc(var(--radius-lg) * 2 - var(--space-2xs));
+  /* Concentric with the shell: shell radius minus padding (8px) and
+     border (1px). */
+  border-radius: calc(var(--radius-lg) * 2 - var(--space-2xs) - 1px);
   background: #000;
   box-shadow:
     0 0 0 var(--space-2xs) #27272a,
