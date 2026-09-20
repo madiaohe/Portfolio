@@ -18,7 +18,8 @@
   object-fit: contain;
 }
 .showcase-header h1 {
-  margin: 0 0 var(--space-sm);
+  /* No bottom margin: the gallery carries the 64px gap from the title. */
+  margin: 0;
   color: var(--foreground);
   font-size: var(--text-body);
   font-weight: var(--font-weight-semibold);
@@ -31,12 +32,6 @@
   line-height: var(--leading-body);
   overflow-wrap: anywhere;
 }
-.showcase-date {
-  display: block;
-  font-size: var(--text-caption);
-  color: var(--muted-foreground);
-}
-
 .showcase-cover {
   margin: var(--space-3xl) 0 0;
 }
@@ -71,7 +66,7 @@
 }
 
 .showcase-chapters {
-  margin-top: var(--space-4xl);
+  margin-top: var(--space-3xl);
 }
 .showcase-chapter + .showcase-chapter {
   margin-top: var(--space-4xl);
@@ -118,8 +113,17 @@
   line-height: var(--leading-body-zh);
 }
 
+/* Scroll autoplay sits 128px below the last chapter. The device shell sits at
+   the top of the sticky stage (not centered) so the perceived gap matches the
+   128px margin instead of adding half a viewport of empty stage space. */
 .showcase-gallery {
-  margin-top: var(--space-4xl);
+  margin-top: var(--space-5xl);
+}
+.showcase-gallery .scroll-autoplay-device__stage {
+  justify-content: flex-start;
+  /* Let the device shell span the full content column like the body text. */
+  padding-left: 0;
+  padding-right: 0;
 }
 
 @media (max-width: 760px) {

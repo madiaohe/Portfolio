@@ -143,13 +143,6 @@ export function ShowcasePage({
             {item.description ? (
               <p className="showcase-deck">{item.description[language]}</p>
             ) : null}
-            <time className="showcase-date" dateTime={item.publishedAt}>
-              {new Intl.DateTimeFormat(language === 'zh' ? 'zh-CN' : 'en-GB', {
-                year: 'numeric',
-                month: 'long',
-                timeZone: 'UTC',
-              }).format(new Date(`${item.publishedAt}T00:00:00Z`))}
-            </time>
           </header>
 
           {item.cover ? (
@@ -177,14 +170,6 @@ export function ShowcasePage({
                 </div>
               ))}
             </dl>
-          ) : null}
-
-          {item.gallery && item.gallery.length > 1 ? (
-            <ScrollAutoplayDevice
-              images={item.gallery}
-              aspect={item.galleryAspect ?? '4:3'}
-              fullscreenPreview
-            />
           ) : null}
 
           {chapters.length > 0 ? (
@@ -235,6 +220,15 @@ export function ShowcasePage({
                 </section>
               ))}
             </div>
+          ) : null}
+
+          {item.gallery && item.gallery.length > 1 ? (
+            <ScrollAutoplayDevice
+              className="showcase-gallery"
+              images={item.gallery}
+              aspect={item.galleryAspect ?? '4:3'}
+              fullscreenPreview
+            />
           ) : null}
 
           <DetailPager

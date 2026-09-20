@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!project) return { title: 'Project not found — Xu Xianyu' };
   return {
     title: `${project.title.en} — Xu Xianyu`,
-    description: project.description.en,
+    description: project.description?.en ?? '',
     robots: { index: false, follow: false },
   };
 }

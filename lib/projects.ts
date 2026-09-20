@@ -18,7 +18,7 @@ export type PublishedProject = {
   // ShowcasePage. Swap this field to switch templates without moving data.
   layout?: DetailLayout;
   title: LocalizedText;
-  description: LocalizedText;
+  description?: LocalizedText;
   blocks: WritingBlock[];
   cover?: ShowcaseCover;
   logo?: ShowcaseLogo;
@@ -205,10 +205,6 @@ export const projects: Project[] = [
       alt: 'Schneider Electric logo',
     },
     title: { zh: '施耐德', en: 'Schneider Electric' },
-    description: {
-      zh: '施耐德电气项目——具体内容待补充。',
-      en: 'Schneider Electric project — content to be added.',
-    },
     blocks: createProjectTemplateBlocks(),
     facts: [
       {
