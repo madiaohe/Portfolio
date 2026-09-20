@@ -1235,6 +1235,7 @@ function ScrollAutoplayDemo({ zh }: { zh: boolean }) {
   return (
     <ScrollAutoplayDevice
       images={IMAGES}
+      aspect="1 / 1"
       fullscreenPreview
       caption={
         zh ? '滚动下方区域播放图片' : 'Scroll this area to play the images'
