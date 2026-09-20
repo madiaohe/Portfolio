@@ -13,7 +13,8 @@ export type DetailLayout = 'article' | 'showcase';
 export type ShowcaseBlock =
   | { type: 'paragraph'; text: LocalizedText }
   | { type: 'heading'; id: string; text: LocalizedText }
-  | { type: 'image'; src: string; alt: string; caption?: LocalizedText };
+  | { type: 'image'; src: string; alt: string; caption?: LocalizedText }
+  | { type: 'gallery' };
 
 export type ShowcaseCover = {
   src: string;
@@ -75,8 +76,6 @@ export type PublishedWritingArticle = {
   logo?: ShowcaseLogo;
   gallery?: ShowcaseGalleryImage[];
   galleryAspect?: ShowcaseGalleryAspect;
-  /** Custom label for the gallery directory chapter; defaults to 画廊/Gallery. */
-  galleryLabel?: LocalizedText;
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
 };

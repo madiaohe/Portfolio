@@ -24,8 +24,6 @@ export type PublishedProject = {
   logo?: ShowcaseLogo;
   gallery?: ShowcaseGalleryImage[];
   galleryAspect?: ShowcaseGalleryAspect;
-  /** Custom label for the gallery directory chapter; defaults to 画廊/Gallery. */
-  galleryLabel?: LocalizedText;
   facts?: ShowcaseFact[];
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
@@ -200,9 +198,9 @@ export const projects: Project[] = [
   },
   // Reference showcase template: a project with layout: 'showcase' renders
   // the image-led ShowcasePage. Supply title, logo, facts (date / role /
-  // type and any custom rows), gallery images + galleryAspect, and optional
-  // chapters; the gallery directory chapter is derived automatically
-  // (label via galleryLabel). See docs/showcase-template.md.
+  // type and any custom rows), gallery images + galleryAspect, and chapters;
+  // place a { type: 'gallery' } block in a chapter to render the images.
+  // See docs/showcase-template.md.
   {
     slug: 'schneider-electric',
     publishedAt: '2025-03-03',
@@ -285,8 +283,47 @@ export const projects: Project[] = [
           {
             type: 'paragraph',
             text: {
-              zh: '这是 showcase 模板的占位章节。项目真实内容（背景、设计方向、关键决策与结果）整理好后会替换这里。',
-              en: 'This is a placeholder chapter for the showcase template. Real project content (context, design direction, decisions and outcomes) will replace this once it is ready.',
+              zh: '施耐德电气在工业自动化与能源管理领域深耕多年。这个项目聚焦工业现场设备的人机界面（HMI）：工程师需要在本地或远程完成 IO 驱动、IO 设备、无线 4G/Wi-Fi、VPN 等硬件的发现、连接、配置与自检。过去这些操作分散在多个工具和密集的参数表中，学习成本高，也容易在配置中途出错。',
+              en: 'Schneider Electric is a long-standing leader in industrial automation and energy management. This project focuses on the human-machine interface (HMI) for industrial field devices: engineers need to discover, connect, configure, and self-test hardware such as IO drivers, IO equipment, wireless 4G/Wi-Fi, and VPN channels, both locally and remotely. In the past these tasks were scattered across multiple tools and dense parameter sheets — hard to learn and easy to break midway through a configuration.',
+            },
+          },
+          {
+            type: 'gallery',
+          },
+          {
+            type: 'heading',
+            id: 'goals',
+            text: { zh: '设计目标', en: 'Design goals' },
+          },
+          {
+            type: 'paragraph',
+            text: {
+              zh: '把复杂的设备配置收敛成一个清晰、可视、可引导的流程：让工程师在几分钟内走完「上电 → 连接 → 配置 → 自检 → 上线」的完整链路，并在任何一步出现问题时，都能被明确地看到、定位与修复，而不是靠经验和反复试错。',
+              en: 'Fold complex device configuration into a clear, visual, guided flow: let engineers walk the full path from power-on to connect, configure, self-test, and go live within minutes, and make any failure visible, locatable, and recoverable instead of relying on experience and trial and error.',
+            },
+          },
+          {
+            type: 'heading',
+            id: 'capabilities',
+            text: { zh: '核心能力', en: 'Key capabilities' },
+          },
+          {
+            type: 'paragraph',
+            text: {
+              zh: '· 状态可视化：首页直观区分「在线 / 离线 / 自检中」，网络与 VPN 状态一目了然；\n· 配置向导：IO 驱动、IO 设备、无线 4G/Wi-Fi、VPN 逐项引导，减少记忆负担；\n· 自检与排障：离线自检（COM2）把故障定位前置，现场不用来回排查；\n· 安全连接：Secure Connect 与 VPN 成为远程接入的默认路径，远程运维更可控。',
+              en: '· Status-first visibility: the home screen separates online / offline / self-testing at a glance, with network and VPN states always visible;\n· Guided configuration: IO drivers, IO equipment, wireless 4G/Wi-Fi and VPN are configured step by step, reducing cognitive load;\n· Self-test and troubleshooting: offline self-test (COM2) surfaces faults early, so field visits are less about guessing;\n· Secure connectivity: Secure Connect and VPN are the default remote access path, making remote operations more controlled.',
+            },
+          },
+          {
+            type: 'heading',
+            id: 'innovation',
+            text: { zh: '设计语言与创新', en: 'Design language & innovation' },
+          },
+          {
+            type: 'paragraph',
+            text: {
+              zh: '界面采用深色工业视觉，用状态色（在线绿、离线灰）传达实时反馈，危险操作均以弹窗二次确认。创新点在于「状态驱动的信息架构」：不按功能菜单平铺，而是围绕设备生命周期（上电 → 连接 → 配置 → 自检 → 上线）组织界面，新手可以按步骤完成，同时保留高级配置的深度；输入与交互兼容中文输入法与键盘操作，适配现场与远程两种使用场景。',
+              en: 'The interface uses a dark industrial visual language, with status colors (green for online, grey for offline) carrying real-time feedback and destructive actions guarded by confirmation dialogs. The innovation is a status-driven information architecture: instead of flattening functions into menus, the UI is organized around the device lifecycle — power-on, connect, configure, self-test, go live — so newcomers can follow the steps while advanced configuration depth stays accessible. Input and interactions support Chinese IME composition and keyboard operation, suiting both field and remote scenarios.',
             },
           },
         ],

@@ -73,14 +73,11 @@
   margin-top: var(--space-3xl);
 }
 .showcase-chapter + .showcase-chapter {
-  margin-top: var(--space-4xl);
+  margin-top: var(--space-3xl);
 }
-/* The gallery chapter follows the last text chapter tightly, keeping the
-   device as close to the Overview as the centered stage allows. */
-.showcase-chapter + .showcase-chapter--gallery {
-  margin-top: 0;
-}
-.showcase-chapter__heading {
+.showcase-chapter .showcase-chapter__heading {
+  /* Higher specificity than minimal.css' h2 reset: keep a 24px rhythm
+     between the chapter heading and the body. */
   margin: 0 0 var(--space-md);
   color: var(--foreground);
   font-size: var(--text-body);
@@ -102,7 +99,9 @@
   margin-top: var(--space-md);
 }
 .showcase-chapter__body > h3 {
-  margin: var(--space-3xl) 0 var(--space-sm);
+  /* 64px between the previous paragraph's end and the next section heading;
+     the heading stays close to its own paragraph (24px). */
+  margin: var(--space-3xl) 0 var(--space-md);
   color: var(--foreground);
   font-size: var(--text-body);
   font-weight: var(--font-weight-semibold);
