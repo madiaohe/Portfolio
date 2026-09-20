@@ -185,10 +185,13 @@ export function ShowcasePage({
                   key={chapter.id}
                   id={chapter.id}
                   className="showcase-chapter"
+                  aria-label={chapter.heading[language]}
                 >
-                  <h2 className="showcase-chapter__heading">
-                    <a href={`#${chapter.id}`}>{chapter.heading[language]}</a>
-                  </h2>
+                  {chapter.hideHeading ? null : (
+                    <h2 className="showcase-chapter__heading">
+                      <a href={`#${chapter.id}`}>{chapter.heading[language]}</a>
+                    </h2>
+                  )}
                   <div className="showcase-chapter__body">
                     {chapter.blocks.map((block, index) => {
                       switch (block.type) {

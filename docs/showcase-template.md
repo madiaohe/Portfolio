@@ -6,15 +6,15 @@ Showcase 是图片主导的项目 / 写作详情模版，复用 `components/bloc
 
 ## 数据契约（`Project` / `PublishedWritingArticle`）
 
-| 字段 | 作用 | 示例 |
-| --- | --- | --- |
-| `layout` | 选择模版 | `'showcase'`（缺省走 DetailPage） |
-| `title` | 标题（中英） | `{ zh: '施耐德', en: 'Schneider Electric' }` |
-| `logo` | 顶部 logo（可选） | `{ src, alt }` |
-| `facts` | 日期 / 角色 / 类型等元信息（可选） | `[{ label, value }]` |
-| `gallery` | 案例图片数组 | `[{ src, alt }]` |
-| `galleryAspect` | 图片区宽高比，与图片一致即无黑边 | `'16 / 9'` |
-| `chapters` | 正文章节（Heading + blocks） | `[{ id, heading, blocks }]` |
+| 字段            | 作用                               | 示例                                                                                  |
+| --------------- | ---------------------------------- | ------------------------------------------------------------------------------------- |
+| `layout`        | 选择模版                           | `'showcase'`（缺省走 DetailPage）                                                     |
+| `title`         | 标题（中英）                       | `{ zh: '施耐德', en: 'Schneider Electric' }`                                          |
+| `logo`          | 顶部 logo（可选）                  | `{ src, alt }`                                                                        |
+| `facts`         | 日期 / 角色 / 类型等元信息（可选） | `[{ label, value }]`                                                                  |
+| `gallery`       | 案例图片数组                       | `[{ src, alt }]`                                                                      |
+| `galleryAspect` | 图片区宽高比，与图片一致即无黑边   | `'16 / 9'`                                                                            |
+| `chapters`      | 正文章节（Heading + blocks）       | `[{ id, heading, blocks }]`；`hideHeading: true` 时仅保留左侧目录项，不在正文渲染标题 |
 
 - `facts` 的 `value` 可以是单条文本，也可以是数组——数组会作为多个标签垂直堆叠
   （如角色拆成 UI / UX，类型列 HMI / 工业设计 / 交互设计）。
@@ -24,15 +24,29 @@ Showcase 是图片主导的项目 / 写作详情模版，复用 `components/bloc
 
 章节内支持四种 block：
 
-| block | 渲染 |
-| --- | --- |
-| `{ type: 'paragraph', text }` | 段落 |
-| `{ type: 'heading', id, text }` | 子章节标题（h3，可在目录外提供锚点） |
-| `{ type: 'image', src, alt, caption? }` | 图片 |
-| `{ type: 'gallery' }` | 图片画廊（`ScrollAutoplayDevice`） |
+| block                                   | 渲染                                 |
+| --------------------------------------- | ------------------------------------ |
+| `{ type: 'paragraph', text }`           | 段落                                 |
+| `{ type: 'heading', id, text }`         | 子章节标题（h3，可在目录外提供锚点） |
+| `{ type: 'image', src, alt, caption? }` | 图片                                 |
+| `{ type: 'gallery' }`                   | 图片画廊（`ScrollAutoplayDevice`）   |
 
-画廊用 `{ type: 'gallery' }` 放在章节内任意位置，例如 Overview 的背景段之后、
-Design goals 之前。
+## Gallery 章节
+
+滚动浏览默认作为独立章节加入左侧目录，但不在正文中重复显示标题：
+
+```ts
+{
+  id: 'gallery',
+  heading: { zh: '滚动浏览', en: 'Gallery' },
+  hideHeading: true,
+  blocks: [{ type: 'gallery' }],
+}
+```
+
+`heading` 用于左侧目录和无标题章节的 `aria-label`；`hideHeading: true` 只隐藏正文
+标题，不隐藏章节内容。通常把它放在 Overview 之后、正文段落章节之前。画廊图片和
+宽高比仍由顶层的 `gallery`、`galleryAspect` 提供。
 
 ## 页面结构与间距
 
@@ -65,10 +79,18 @@ Design goals 之前。
       heading: { zh: '概览', en: 'Overview' },
       blocks: [
         { type: 'paragraph', text: { zh: '…', en: '…' } },
-        { type: 'gallery' },
-        { type: 'heading', id: 'goals', text: { zh: '设计目标', en: 'Design goals' } },
-        { type: 'paragraph', text: { zh: '…', en: '…' } },
       ],
+    },
+    {
+      id: 'gallery',
+      heading: { zh: '滚动浏览', en: 'Gallery' },
+      hideHeading: true,
+      blocks: [{ type: 'gallery' }],
+    },
+    {
+      id: 'goals',
+      heading: { zh: '设计目标', en: 'Design goals' },
+      blocks: [{ type: 'paragraph', text: { zh: '…', en: '…' } }],
     },
   ],
 }

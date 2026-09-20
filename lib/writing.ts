@@ -45,6 +45,8 @@ export type ShowcaseFact = {
 export type ShowcaseChapter = {
   id: string;
   heading: LocalizedText;
+  /** Keep the chapter in the side directory but omit its heading from prose. */
+  hideHeading?: boolean;
   blocks: ShowcaseBlock[];
 };
 

@@ -79,6 +79,9 @@
 .showcase-chapter + .showcase-chapter {
   margin-top: var(--space-3xl);
 }
+.showcase-chapter {
+  scroll-margin-top: var(--space-lg);
+}
 .showcase-chapter .showcase-chapter__heading {
   /* Higher specificity than minimal.css' h2 reset: keep a 24px rhythm
      between the chapter heading and the body. */

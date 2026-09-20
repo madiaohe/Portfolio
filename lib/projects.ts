@@ -217,6 +217,7 @@ export const projects: Project[] = [
       {
         id: 'gallery',
         heading: { zh: '滚动浏览', en: 'Gallery' },
+        hideHeading: true,
         blocks: [{ type: 'gallery' }],
       },
       {
@@ -431,6 +432,7 @@ export const projects: Project[] = [
       {
         id: 'gallery',
         heading: { zh: '滚动浏览', en: 'Gallery' },
+        hideHeading: true,
         blocks: [{ type: 'gallery' }],
       },
       {
