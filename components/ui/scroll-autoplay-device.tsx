@@ -455,6 +455,7 @@ function FullscreenPreview({
         aria-modal="true"
         aria-label={copy.title}
         className="scroll-autoplay-fullscreen__surface"
+        style={getAspectStyle(aspect)}
         initial={reduceMotion ? false : { opacity: 0, scale: 0.985 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={
