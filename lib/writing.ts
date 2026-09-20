@@ -71,6 +71,8 @@ export type PublishedWritingArticle = {
   logo?: ShowcaseLogo;
   gallery?: ShowcaseGalleryImage[];
   galleryAspect?: ShowcaseGalleryAspect;
+  /** Custom label for the gallery directory chapter; defaults to 画廊/Gallery. */
+  galleryLabel?: LocalizedText;
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
 };

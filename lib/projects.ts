@@ -24,6 +24,8 @@ export type PublishedProject = {
   logo?: ShowcaseLogo;
   gallery?: ShowcaseGalleryImage[];
   galleryAspect?: ShowcaseGalleryAspect;
+  /** Custom label for the gallery directory chapter; defaults to 画廊/Gallery. */
+  galleryLabel?: LocalizedText;
   facts?: ShowcaseFact[];
   chapters?: ShowcaseChapter[];
   references?: { en: string[]; zh: string[] };
@@ -196,6 +198,11 @@ export const projects: Project[] = [
       },
     ],
   },
+  // Reference showcase template: a project with layout: 'showcase' renders
+  // the image-led ShowcasePage. Supply title, logo, facts (date / role /
+  // type and any custom rows), gallery images + galleryAspect, and optional
+  // chapters; the gallery directory chapter is derived automatically
+  // (label via galleryLabel). See docs/showcase-template.md.
   {
     slug: 'schneider-electric',
     publishedAt: '2025-03-03',

@@ -29,6 +29,8 @@ export type ShowcaseItem = {
   facts?: ShowcaseFact[];
   gallery?: ShowcaseGalleryImage[];
   galleryAspect?: ShowcaseGalleryAspect;
+  /** Custom label for the gallery directory chapter; defaults to 画廊/Gallery. */
+  galleryLabel?: LocalizedText;
   chapters?: ShowcaseChapter[];
 };
 
@@ -63,13 +65,13 @@ export function ShowcasePage({
         ...base,
         {
           id: 'gallery',
-          heading: { zh: '画廊', en: 'Gallery' },
+          heading: item.galleryLabel ?? { zh: '画廊', en: 'Gallery' },
           blocks: [],
         },
       ];
     }
     return base;
-  }, [item.chapters, item.gallery]);
+  }, [item.chapters, item.gallery, item.galleryLabel]);
   const headings = chapters.map((chapter) => chapter.heading);
   const [activeIndex, setActiveIndex] = useState(0);
 
