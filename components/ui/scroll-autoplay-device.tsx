@@ -63,6 +63,33 @@ function getDealtThumbnailCount(progress: number, count: number) {
   return Math.max(0, Math.min(count, Math.ceil(normalized * count)));
 }
 
+function getFullscreenDealtThumbnailCount(activeIndex: number, count: number) {
+  if (count <= 1 || activeIndex <= 0) return 0;
+  if (activeIndex >= count - 1) return count;
+
+  // Fullscreen navigation has one less transition than image count. Map the
+  // active step onto the same dealt-image scale used by the inline rail.
+  return Math.min(count, Math.floor((activeIndex * count) / (count - 1)));
+}
+
+function getThumbnailOverflowCounts(count: number, dealtCount: number) {
+  const leftCount = count - dealtCount;
+  const rightCount = dealtCount;
+
+  return {
+    leftCount,
+    rightCount,
+    leftOverflowCount:
+      leftCount > INLINE_THUMBNAIL_LIMIT
+        ? leftCount - INLINE_THUMBNAIL_VISIBLE_COUNT
+        : 0,
+    rightOverflowCount:
+      rightCount > INLINE_THUMBNAIL_LIMIT
+        ? rightCount - INLINE_THUMBNAIL_VISIBLE_COUNT
+        : 0,
+  };
+}
+
 function getInlineLeftThumbnailX(
   imageIndex: number,
   dealtCount: number,
@@ -143,10 +170,7 @@ function InlineOverflowThumb({ count, x }: { count: number; x: number }) {
       initial={false}
       animate={{ x }}
     >
-      <span
-        aria-hidden="true"
-        className="scroll-autoplay-device__thumb-overflow"
-      >
+      <span aria-hidden="true" className="scroll-autoplay-thumb-overflow">
         +{count}
       </span>
     </motion.div>
@@ -185,16 +209,10 @@ function ThumbnailRail({
     return () => ro.disconnect();
   }, [count]);
 
-  const leftCount = count - dealtCount;
-  const rightCount = dealtCount;
-  const leftOverflowCount =
-    leftCount > INLINE_THUMBNAIL_LIMIT
-      ? leftCount - INLINE_THUMBNAIL_VISIBLE_COUNT
-      : 0;
-  const rightOverflowCount =
-    rightCount > INLINE_THUMBNAIL_LIMIT
-      ? rightCount - INLINE_THUMBNAIL_VISIBLE_COUNT
-      : 0;
+  const { leftOverflowCount, rightOverflowCount } = getThumbnailOverflowCounts(
+    count,
+    dealtCount,
+  );
 
   const leftImages =
     leftOverflowCount > 0
@@ -255,39 +273,6 @@ function ThumbnailRail({
   );
 }
 
-function getFullscreenThumbnailX({
-  index,
-  count,
-  wrapWidth,
-  activeIndex,
-  size,
-}: {
-  index: number;
-  count: number;
-  wrapWidth: number;
-  activeIndex: number;
-  size: number;
-}) {
-  // Same uniform 4px gap as the inline rail: one step drives both states.
-  const step = size + 4;
-  const clusterWidth = (count - 1) * step + size;
-  const startX = index * step;
-  const endX = wrapWidth - clusterWidth + index * step;
-  if (count <= 1) return endX;
-
-  const progress = activeIndex / (count - 1);
-  // Same reversed slot order as the inline rail: last image deals out first,
-  // first image last, keeping the rail readable left-to-right.
-  const start = (count - 1 - index) / count;
-  const end = (count - index) / count;
-  const localProgress = Math.max(
-    0,
-    Math.min(1, (progress - start) / (end - start)),
-  );
-
-  return startX + (endX - startX) * localProgress;
-}
-
 function FullscreenThumbnailRail({
   images,
   activeIndex,
@@ -315,7 +300,23 @@ function FullscreenThumbnailRail({
     const ro = new ResizeObserver(measure);
     ro.observe(wrap);
     return () => ro.disconnect();
-  }, [images.length]);
+  }, [count]);
+
+  const dealtCount = getFullscreenDealtThumbnailCount(activeIndex, count);
+  const { leftOverflowCount, rightOverflowCount } = getThumbnailOverflowCounts(
+    count,
+    dealtCount,
+  );
+  const leftImages =
+    leftOverflowCount > 0
+      ? images.slice(dealtCount, dealtCount + INLINE_THUMBNAIL_VISIBLE_COUNT)
+      : images.slice(dealtCount);
+  const rightStartIndex =
+    rightOverflowCount > 0 ? dealtCount - INLINE_THUMBNAIL_VISIBLE_COUNT : 0;
+  const rightImages = images.slice(rightStartIndex, dealtCount);
+  const moveTransition = reduceMotion
+    ? { duration: 0 }
+    : { duration: 0.9, ease: EASE_IN_OUT };
 
   return (
     <fieldset
@@ -323,35 +324,83 @@ function FullscreenThumbnailRail({
       className="scroll-autoplay-fullscreen__thumbs"
       aria-label={copy.images}
     >
-      {/* Same reversed order as the inline rail: first image on the right. */}
-      {[...images].reverse().map((image, index) => (
-        <motion.button
-          key={image.src}
-          type="button"
+      {leftOverflowCount > 0 ? (
+        <motion.div
+          key="fullscreen-left-overflow"
           className="scroll-autoplay-fullscreen__thumb"
+          aria-hidden="true"
           initial={false}
-          animate={{
-            x: getFullscreenThumbnailX({
-              index,
-              count,
-              wrapWidth,
-              activeIndex,
-              size,
-            }),
-          }}
-          transition={
-            reduceMotion
-              ? { duration: 0 }
-              : { duration: 0.2, ease: [0.22, 1, 0.36, 1] }
-          }
-          aria-label={`${copy.showImage} ${count - index}: ${image.alt}`}
-          aria-current={count - 1 - index === activeIndex ? 'true' : undefined}
-          title={image.alt}
-          onClick={() => onSelect(count - 1 - index)}
+          animate={{ x: 0 }}
+          transition={moveTransition}
         >
-          <Image fill src={image.src} alt="" sizes={`${size}px`} />
-        </motion.button>
-      ))}
+          <span className="scroll-autoplay-thumb-overflow">
+            +{leftOverflowCount}
+          </span>
+        </motion.div>
+      ) : null}
+      {leftImages.map((image, index) => {
+        const imageIndex = dealtCount + index;
+
+        return (
+          <motion.button
+            key={image.src}
+            type="button"
+            className="scroll-autoplay-fullscreen__thumb"
+            initial={false}
+            animate={{
+              x: getInlineLeftThumbnailX(imageIndex, dealtCount, count, size),
+            }}
+            transition={moveTransition}
+            aria-label={`${copy.showImage} ${imageIndex + 1}: ${image.alt}`}
+            aria-current={imageIndex === activeIndex ? 'true' : undefined}
+            title={image.alt}
+            onClick={() => onSelect(imageIndex)}
+          >
+            <Image fill src={image.src} alt="" sizes={`${size}px`} />
+          </motion.button>
+        );
+      })}
+      {rightImages.map((image, index) => {
+        const imageIndex = rightStartIndex + index;
+
+        return (
+          <motion.button
+            key={image.src}
+            type="button"
+            className="scroll-autoplay-fullscreen__thumb"
+            initial={false}
+            animate={{
+              x: getInlineRightThumbnailX(
+                imageIndex,
+                dealtCount,
+                wrapWidth,
+                size,
+              ),
+            }}
+            transition={moveTransition}
+            aria-label={`${copy.showImage} ${imageIndex + 1}: ${image.alt}`}
+            aria-current={imageIndex === activeIndex ? 'true' : undefined}
+            title={image.alt}
+            onClick={() => onSelect(imageIndex)}
+          >
+            <Image fill src={image.src} alt="" sizes={`${size}px`} />
+          </motion.button>
+        );
+      })}
+      {rightOverflowCount > 0 ? (
+        <motion.div
+          key="fullscreen-right-overflow"
+          className="scroll-autoplay-fullscreen__thumb"
+          aria-hidden="true"
+          initial={false}
+          animate={{ x: wrapWidth - size }}
+          transition={moveTransition}
+        >
+          <span className="scroll-autoplay-thumb-overflow">
+            +{rightOverflowCount}
+          </span>
+        </motion.div>
+      ) : null}
     </fieldset>
   );
 }
