@@ -84,9 +84,11 @@ import { CapsuleInput } from '@/components/ui/capsule-input';
 
 ## Scroll Autoplay
 
-`ScrollAutoplayDevice`（`components/ui/scroll-autoplay-device.tsx`）是滚动驱动的图片展示组件。主图跨过迟滞阈值后吸附到完整帧，避免停留在两张图片之间；缩略图轨道仍跟随滚动进度展开。
+`ScrollAutoplayDevice`（`components/ui/scroll-autoplay-device.tsx`）是滚动驱动的图片展示组件。主图跨过迟滞阈值后吸附到完整帧，避免停留在两张图片之间；缩略图轨道按当前进度在左右两簇之间发牌。
 
-传入 `fullscreenPreview` 后，设备右上角显示放大按钮。全屏预览从当前帧开始，支持滚轮、触控板、上下/左右方向键、按钮及缩略图切换；底部缩略图沿用内联状态从左向右发牌展开的运动规则。`Escape`、缩小按钮或背景按钮关闭后返回原放大按钮，并保留 Showcase 的滚动位置。
+内联缩略图的未发牌部分停在左侧簇，已发牌部分靠右侧簇排列：第一张图从左侧簇最右侧发出，落到右侧簇最右侧；最后一张图最后落到右侧簇最左侧。每个簇最多显示 8 个槽位：数量不超过 8 时全部显示真实缩略图；超过 8 时显示 7 个真实缩略图，并在最外侧显示 `+X`（`X = 簇内总数 - 7`）。左侧 `+X` 固定在最左端，右侧 `+X` 固定在最右端。
+
+传入 `fullscreenPreview` 后，设备右上角显示放大按钮。全屏预览从当前帧开始，支持滚轮、触控板、上下/左右方向键、按钮及缩略图切换；底部缩略图沿用内联状态的左右两簇发牌规则。`Escape`、缩小按钮或背景按钮关闭后返回原放大按钮，并保留 Showcase 的滚动位置。
 
 ```tsx
 <ScrollAutoplayDevice

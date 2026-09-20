@@ -122,6 +122,17 @@
   height: 100%;
   object-fit: cover;
 }
+.scroll-autoplay-device__thumb-overflow {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: var(--muted-foreground);
+  background: var(--muted);
+  font-size: calc(var(--thumb-size, 24px) * 0.56);
+  font-weight: var(--font-weight-medium, 500);
+  line-height: 1;
+}
 
 /* Full-viewport viewer: a body portal that keeps the underlying showcase
    inert and preserves the currently snapped inline frame when opened. */

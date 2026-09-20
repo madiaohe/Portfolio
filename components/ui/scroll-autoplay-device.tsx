@@ -12,12 +12,7 @@ import {
   type RefObject,
 } from 'react';
 import { createPortal } from 'react-dom';
-import {
-  motion,
-  MotionValue,
-  useReducedMotion,
-  useTransform,
-} from 'motion/react';
+import { motion, useMotionValueEvent, useReducedMotion } from 'motion/react';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 import { cn } from '@/lib/utils';
 import {
@@ -44,6 +39,9 @@ type FullscreenCopy = {
   showImage: string;
 };
 
+const INLINE_THUMBNAIL_LIMIT = 8;
+const INLINE_THUMBNAIL_VISIBLE_COUNT = 7;
+
 function getAspectStyle(aspect: string) {
   const normalized = aspect.replace(':', ' / ');
   const [width, height] = normalized.split('/').map(Number);
@@ -58,45 +56,76 @@ function getAspectStyle(aspect: string) {
   } as CSSProperties;
 }
 
+function getDealtThumbnailCount(progress: number, count: number) {
+  if (!count) return 0;
+  const normalized = Math.max(0, Math.min(1, progress));
+  return Math.max(0, Math.min(count, Math.ceil(normalized * count)));
+}
+
+function getInlineLeftThumbnailX(
+  imageIndex: number,
+  dealtCount: number,
+  count: number,
+  size: number,
+) {
+  const step = size + 4;
+  const leftCount = count - dealtCount;
+  const positionFromRight = imageIndex - dealtCount;
+  const positionFromLeft =
+    leftCount > INLINE_THUMBNAIL_LIMIT
+      ? INLINE_THUMBNAIL_VISIBLE_COUNT - positionFromRight
+      : leftCount - 1 - positionFromRight;
+
+  return positionFromLeft * step;
+}
+
+function getInlineRightThumbnailX(
+  imageIndex: number,
+  dealtCount: number,
+  wrapWidth: number,
+  size: number,
+) {
+  const step = size + 4;
+  // Before overflow, the first dealt image is rightmost and each newer image
+  // lands one slot further left. After overflow, +X occupies the rightmost
+  // slot, the earliest visible image sits just left of it, and the newest
+  // dealt image lands in the cluster's leftmost visible slot.
+  const hiddenCount = dealtCount - INLINE_THUMBNAIL_VISIBLE_COUNT;
+  const positionFromRight =
+    dealtCount > INLINE_THUMBNAIL_LIMIT
+      ? imageIndex - hiddenCount + 1
+      : imageIndex;
+
+  return wrapWidth - size - positionFromRight * step;
+}
+
 /**
- * One thumbnail. Thumbnails are rendered in reverse image order (last image on
- * the left, first image on the right) so the rail mirrors the main strip's
- * layout. All start clustered at the device's left edge (bottom-left corner);
- * each owns its own progress slot and, during that slot, slides to its final
- * position in the right-aligned row, dealing out one by one left to right.
+ * One thumbnail. The left cluster holds images that have not been dealt yet;
+ * the right cluster holds images that have. Keeping the image key stable lets
+ * Motion animate the transfer between the two clusters.
  */
 function Thumb({
   image,
-  index,
-  count,
-  wrapWidth,
-  progress,
+  x,
   size,
 }: {
   image: ScrollAutoplayImage;
-  index: number;
-  count: number;
-  wrapWidth: number;
-  progress: MotionValue<number>;
+  x: number;
   size: number;
 }) {
-  // Reverse the slot order: the thumbnail that ends up rightmost (the last
-  // image) deals out first and the first image moves last, so the rail always
-  // reads left-to-right as image 1 → N while sliding from the left cluster to
-  // the right row.
-  const start = (count - 1 - index) / count;
-  const end = (count - index) / count;
-  // Both the clustered (left edge) and expanded (right row) states share a
-  // uniform 4px gap, so one step drives both positions (size + 4).
-  const step = size + 4;
-  // Full cluster span: (count - 1) steps plus the first thumbnail, so the
-  // cluster's left edge stays flush with the rail regardless of the gap.
-  const clusterWidth = (count - 1) * step + size;
-  const startX = index * step;
-  const endX = wrapWidth - clusterWidth + index * step;
-  const x = useTransform(progress, [start, end], [startX, endX]);
+  const reduceMotion = useReducedMotion();
+
   return (
-    <motion.div className="scroll-autoplay-device__thumb" style={{ x }}>
+    <motion.div
+      className="scroll-autoplay-device__thumb"
+      initial={false}
+      animate={{ x }}
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : { type: 'spring', stiffness: 300, damping: 34, mass: 0.7 }
+      }
+    >
       <Image
         src={image.src}
         alt={image.alt}
@@ -104,6 +133,23 @@ function Thumb({
         height={size}
         className="scroll-autoplay-device__thumb-image"
       />
+    </motion.div>
+  );
+}
+
+function InlineOverflowThumb({ count, x }: { count: number; x: number }) {
+  return (
+    <motion.div
+      className="scroll-autoplay-device__thumb"
+      initial={false}
+      animate={{ x }}
+    >
+      <span
+        aria-hidden="true"
+        className="scroll-autoplay-device__thumb-overflow"
+      >
+        +{count}
+      </span>
     </motion.div>
   );
 }
@@ -116,8 +162,19 @@ function ThumbnailRail({
   size: number;
 }) {
   const progress = useScrollAutoplayProgress();
+  const count = images.length;
   const wrapRef = useRef<HTMLDivElement>(null);
   const [wrapWidth, setWrapWidth] = useState(0);
+  const [dealtCount, setDealtCount] = useState(() =>
+    getDealtThumbnailCount(progress.get(), count),
+  );
+
+  useMotionValueEvent(progress, 'change', (value) => {
+    const nextDealtCount = getDealtThumbnailCount(value, count);
+    setDealtCount((current) =>
+      current === nextDealtCount ? current : nextDealtCount,
+    );
+  });
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -127,23 +184,74 @@ function ThumbnailRail({
     const ro = new ResizeObserver(measure);
     ro.observe(wrap);
     return () => ro.disconnect();
-  }, [images.length]);
+  }, [count]);
+
+  const leftCount = count - dealtCount;
+  const rightCount = dealtCount;
+  const leftOverflowCount =
+    leftCount > INLINE_THUMBNAIL_LIMIT
+      ? leftCount - INLINE_THUMBNAIL_VISIBLE_COUNT
+      : 0;
+  const rightOverflowCount =
+    rightCount > INLINE_THUMBNAIL_LIMIT
+      ? rightCount - INLINE_THUMBNAIL_VISIBLE_COUNT
+      : 0;
+
+  const leftImages =
+    leftOverflowCount > 0
+      ? images.slice(dealtCount, dealtCount + INLINE_THUMBNAIL_VISIBLE_COUNT)
+      : images.slice(dealtCount);
+  const rightStartIndex =
+    rightOverflowCount > 0 ? dealtCount - INLINE_THUMBNAIL_VISIBLE_COUNT : 0;
+  const rightImages = images.slice(rightStartIndex, dealtCount);
 
   return (
     <div ref={wrapRef} className="scroll-autoplay-device__thumbs">
-      {/* Reverse the render order so the rail mirrors the main strip: the
-          first image sits at the right end, the last at the left end. */}
-      {[...images].reverse().map((image, index) => (
+      {/* The left cluster grows from the left edge; its overflow stays at the
+          far left. Images read from the next-to-deal image on the right back
+          toward later images on the left. */}
+      {leftOverflowCount > 0 ? (
+        <InlineOverflowThumb
+          key="inline-left-overflow"
+          count={leftOverflowCount}
+          x={0}
+        />
+      ) : null}
+      {leftImages.map((image, index) => (
         <Thumb
           key={image.src}
           image={image}
-          index={index}
-          count={images.length}
-          wrapWidth={wrapWidth}
-          progress={progress}
+          x={getInlineLeftThumbnailX(
+            dealtCount + index,
+            dealtCount,
+            count,
+            size,
+          )}
           size={size}
         />
       ))}
+      {/* The right cluster is anchored to the right edge; its overflow stays
+          at the far right and counts the earliest images already dealt. */}
+      {rightImages.map((image, index) => (
+        <Thumb
+          key={image.src}
+          image={image}
+          x={getInlineRightThumbnailX(
+            rightStartIndex + index,
+            dealtCount,
+            wrapWidth,
+            size,
+          )}
+          size={size}
+        />
+      ))}
+      {rightOverflowCount > 0 ? (
+        <InlineOverflowThumb
+          key="inline-right-overflow"
+          count={rightOverflowCount}
+          x={wrapWidth - size}
+        />
+      ) : null}
     </div>
   );
 }
