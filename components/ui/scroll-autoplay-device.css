@@ -16,7 +16,6 @@
 .scroll-autoplay-device {
   position: relative;
   width: min(100%, var(--device-width, 640px));
-  aspect-ratio: var(--gallery-aspect, 4 / 3);
   padding: var(--space-2xs);
   border: 1px solid var(--border);
   border-radius: calc(var(--radius-lg) * 2);
@@ -29,22 +28,26 @@
     inset 0 1px 0 color-mix(in oklab, #fff 30%, transparent),
     0 12px 36px color-mix(in oklab, var(--foreground) 12%, transparent);
 }
-/* Screen bezel: fixed dark frame so images read as a touchscreen. */
+/* The screen owns the gallery aspect so the image area matches the source
+   ratio exactly (no letterbox bars); the bezel is a shadow so it does not
+   change the image-area dimensions. */
 .scroll-autoplay-device__screen {
   position: relative;
   width: 100%;
-  height: 100%;
-  padding: var(--space-sm);
+  aspect-ratio: var(--gallery-aspect, 4 / 3);
   overflow: hidden;
-  border: var(--space-2xs) solid #27272a;
   border-radius: calc(var(--radius-lg) * 2 - var(--space-2xs));
   background: #000;
-  box-shadow: 0 0 0 1px color-mix(in oklab, #000 60%, transparent);
+  box-shadow:
+    0 0 0 var(--space-2xs) #27272a,
+    0 0 0 calc(var(--space-2xs) + 1px)
+      color-mix(in oklab, #000 60%, transparent);
 }
 .scroll-autoplay-device__image {
   /* contain keeps the whole screenshot visible inside the dark bezel —
-     different source ratios (e.g. 1936x1084 vs 1936x1168) never crop. */
-  object-fit: contain;
+     different source ratios (e.g. 1936x1084 vs 1936x1168) never crop.
+     !important beats next/image fill's inline object-fit: cover. */
+  object-fit: contain !important;
 }
 .scroll-autoplay-device__fullscreen-trigger {
   position: absolute;
@@ -232,8 +235,6 @@
   position: relative;
   width: min(100%, 1440px);
   width: min(100%, 1440px, calc(68dvh * var(--gallery-ratio, 1.333333)));
-  max-height: 68dvh;
-  aspect-ratio: var(--gallery-aspect, 4 / 3);
   padding: var(--space-2xs);
   border: 1px solid var(--border);
   border-radius: calc(var(--radius-lg) * 2);
@@ -251,13 +252,14 @@
 .scroll-autoplay-fullscreen__screen {
   position: relative;
   width: 100%;
-  height: 100%;
-  padding: var(--space-sm);
+  aspect-ratio: var(--gallery-aspect, 4 / 3);
   overflow: hidden;
-  border: var(--space-2xs) solid #27272a;
   border-radius: calc(var(--radius-lg) * 2 - var(--space-2xs));
   background: #000;
-  box-shadow: 0 0 0 1px color-mix(in oklab, #000 60%, transparent);
+  box-shadow:
+    0 0 0 var(--space-2xs) #27272a,
+    0 0 0 calc(var(--space-2xs) + 1px)
+      color-mix(in oklab, #000 60%, transparent);
 }
 /* Joined strip: every frame sits side by side and the strip slides, so
    consecutive images stay adjacent during the transition (no dark gap). */
@@ -275,7 +277,7 @@
   pointer-events: none;
 }
 .scroll-autoplay-fullscreen__image {
-  object-fit: contain;
+  object-fit: contain !important;
   user-select: none;
   -webkit-user-drag: none;
 }

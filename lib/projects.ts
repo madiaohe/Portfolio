@@ -231,31 +231,35 @@ export const projects: Project[] = [
         alt: 'Schneider Electric — network connected',
       },
       {
-        src: '/media/schneider-electric/03-setting-popup.png',
+        src: '/media/schneider-electric/03-setting.png',
         alt: 'Schneider Electric — settings dialog',
       },
       {
-        src: '/media/schneider-electric/04-offline-self-test-com2.png',
+        src: '/media/schneider-electric/04-setting-popup.png',
+        alt: 'Schneider Electric — settings popup',
+      },
+      {
+        src: '/media/schneider-electric/05-offline-self-test.png',
         alt: 'Schneider Electric — offline self-test COM2',
       },
       {
-        src: '/media/schneider-electric/05-io-equipment-config.png',
+        src: '/media/schneider-electric/06-io-driver-config.png',
+        alt: 'Schneider Electric — IO driver configuration',
+      },
+      {
+        src: '/media/schneider-electric/07-io-equipment-config.png',
         alt: 'Schneider Electric — IO equipment configuration',
       },
       {
-        src: '/media/schneider-electric/06-web-gate.png',
-        alt: 'Schneider Electric — web gate',
+        src: '/media/schneider-electric/08-wireless-4g.png',
+        alt: 'Schneider Electric — wireless 4G',
       },
       {
-        src: '/media/schneider-electric/07-secure-connect.png',
-        alt: 'Schneider Electric — secure connect',
+        src: '/media/schneider-electric/09-wireless-wifi-popup.png',
+        alt: 'Schneider Electric — wireless Wi-Fi link popup',
       },
       {
-        src: '/media/schneider-electric/08-wireless-wifi.png',
-        alt: 'Schneider Electric — wireless Wi-Fi',
-      },
-      {
-        src: '/media/schneider-electric/09-vpn-online.png',
+        src: '/media/schneider-electric/10-vpn-online.png',
         alt: 'Schneider Electric — VPN online',
       },
     ],
