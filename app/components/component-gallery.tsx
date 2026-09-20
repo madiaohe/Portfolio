@@ -826,8 +826,8 @@ const SECTIONS: GallerySection[] = [
     en: 'Scroll Autoplay',
     zh: '滚动自动播放',
     description: {
-      en: 'A scroll-driven image crossfade: images switch in sequence as the page scrolls.',
-      zh: '滚动驱动的图片轮播：页面滚动时图片按顺序交叉切换。',
+      en: 'A scroll-driven image player with frame snapping and an immersive fullscreen preview.',
+      zh: '滚动驱动的图片轮播：整帧吸附，并支持沉浸式全屏预览。',
     },
     render: (zh) => (
       <section
@@ -841,7 +841,7 @@ const SECTIONS: GallerySection[] = [
         <pre>
           <code>
             {
-              '<ScrollAutoplayDevice\n  images={[{ src, alt }, ...]}\n  aspect="16 / 9"\n/>'
+              '<ScrollAutoplayDevice\n  images={[{ src, alt }, ...]}\n  aspect="16 / 9"\n  fullscreenPreview\n/>'
             }
           </code>
         </pre>
@@ -1235,6 +1235,7 @@ function ScrollAutoplayDemo({ zh }: { zh: boolean }) {
   return (
     <ScrollAutoplayDevice
       images={IMAGES}
+      fullscreenPreview
       caption={
         zh ? '滚动下方区域播放图片' : 'Scroll this area to play the images'
       }

@@ -227,20 +227,40 @@ export const projects: Project[] = [
     galleryAspect: '16 / 9',
     gallery: [
       {
-        src: '/media/work-categories/digital-products.png',
-        alt: 'Schneider Electric project image 1',
+        src: '/media/schneider-electric/01-offline.png',
+        alt: 'Schneider Electric — offline status',
       },
       {
-        src: '/media/work-categories/brand-systems.png',
-        alt: 'Schneider Electric project image 2',
+        src: '/media/schneider-electric/02-network-on.png',
+        alt: 'Schneider Electric — network connected',
       },
       {
-        src: '/media/work-categories/experiments.png',
-        alt: 'Schneider Electric project image 3',
+        src: '/media/schneider-electric/03-setting-popup.png',
+        alt: 'Schneider Electric — settings dialog',
       },
       {
-        src: '/media/work-categories/selected-objects.png',
-        alt: 'Schneider Electric project image 4',
+        src: '/media/schneider-electric/04-offline-self-test-com2.png',
+        alt: 'Schneider Electric — offline self-test COM2',
+      },
+      {
+        src: '/media/schneider-electric/05-io-equipment-config.png',
+        alt: 'Schneider Electric — IO equipment configuration',
+      },
+      {
+        src: '/media/schneider-electric/06-web-gate.png',
+        alt: 'Schneider Electric — web gate',
+      },
+      {
+        src: '/media/schneider-electric/07-secure-connect.png',
+        alt: 'Schneider Electric — secure connect',
+      },
+      {
+        src: '/media/schneider-electric/08-wireless-wifi.png',
+        alt: 'Schneider Electric — wireless Wi-Fi',
+      },
+      {
+        src: '/media/schneider-electric/09-vpn-online.png',
+        alt: 'Schneider Electric — VPN online',
       },
     ],
     chapters: [

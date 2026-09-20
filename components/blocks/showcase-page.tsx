@@ -183,6 +183,7 @@ export function ShowcasePage({
             <ScrollAutoplayDevice
               images={item.gallery}
               aspect={item.galleryAspect ?? '4:3'}
+              fullscreenPreview
             />
           ) : null}
 

@@ -4,20 +4,22 @@ import {
   motion,
   HTMLMotionProps,
   MotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
   useScroll,
-  useTransform,
   UseScrollOptions,
 } from 'motion/react';
 import React from 'react';
 
 interface ScrollAutoplayProps extends HTMLMotionProps<'div'> {
   offset?: UseScrollOptions['offset'];
+  totalItems: number;
 }
 interface ScrollAutoPlayItemProps extends HTMLMotionProps<'div'> {
   index: number;
-  totalImages: number;
 }
 interface ScrollAutoplayContextValue {
+  activeIndex: number;
   scrollYProgress: MotionValue<number>;
 }
 const ScrollAutoplayContext = React.createContext<
@@ -38,8 +40,14 @@ export function useScrollAutoplayProgress() {
   return useScrollAutoplayContext().scrollYProgress;
 }
 
+/** Expose the currently snapped frame for controls such as fullscreen preview. */
+export function useScrollAutoplayIndex() {
+  return useScrollAutoplayContext().activeIndex;
+}
+
 export function ScrollAutoplay({
   offset = ['start start', 'end end'],
+  totalItems,
   className,
   ...props
 }: ScrollAutoplayProps) {
@@ -48,9 +56,35 @@ export function ScrollAutoplay({
     target: scrollRef,
     offset: offset,
   });
+  const lastIndex = Math.max(totalItems - 1, 0);
+  const initialIndex = Math.round(scrollYProgress.get() * lastIndex);
+  const activeIndexRef = React.useRef(initialIndex);
+  const [activeIndex, setActiveIndex] = React.useState(initialIndex);
+  const visibleIndex = Math.min(activeIndex, lastIndex);
+
+  useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+    const exactIndex = Math.max(0, Math.min(1, progress)) * lastIndex;
+    let nextIndex = activeIndexRef.current;
+
+    // A small hysteresis band prevents rapid toggling when the scroll position
+    // hovers around the midpoint between two images.
+    while (nextIndex < lastIndex && exactIndex >= nextIndex + 0.55) {
+      nextIndex += 1;
+    }
+    while (nextIndex > 0 && exactIndex <= nextIndex - 0.55) {
+      nextIndex -= 1;
+    }
+
+    if (nextIndex !== activeIndexRef.current) {
+      activeIndexRef.current = nextIndex;
+      setActiveIndex(nextIndex);
+    }
+  });
 
   return (
-    <ScrollAutoplayContext.Provider value={{ scrollYProgress }}>
+    <ScrollAutoplayContext.Provider
+      value={{ activeIndex: visibleIndex, scrollYProgress }}
+    >
       <motion.div
         ref={scrollRef}
         className={cn('relative min-h-screen', className)}
@@ -74,31 +108,27 @@ export function ScrollAutoplayContainer({
 
 export function ScrollAutoplayItem({
   index,
-  totalImages,
   className,
   style,
   ...props
 }: ScrollAutoPlayItemProps) {
-  const { scrollYProgress } = useScrollAutoplayContext();
-
-  // Horizontal rail: images sit side by side (left: index * 100%) and the
-  // whole rail translates left as the page scrolls, so each frame slides in
-  // from the right and out to the left — a right-to-left carousel.
-  const x = useTransform(
-    scrollYProgress,
-    [0, 1],
-    ['0%', `${-(totalImages - 1) * 100}%`],
-  );
+  const { activeIndex } = useScrollAutoplayContext();
+  const reduceMotion = useReducedMotion();
 
   return (
     <motion.div
       className={cn('absolute inset-y-0 left-0 size-full', className)}
       style={{
         left: `${index * 100}%`,
-        x,
         willChange: 'transform',
         ...style,
       }}
+      animate={{ x: `${-activeIndex * 100}%` }}
+      transition={
+        reduceMotion
+          ? { duration: 0 }
+          : { type: 'spring', stiffness: 300, damping: 34, mass: 0.7 }
+      }
       {...props}
     />
   );

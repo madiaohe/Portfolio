@@ -1,5 +1,5 @@
 /* All-in-one scroll autoplay device: sticky stage, skeuomorphic shell,
-   dark screen bezel and per-image crossfade. Tokens follow design-system. */
+   dark screen bezel and per-image snap transition. Tokens follow design-system. */
 .scroll-autoplay-device__stage {
   position: sticky;
   top: 0;
@@ -15,7 +15,7 @@
 }
 .scroll-autoplay-device {
   position: relative;
-  width: min(100%, 640px);
+  width: min(100%, var(--device-width, 640px));
   aspect-ratio: var(--gallery-aspect, 4 / 3);
   padding: var(--space-2xs);
   border: 1px solid var(--border);
@@ -42,7 +42,46 @@
   box-shadow: 0 0 0 1px color-mix(in oklab, #000 60%, transparent);
 }
 .scroll-autoplay-device__image {
-  object-fit: cover;
+  /* contain keeps the whole screenshot visible inside the dark bezel —
+     different source ratios (e.g. 1936x1084 vs 1936x1168) never crop. */
+  object-fit: contain;
+}
+.scroll-autoplay-device__fullscreen-trigger {
+  position: absolute;
+  z-index: 2;
+  right: -1px;
+  bottom: calc(100% + var(--space-2xs) + 1px);
+  display: grid;
+  width: var(--space-lg);
+  height: var(--space-lg);
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-xs);
+  color: var(--muted-foreground);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.72;
+  transition:
+    color 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+.scroll-autoplay-device__fullscreen-trigger:hover {
+  color: var(--foreground);
+  opacity: 1;
+}
+.scroll-autoplay-device__fullscreen-trigger:active {
+  transform: scale(0.92);
+}
+.scroll-autoplay-device__fullscreen-trigger:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: var(--space-3xs);
+  color: var(--foreground);
+  opacity: 1;
+}
+.scroll-autoplay-device__fullscreen-trigger svg {
+  width: var(--space-sm);
+  height: var(--space-sm);
 }
 .scroll-autoplay-device__caption {
   font-size: var(--text-caption);
@@ -54,8 +93,8 @@
    device's right edge and deal out one by one to a left-aligned row. */
 .scroll-autoplay-device__thumbs {
   position: relative;
-  width: min(100%, 640px);
-  height: 24px;
+  width: min(100%, var(--device-width, 640px));
+  height: var(--thumb-size, 24px);
   margin-top: 0;
   overflow: visible;
 }
@@ -63,8 +102,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 24px;
-  height: 24px;
+  width: var(--thumb-size, 24px);
+  height: var(--thumb-size, 24px);
   border-radius: var(--radius-xs);
   border: 1px solid var(--border);
   overflow: hidden;
@@ -73,4 +112,230 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Full-viewport viewer: a body portal that keeps the underlying showcase
+   inert and preserves the currently snapped inline frame when opened. */
+.scroll-autoplay-fullscreen,
+.scroll-autoplay-fullscreen * {
+  box-sizing: border-box;
+}
+.scroll-autoplay-fullscreen {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  color: var(--foreground);
+  font-family: 'Reference Sans', 'Reference Sans Fallback', sans-serif;
+  font-size: var(--text-body);
+  line-height: var(--leading-heading);
+}
+.scroll-autoplay-fullscreen__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: color-mix(in oklab, var(--background) 88%, transparent);
+  backdrop-filter: blur(var(--space-xs));
+  cursor: zoom-out;
+}
+.scroll-autoplay-fullscreen__surface {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
+  border: 0;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: var(--space-sm);
+  padding-top: max(var(--space-md), env(safe-area-inset-top));
+  padding-right: max(var(--space-md), env(safe-area-inset-right));
+  padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
+  padding-left: max(var(--space-md), env(safe-area-inset-left));
+  color: inherit;
+  background: transparent;
+  outline: none;
+}
+.scroll-autoplay-fullscreen__header {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+}
+.scroll-autoplay-fullscreen__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.scroll-autoplay-fullscreen__icon-button {
+  display: grid;
+  width: var(--space-lg);
+  height: var(--space-lg);
+  flex: 0 0 var(--space-lg);
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-xs);
+  color: var(--muted-foreground);
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.72;
+  transition:
+    color 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+.scroll-autoplay-fullscreen__icon-button:hover:not(:disabled) {
+  color: var(--foreground);
+  opacity: 1;
+}
+.scroll-autoplay-fullscreen__icon-button:active:not(:disabled) {
+  transform: scale(0.92);
+}
+.scroll-autoplay-fullscreen__icon-button:disabled {
+  opacity: 0.24;
+}
+.scroll-autoplay-fullscreen__icon-button:focus-visible,
+.scroll-autoplay-fullscreen__thumb:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: var(--space-3xs);
+}
+.scroll-autoplay-fullscreen__icon-button:focus-visible {
+  color: var(--foreground);
+  opacity: 1;
+}
+.scroll-autoplay-fullscreen__icon-button svg {
+  width: var(--space-sm);
+  height: var(--space-sm);
+}
+.scroll-autoplay-fullscreen__viewer {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+}
+.scroll-autoplay-fullscreen__device {
+  position: relative;
+  width: min(100%, 1440px);
+  width: min(100%, 1440px, calc(68dvh * var(--gallery-ratio, 1.333333)));
+  max-height: 68dvh;
+  aspect-ratio: var(--gallery-aspect, 4 / 3);
+  padding: var(--space-2xs);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius-lg) * 2);
+  background: linear-gradient(
+    120deg,
+    color-mix(in oklab, var(--muted-foreground) 30%, transparent),
+    color-mix(in oklab, var(--muted) 40%, transparent)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, #fff 30%, transparent),
+    0 var(--space-sm) var(--space-3xl)
+      color-mix(in oklab, var(--foreground) 16%, transparent);
+  touch-action: pan-x;
+}
+.scroll-autoplay-fullscreen__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-sm);
+  overflow: hidden;
+  border: var(--space-2xs) solid #27272a;
+  border-radius: calc(var(--radius-lg) * 2 - var(--space-2xs));
+  background: #000;
+  box-shadow: 0 0 0 1px color-mix(in oklab, #000 60%, transparent);
+}
+.scroll-autoplay-fullscreen__frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.scroll-autoplay-fullscreen__image {
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.scroll-autoplay-fullscreen__previous,
+.scroll-autoplay-fullscreen__next {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.scroll-autoplay-fullscreen__previous:active:not(:disabled),
+.scroll-autoplay-fullscreen__next:active:not(:disabled) {
+  transform: translateY(-50%) scale(0.92);
+}
+.scroll-autoplay-fullscreen__previous {
+  left: 0;
+}
+.scroll-autoplay-fullscreen__next {
+  right: 0;
+}
+.scroll-autoplay-fullscreen__thumbs {
+  position: relative;
+  width: min(100%, 1440px, calc(68dvh * var(--gallery-ratio, 1.333333)));
+  min-width: 0;
+  min-inline-size: 0;
+  height: var(--thumb-size, 24px);
+  margin: 0 auto;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+}
+.scroll-autoplay-fullscreen__thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--thumb-size, 24px);
+  height: var(--thumb-size, 24px);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--muted);
+  cursor: pointer;
+}
+.scroll-autoplay-fullscreen__thumb img {
+  object-fit: cover;
+}
+
+@media (max-width: 640px) {
+  .scroll-autoplay-fullscreen__surface {
+    gap: var(--space-xs);
+    padding-top: max(var(--space-sm), env(safe-area-inset-top));
+    padding-right: max(var(--space-sm), env(safe-area-inset-right));
+    padding-bottom: max(var(--space-sm), env(safe-area-inset-bottom));
+    padding-left: max(var(--space-sm), env(safe-area-inset-left));
+  }
+  .scroll-autoplay-fullscreen__device {
+    width: min(100%, calc(60dvh * var(--gallery-ratio, 1.333333)));
+    max-height: 60dvh;
+  }
+  .scroll-autoplay-fullscreen__thumbs {
+    width: min(100%, calc(60dvh * var(--gallery-ratio, 1.333333)));
+  }
+  .scroll-autoplay-fullscreen__previous {
+    left: var(--space-2xs);
+  }
+  .scroll-autoplay-fullscreen__next {
+    right: var(--space-2xs);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-autoplay-device__fullscreen-trigger,
+  .scroll-autoplay-fullscreen__icon-button,
+  .scroll-autoplay-fullscreen__thumb {
+    transition: none;
+  }
 }

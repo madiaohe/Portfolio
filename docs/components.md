@@ -82,6 +82,32 @@ import { CapsuleInput } from '@/components/ui/capsule-input';
 
 本地项目和文章的草稿还需要分别在 `lib/projects.ts`、`lib/writing.ts` 中标记 `status: 'draft'`。这些草稿会出现在首页列表中，但不会生成详情路由，直接访问 URL 返回 404，也不会出现在详情页上一篇 / 下一篇中。项目也可以标记 `status: 'external'` 并提供 `href`；首页会在新标签页打开外部链接，但不会生成详情页，也不会进入详情页翻页。已发布条目的列表日期只显示月份；年份仍按上一条已发布内容分组显示。
 
+## Scroll Autoplay
+
+`ScrollAutoplayDevice`（`components/ui/scroll-autoplay-device.tsx`）是滚动驱动的图片展示组件。主图跨过迟滞阈值后吸附到完整帧，避免停留在两张图片之间；缩略图轨道仍跟随滚动进度展开。
+
+传入 `fullscreenPreview` 后，设备右上角显示放大按钮。全屏预览从当前帧开始，支持滚轮、触控板、上下/左右方向键、按钮及缩略图切换；底部缩略图沿用内联状态从右向左发牌展开的运动规则。`Escape`、缩小按钮或背景按钮关闭后返回原放大按钮，并保留 Showcase 的滚动位置。
+
+```tsx
+<ScrollAutoplayDevice
+  images={[{ src, alt }, ...]}
+  aspect="16 / 9"
+  fullscreenPreview
+/>
+```
+
+外壳宽度与缩略图尺寸已参数化：`deviceWidth` 控制设备外壳最大宽度（数字为像素，也接受任意 CSS 长度），`thumbnailSize` 控制缩略图边长（同时驱动底部轨道高度与发牌步距，内联与全屏预览共用）。默认值分别为 `640` 与 `24`，项目页按需传入即可：
+
+```tsx
+<ScrollAutoplayDevice
+  images={[{ src, alt }, ...]}
+  aspect="16 / 9"
+  deviceWidth={720}
+  thumbnailSize={28}
+  fullscreenPreview
+/>
+```
+
 ## 添加组件
 
 项目已接入 Tailwind CSS 4，`components.json` 为 shadcn CLI 配置。`aliases.ui` 指向 `@/components/ui`，`aliases.components` 保留为组件根路径 `@/components`，`aliases.hooks` 指向 `@/lib/hooks`。`@ncdai`、`@unlumen-ui` 和 `@beui` Registry 均已配置。
