@@ -56,7 +56,20 @@ export function ShowcasePage({
 }) {
   const { language } = useSiteLanguage();
   const reduced = useReducedMotion() ?? false;
-  const chapters = useMemo(() => item.chapters ?? [], [item.chapters]);
+  const chapters = useMemo(() => {
+    const base = item.chapters ?? [];
+    if (item.gallery && item.gallery.length > 1) {
+      return [
+        ...base,
+        {
+          id: 'gallery',
+          heading: { zh: '画廊', en: 'Gallery' },
+          blocks: [],
+        },
+      ];
+    }
+    return base;
+  }, [item.chapters, item.gallery]);
   const headings = chapters.map((chapter) => chapter.heading);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -178,57 +191,65 @@ export function ShowcasePage({
                 <section
                   key={chapter.id}
                   id={chapter.id}
-                  className="showcase-chapter"
+                  className={
+                    chapter.id === 'gallery'
+                      ? 'showcase-chapter showcase-chapter--gallery'
+                      : 'showcase-chapter'
+                  }
                 >
-                  <h2 className="showcase-chapter__heading">
-                    <a href={`#${chapter.id}`}>{chapter.heading[language]}</a>
-                  </h2>
-                  <div className="showcase-chapter__body">
-                    {chapter.blocks.map((block, index) => {
-                      switch (block.type) {
-                        case 'paragraph':
-                          return <p key={index}>{block.text[language]}</p>;
-                        case 'heading':
-                          return (
-                            <h3 key={index} id={block.id}>
-                              {block.text[language]}
-                            </h3>
-                          );
-                        case 'image':
-                          return (
-                            <figure
-                              key={index}
-                              className="showcase-chapter__image"
-                            >
-                              <Image
-                                src={block.src}
-                                alt={block.alt}
-                                width={1254}
-                                height={1254}
-                                unoptimized
-                              />
-                              {block.caption ? (
-                                <figcaption>
-                                  {block.caption[language]}
-                                </figcaption>
-                              ) : null}
-                            </figure>
-                          );
-                      }
-                    })}
-                  </div>
+                  {chapter.id !== 'gallery' ? (
+                    <h2 className="showcase-chapter__heading">
+                      <a href={`#${chapter.id}`}>{chapter.heading[language]}</a>
+                    </h2>
+                  ) : null}
+                  {chapter.id === 'gallery' &&
+                  item.gallery &&
+                  item.gallery.length > 1 ? (
+                    <ScrollAutoplayDevice
+                      className="showcase-gallery"
+                      images={item.gallery}
+                      aspect={item.galleryAspect ?? '4:3'}
+                      fullscreenPreview
+                    />
+                  ) : (
+                    <div className="showcase-chapter__body">
+                      {chapter.blocks.map((block, index) => {
+                        switch (block.type) {
+                          case 'paragraph':
+                            return <p key={index}>{block.text[language]}</p>;
+                          case 'heading':
+                            return (
+                              <h3 key={index} id={block.id}>
+                                {block.text[language]}
+                              </h3>
+                            );
+                          case 'image':
+                            return (
+                              <figure
+                                key={index}
+                                className="showcase-chapter__image"
+                              >
+                                <Image
+                                  src={block.src}
+                                  alt={block.alt}
+                                  width={1254}
+                                  height={1254}
+                                  unoptimized
+                                />
+                                {block.caption ? (
+                                  <figcaption>
+                                    {block.caption[language]}
+                                  </figcaption>
+                                ) : null}
+                              </figure>
+                            );
+                        }
+                      })}
+                    </div>
+                  )}
                 </section>
               ))}
             </div>
-          ) : null}
-
-          {item.gallery && item.gallery.length > 1 ? (
-            <ScrollAutoplayDevice
-              className="showcase-gallery"
-              images={item.gallery}
-              aspect={item.galleryAspect ?? '4:3'}
-              fullscreenPreview
-            />
           ) : null}
 
           <DetailPager

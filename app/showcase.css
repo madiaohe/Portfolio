@@ -71,6 +71,11 @@
 .showcase-chapter + .showcase-chapter {
   margin-top: var(--space-4xl);
 }
+/* The gallery chapter follows the last text chapter tightly, keeping the
+   device as close to the Overview as the centered stage allows. */
+.showcase-chapter + .showcase-chapter--gallery {
+  margin-top: 0;
+}
 .showcase-chapter__heading {
   margin: 0 0 var(--space-md);
   color: var(--foreground);
