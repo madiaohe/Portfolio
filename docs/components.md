@@ -96,14 +96,15 @@ import { CapsuleInput } from '@/components/ui/capsule-input';
 />
 ```
 
-外壳宽度与缩略图尺寸已参数化：`deviceWidth` 控制设备外壳最大宽度（数字为像素，也接受任意 CSS 长度），`thumbnailSize` 控制缩略图边长（同时驱动底部轨道高度与发牌步距，内联与全屏预览共用）。默认值分别为 `640` 与 `24`，项目页按需传入即可：
+外壳宽度与缩略图尺寸已参数化：`deviceWidth` 控制设备外壳最大宽度（数字为像素，也接受任意 CSS 长度），`thumbnailSize` 控制内联缩略图边长（同时驱动底部轨道高度与发牌步距），`fullscreenThumbnailSize` 控制全屏预览的缩略图边长。默认值分别为 `640`、`16` 与 `24`，项目页按需传入即可：
 
 ```tsx
 <ScrollAutoplayDevice
   images={[{ src, alt }, ...]}
   aspect="16 / 9"
   deviceWidth={720}
-  thumbnailSize={28}
+  thumbnailSize={16}
+  fullscreenThumbnailSize={24}
   fullscreenPreview
 />
 ```

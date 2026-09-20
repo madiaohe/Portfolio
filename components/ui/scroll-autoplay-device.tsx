@@ -258,7 +258,7 @@ function FullscreenPreview({
   copy,
   returnFocusRef,
   onClose,
-  thumbnailSize = 24,
+  fullscreenThumbnailSize = 24,
 }: {
   id: string;
   images: ScrollAutoplayImage[];
@@ -268,7 +268,7 @@ function FullscreenPreview({
   copy: FullscreenCopy;
   returnFocusRef: RefObject<HTMLButtonElement | null>;
   onClose: () => void;
-  thumbnailSize?: number;
+  fullscreenThumbnailSize?: number;
 }) {
   const reduceMotion = useReducedMotion() ?? false;
   const layerRef = useRef<HTMLDivElement>(null);
@@ -437,7 +437,9 @@ function FullscreenPreview({
     <div
       ref={layerRef}
       className="ui-scope scroll-autoplay-fullscreen"
-      style={{ '--thumb-size': `${thumbnailSize}px` } as CSSProperties}
+      style={
+        { '--thumb-size': `${fullscreenThumbnailSize}px` } as CSSProperties
+      }
     >
       <button
         type="button"
@@ -575,7 +577,7 @@ function FullscreenPreview({
           reduceMotion={reduceMotion}
           copy={copy}
           onSelect={selectIndex}
-          size={thumbnailSize}
+          size={fullscreenThumbnailSize}
         />
       </motion.dialog>
     </div>,
@@ -590,6 +592,7 @@ function ScrollAutoplayDeviceStage({
   imageClassName,
   fullscreenPreview,
   thumbnailSize,
+  fullscreenThumbnailSize,
 }: {
   images: ScrollAutoplayImage[];
   aspect: string;
@@ -597,6 +600,7 @@ function ScrollAutoplayDeviceStage({
   imageClassName?: string;
   fullscreenPreview: boolean;
   thumbnailSize: number;
+  fullscreenThumbnailSize: number;
 }) {
   const { language } = useSiteLanguage();
   const activeIndex = useScrollAutoplayIndex();
@@ -678,7 +682,7 @@ function ScrollAutoplayDeviceStage({
           copy={copy}
           returnFocusRef={fullscreenTriggerRef}
           onClose={closeFullscreen}
-          thumbnailSize={thumbnailSize}
+          fullscreenThumbnailSize={fullscreenThumbnailSize}
         />
       ) : null}
     </>
@@ -700,7 +704,8 @@ export function ScrollAutoplayDevice({
   imageClassName,
   fullscreenPreview = false,
   deviceWidth = 640,
-  thumbnailSize = 24,
+  thumbnailSize = 16,
+  fullscreenThumbnailSize = 24,
 }: {
   images: ScrollAutoplayImage[];
   aspect?: string;
@@ -711,8 +716,10 @@ export function ScrollAutoplayDevice({
   fullscreenPreview?: boolean;
   /** Max device shell width (number = px, or any CSS length). */
   deviceWidth?: number | string;
-  /** Square thumbnail edge length in px; also drives the deal-out rail. */
+  /** Square inline thumbnail edge length in px; drives the deal-out rail. */
   thumbnailSize?: number;
+  /** Fullscreen preview thumbnail edge length in px. */
+  fullscreenThumbnailSize?: number;
 }) {
   if (!images.length) return null;
 
@@ -738,6 +745,7 @@ export function ScrollAutoplayDevice({
         imageClassName={imageClassName}
         fullscreenPreview={fullscreenPreview}
         thumbnailSize={thumbnailSize}
+        fullscreenThumbnailSize={fullscreenThumbnailSize}
       />
     </ScrollAutoplay>
   );

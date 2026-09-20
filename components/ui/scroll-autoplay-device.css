@@ -109,6 +109,10 @@
   overflow: hidden;
 }
 .scroll-autoplay-device__thumb-image {
+  /* Fill the whole tile and crop: never letterboxed or shifted by the
+     inline baseline, so the 16x16 thumbnail is covered edge to edge. */
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
