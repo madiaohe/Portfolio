@@ -59,10 +59,11 @@ function getAspectStyle(aspect: string) {
 }
 
 /**
- * One thumbnail. All thumbnails start clustered at the device's right edge
- * (bottom-right corner). Each thumbnail owns its own progress slot and, during
- * that slot, slides to its final position in the left-aligned row, so the
- * thumbnails "deal out" one by one from right to left.
+ * One thumbnail. Thumbnails are rendered in reverse image order (last image on
+ * the left, first image on the right) so the rail mirrors the main strip's
+ * layout. All start clustered at the device's left edge (bottom-left corner);
+ * each owns its own progress slot and, during that slot, slides to its final
+ * position in the right-aligned row, dealing out one by one left to right.
  */
 function Thumb({
   image,
@@ -79,16 +80,20 @@ function Thumb({
   progress: MotionValue<number>;
   size: number;
 }) {
-  const start = index / count;
-  const end = (index + 1) / count;
-  // Both the clustered (right edge) and expanded (left row) states share a
+  // Reverse the slot order: the thumbnail that ends up rightmost (the last
+  // image) deals out first and the first image moves last, so the rail always
+  // reads left-to-right as image 1 → N while sliding from the left cluster to
+  // the right row.
+  const start = (count - 1 - index) / count;
+  const end = (count - index) / count;
+  // Both the clustered (left edge) and expanded (right row) states share a
   // uniform 4px gap, so one step drives both positions (size + 4).
   const step = size + 4;
   // Full cluster span: (count - 1) steps plus the first thumbnail, so the
-  // cluster's right edge stays flush with the rail regardless of the gap.
+  // cluster's left edge stays flush with the rail regardless of the gap.
   const clusterWidth = (count - 1) * step + size;
-  const startX = wrapWidth - clusterWidth + index * step;
-  const endX = index * step;
+  const startX = index * step;
+  const endX = wrapWidth - clusterWidth + index * step;
   const x = useTransform(progress, [start, end], [startX, endX]);
   return (
     <motion.div className="scroll-autoplay-device__thumb" style={{ x }}>
@@ -126,7 +131,9 @@ function ThumbnailRail({
 
   return (
     <div ref={wrapRef} className="scroll-autoplay-device__thumbs">
-      {images.map((image, index) => (
+      {/* Reverse the render order so the rail mirrors the main strip: the
+          first image sits at the right end, the last at the left end. */}
+      {[...images].reverse().map((image, index) => (
         <Thumb
           key={image.src}
           image={image}
@@ -157,13 +164,15 @@ function getFullscreenThumbnailX({
   // Same uniform 4px gap as the inline rail: one step drives both states.
   const step = size + 4;
   const clusterWidth = (count - 1) * step + size;
-  const startX = wrapWidth - clusterWidth + index * step;
-  const endX = index * step;
+  const startX = index * step;
+  const endX = wrapWidth - clusterWidth + index * step;
   if (count <= 1) return endX;
 
   const progress = activeIndex / (count - 1);
-  const start = index / count;
-  const end = (index + 1) / count;
+  // Same reversed slot order as the inline rail: last image deals out first,
+  // first image last, keeping the rail readable left-to-right.
+  const start = (count - 1 - index) / count;
+  const end = (count - index) / count;
   const localProgress = Math.max(
     0,
     Math.min(1, (progress - start) / (end - start)),
@@ -187,6 +196,7 @@ function FullscreenThumbnailRail({
   onSelect: (index: number) => void;
   size: number;
 }) {
+  const count = images.length;
   const wrapRef = useRef<HTMLFieldSetElement>(null);
   const [wrapWidth, setWrapWidth] = useState(0);
 
@@ -206,7 +216,8 @@ function FullscreenThumbnailRail({
       className="scroll-autoplay-fullscreen__thumbs"
       aria-label={copy.images}
     >
-      {images.map((image, index) => (
+      {/* Same reversed order as the inline rail: first image on the right. */}
+      {[...images].reverse().map((image, index) => (
         <motion.button
           key={image.src}
           type="button"
@@ -215,7 +226,7 @@ function FullscreenThumbnailRail({
           animate={{
             x: getFullscreenThumbnailX({
               index,
-              count: images.length,
+              count,
               wrapWidth,
               activeIndex,
               size,
@@ -226,10 +237,10 @@ function FullscreenThumbnailRail({
               ? { duration: 0 }
               : { duration: 0.2, ease: [0.22, 1, 0.36, 1] }
           }
-          aria-label={`${copy.showImage} ${index + 1}: ${image.alt}`}
-          aria-current={index === activeIndex ? 'true' : undefined}
+          aria-label={`${copy.showImage} ${count - index}: ${image.alt}`}
+          aria-current={count - 1 - index === activeIndex ? 'true' : undefined}
           title={image.alt}
-          onClick={() => onSelect(index)}
+          onClick={() => onSelect(count - 1 - index)}
         >
           <Image fill src={image.src} alt="" sizes={`${size}px`} />
         </motion.button>
@@ -503,11 +514,14 @@ function FullscreenPreview({
             }}
           >
             <div className="scroll-autoplay-fullscreen__screen">
-              {/* All frames sit side by side; the strip slides so consecutive
-                  images stay joined during the transition, mirroring the
-                  inline scroll player (no fade, no dark gap between pages). */}
+              {/* All frames sit side by side; the strip slides left as the
+                  index advances, so the next (right) button reveals the next
+                  image from the right and the previous (left) button reveals
+                  the previous one from the left — standard pager motion.
+                  Consecutive frames stay joined — no dark gap. */}
               <motion.div
                 className="scroll-autoplay-fullscreen__strip"
+                initial={false}
                 animate={{ x: `-${activeIndex * 100}%` }}
                 transition={
                   reduceMotion
@@ -675,7 +689,7 @@ function ScrollAutoplayDeviceStage({
  * All-in-one scroll-driven image player wrapped in a skeuomorphic
  * touchscreen device frame. Encapsulates the scroll container, sticky
  * stage, device shell, screen bezel, per-image snap transition and a 24px
- * thumbnail rail whose thumbnails deal out one by one, right to left.
+ * thumbnail rail whose thumbnails deal out one by one, left to right.
  */
 export function ScrollAutoplayDevice({
   images,

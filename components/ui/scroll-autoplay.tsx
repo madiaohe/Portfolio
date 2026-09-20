@@ -21,6 +21,7 @@ interface ScrollAutoPlayItemProps extends HTMLMotionProps<'div'> {
 interface ScrollAutoplayContextValue {
   activeIndex: number;
   scrollYProgress: MotionValue<number>;
+  totalItems: number;
 }
 const ScrollAutoplayContext = React.createContext<
   ScrollAutoplayContextValue | undefined
@@ -83,7 +84,7 @@ export function ScrollAutoplay({
 
   return (
     <ScrollAutoplayContext.Provider
-      value={{ activeIndex: visibleIndex, scrollYProgress }}
+      value={{ activeIndex: visibleIndex, scrollYProgress, totalItems }}
     >
       <motion.div
         ref={scrollRef}
@@ -112,18 +113,21 @@ export function ScrollAutoplayItem({
   style,
   ...props
 }: ScrollAutoPlayItemProps) {
-  const { activeIndex } = useScrollAutoplayContext();
+  const { activeIndex, totalItems } = useScrollAutoplayContext();
   const reduceMotion = useReducedMotion();
 
+  // Frames render right-to-left and the strip advances right as the index
+  // grows, so scrolling down moves the content left-to-right: the next image
+  // enters from the left edge and consecutive frames stay joined.
   return (
     <motion.div
       className={cn('absolute inset-y-0 left-0 size-full', className)}
       style={{
-        left: `${index * 100}%`,
+        left: `${(totalItems - 1 - index) * 100}%`,
         willChange: 'transform',
         ...style,
       }}
-      animate={{ x: `${-activeIndex * 100}%` }}
+      animate={{ x: `${(activeIndex - totalItems + 1) * 100}%` }}
       transition={
         reduceMotion
           ? { duration: 0 }

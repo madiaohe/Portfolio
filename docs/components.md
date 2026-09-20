@@ -86,7 +86,7 @@ import { CapsuleInput } from '@/components/ui/capsule-input';
 
 `ScrollAutoplayDevice`（`components/ui/scroll-autoplay-device.tsx`）是滚动驱动的图片展示组件。主图跨过迟滞阈值后吸附到完整帧，避免停留在两张图片之间；缩略图轨道仍跟随滚动进度展开。
 
-传入 `fullscreenPreview` 后，设备右上角显示放大按钮。全屏预览从当前帧开始，支持滚轮、触控板、上下/左右方向键、按钮及缩略图切换；底部缩略图沿用内联状态从右向左发牌展开的运动规则。`Escape`、缩小按钮或背景按钮关闭后返回原放大按钮，并保留 Showcase 的滚动位置。
+传入 `fullscreenPreview` 后，设备右上角显示放大按钮。全屏预览从当前帧开始，支持滚轮、触控板、上下/左右方向键、按钮及缩略图切换；底部缩略图沿用内联状态从左向右发牌展开的运动规则。`Escape`、缩小按钮或背景按钮关闭后返回原放大按钮，并保留 Showcase 的滚动位置。
 
 ```tsx
 <ScrollAutoplayDevice

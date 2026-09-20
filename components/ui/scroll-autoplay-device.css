@@ -90,7 +90,7 @@
 }
 
 /* Thumbnail rail below the device. Thumbnails start clustered at the
-   device's right edge and deal out one by one to a left-aligned row. */
+   device's left edge and deal out one by one to a right-aligned row. */
 .scroll-autoplay-device__thumbs {
   position: relative;
   width: min(100%, var(--device-width, 640px));
