@@ -134,9 +134,20 @@ export const projects: Project[] = [
   },
   {
     href: 'https://www.tesko.com.cn/',
-    publishedAt: '2025-11-24',
+    publishedAt: '2025-12-24',
     status: 'external',
-    title: { zh: 'TESKO', en: 'TESKO' },
+    title: { zh: 'TESKO Web', en: 'TESKO Web' },
+  },
+  {
+    slug: 'tesko-hmi',
+    status: 'draft',
+    publishedAt: '2025-12-01',
+    title: { zh: 'TESKO HMI', en: 'TESKO HMI' },
+    description: {
+      zh: 'TESKO 人机界面设计项目。',
+      en: 'An HMI design project for TESKO.',
+    },
+    blocks: createProjectTemplateBlocks(),
   },
   {
     slug: 'pack-pilot',

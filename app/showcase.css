@@ -72,6 +72,10 @@
 .showcase-chapters {
   margin-top: var(--space-3xl);
 }
+/* The pager sits 128px below the last paragraph. */
+.showcase-site .detail-navigation {
+  margin-top: var(--space-5xl);
+}
 .showcase-chapter + .showcase-chapter {
   margin-top: var(--space-3xl);
 }
