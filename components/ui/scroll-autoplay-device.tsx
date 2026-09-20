@@ -14,6 +14,7 @@ import {
 import { createPortal } from 'react-dom';
 import { motion, useMotionValueEvent, useReducedMotion } from 'motion/react';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
+import { EASE_IN_OUT } from '@/lib/ease';
 import { cn } from '@/lib/utils';
 import {
   ScrollAutoplay,
@@ -121,9 +122,7 @@ function Thumb({
       initial={false}
       animate={{ x }}
       transition={
-        reduceMotion
-          ? { duration: 0 }
-          : { type: 'spring', stiffness: 300, damping: 34, mass: 0.7 }
+        reduceMotion ? { duration: 0 } : { duration: 0.9, ease: EASE_IN_OUT }
       }
     >
       <Image
