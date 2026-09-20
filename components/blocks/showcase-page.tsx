@@ -181,7 +181,13 @@ export function ShowcasePage({
               {item.facts.map((fact, index) => (
                 <div key={index} className="showcase-fact">
                   <dt>{fact.label[language]}</dt>
-                  <dd>{fact.value[language]}</dd>
+                  {Array.isArray(fact.value) ? (
+                    fact.value.map((tag) => (
+                      <dd key={tag[language]}>{tag[language]}</dd>
+                    ))
+                  ) : (
+                    <dd>{fact.value[language]}</dd>
+                  )}
                 </div>
               ))}
             </dl>

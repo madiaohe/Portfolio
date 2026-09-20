@@ -64,6 +64,10 @@
   font-size: var(--text-meta);
   line-height: var(--leading-meta);
 }
+/* Multiple values (e.g. Type tags) stack vertically under the label. */
+.showcase-fact dd + dd {
+  margin-top: var(--space-3xs);
+}
 
 .showcase-chapters {
   margin-top: var(--space-3xl);

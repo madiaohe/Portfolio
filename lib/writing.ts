@@ -35,7 +35,11 @@ export type ShowcaseGalleryImage = {
 // Legacy '4:3' / '16:9' forms are also accepted and normalized at render time.
 export type ShowcaseGalleryAspect = string;
 
-export type ShowcaseFact = { label: LocalizedText; value: LocalizedText };
+export type ShowcaseFact = {
+  label: LocalizedText;
+  /** One value, or several tags rendered as vertically stacked lines. */
+  value: LocalizedText | LocalizedText[];
+};
 
 export type ShowcaseChapter = {
   id: string;

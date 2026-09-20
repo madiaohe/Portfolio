@@ -220,11 +220,18 @@ export const projects: Project[] = [
       },
       {
         label: { zh: '角色', en: 'Role' },
-        value: { zh: '待补充', en: 'TBD' },
+        value: [
+          { zh: 'UI 设计师', en: 'UI Designer' },
+          { zh: 'UX 设计师', en: 'UX Designer' },
+        ],
       },
       {
         label: { zh: '类型', en: 'Type' },
-        value: { zh: '待补充', en: 'TBD' },
+        value: [
+          { zh: 'HMI', en: 'HMI' },
+          { zh: '工业设计', en: 'Industrial design' },
+          { zh: '交互设计', en: 'Interaction design' },
+        ],
       },
     ],
     galleryAspect: '16 / 9',
