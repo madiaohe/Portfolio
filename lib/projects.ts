@@ -50,6 +50,77 @@ export type ExternalProject = {
 
 export type Project = PublishedProject | DraftProject | ExternalProject;
 
+type ShowcaseFactsOverride = {
+  /** Override Date, or set to null to omit the default row. */
+  date?: ShowcaseFact['value'] | null;
+  /** Override Role, or set to null to omit the default row. */
+  role?: ShowcaseFact['value'] | null;
+  /** Override Type, or set to null to omit the default row. */
+  type?: ShowcaseFact['value'] | null;
+  /** Add project-specific rows after the default rows. */
+  extra?: ShowcaseFact[];
+};
+
+type ShowcaseProjectInput = Omit<PublishedProject, 'facts' | 'status'> & {
+  facts?: ShowcaseFactsOverride;
+};
+
+const SHOWCASE_FACT_DEFAULTS = {
+  role: [
+    { zh: 'UI 设计师', en: 'UI Designer' },
+    { zh: 'UX 设计师', en: 'UX Designer' },
+  ],
+  type: [
+    { zh: 'HMI', en: 'HMI' },
+    { zh: '工业设计', en: 'Industrial design' },
+    { zh: '交互设计', en: 'Interaction design' },
+  ],
+} satisfies {
+  role: ShowcaseFact['value'];
+  type: ShowcaseFact['value'];
+};
+
+function createShowcaseFacts(
+  publishedAt: string,
+  overrides: ShowcaseFactsOverride = {},
+): ShowcaseFact[] {
+  const rows: (ShowcaseFact | null)[] = [
+    {
+      label: { zh: '时间', en: 'Date' },
+      value: overrides.date ?? { zh: publishedAt, en: publishedAt },
+    },
+    {
+      label: { zh: '角色', en: 'Role' },
+      value: overrides.role ?? SHOWCASE_FACT_DEFAULTS.role,
+    },
+    {
+      label: { zh: '类型', en: 'Type' },
+      value: overrides.type ?? SHOWCASE_FACT_DEFAULTS.type,
+    },
+    ...(overrides.extra ?? []),
+  ];
+
+  return rows.filter(
+    (row): row is ShowcaseFact => row !== null && row.value !== null,
+  );
+}
+
+/**
+ * New showcase projects get Date / Role / Type facts by default. The input's
+ * `facts` only lists overrides, so a project can customise one row without
+ * repeating the others. Pass `publishedAt` as the default display date or set
+ * `facts.date` to a formatted label.
+ */
+function createShowcaseProject(
+  project: ShowcaseProjectInput,
+): PublishedProject {
+  return {
+    ...project,
+    status: 'published',
+    facts: createShowcaseFacts(project.publishedAt, project.facts),
+  };
+}
+
 function createProjectTemplateBlocks(): WritingBlock[] {
   return [
     {
@@ -121,9 +192,8 @@ export const projects: Project[] = [
     },
     blocks: createProjectTemplateBlocks(),
   },
-  {
+  createShowcaseProject({
     slug: 'shaanxibeiren-hmi',
-    status: 'published',
     publishedAt: '2026-01-15',
     layout: 'showcase',
     logo: {
@@ -136,27 +206,6 @@ export const projects: Project[] = [
       en: 'An HMI design project for Shaanxibeiren.',
     },
     blocks: createProjectTemplateBlocks(),
-    facts: [
-      {
-        label: { zh: '时间', en: 'Date' },
-        value: { zh: '2026-01-15', en: '2026-01-15' },
-      },
-      {
-        label: { zh: '角色', en: 'Role' },
-        value: [
-          { zh: 'UI 设计师', en: 'UI Designer' },
-          { zh: 'UX 设计师', en: 'UX Designer' },
-        ],
-      },
-      {
-        label: { zh: '类型', en: 'Type' },
-        value: [
-          { zh: 'HMI', en: 'HMI' },
-          { zh: '工业设计', en: 'Industrial design' },
-          { zh: '交互设计', en: 'Interaction design' },
-        ],
-      },
-    ],
     galleryAspect: '1366 / 768',
     gallery: [
       {
@@ -260,7 +309,7 @@ export const projects: Project[] = [
         ],
       },
     ],
-  },
+  }),
   {
     href: 'https://www.tesko.com.cn/',
     publishedAt: '2025-12-24',

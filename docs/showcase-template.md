@@ -18,6 +18,10 @@ Showcase 是图片主导的项目 / 写作详情模版，复用 `components/bloc
 
 - `facts` 的 `value` 可以是单条文本，也可以是数组——数组会作为多个标签垂直堆叠
   （如角色拆成 UI / UX，类型列 HMI / 工业设计 / 交互设计）。
+- 项目数据用 `createShowcaseProject({...})` 创建。它默认生成 `Date`（取
+  `publishedAt`）、`Role` 与 `Type`；`facts` 只写覆盖项，例如
+  `facts: { date: { zh: '…', en: '…' } }`。`date`、`role`、`type` 都可以设为
+  `null` 来省略默认行，`extra` 可以追加自定义行。
 - 图片建议统一尺寸（如 1920×1080），`galleryAspect` 与之匹配后图片区铺满、无黑边。
 
 ## 章节 blocks
@@ -60,26 +64,21 @@ Showcase 是图片主导的项目 / 写作详情模版，复用 `components/bloc
 ## 参考骨架
 
 ```ts
-{
+createShowcaseProject({
   slug: 'new-project',
   publishedAt: 'YYYY-MM-DD',
   layout: 'showcase',
   title: { zh: '…', en: '…' },
   logo: { src: '/media/….png', alt: '…' },
-  facts: [
-    { label: { zh: '时间', en: 'Date' }, value: { zh: '…', en: '…' } },
-    { label: { zh: '角色', en: 'Role' }, value: [{ zh: '…', en: '…' }] },
-    { label: { zh: '类型', en: 'Type' }, value: [{ zh: '…', en: '…' }] },
-  ],
+  // Optional: override only fields that differ from the defaults.
+  facts: { date: { zh: '…', en: '…' } },
   galleryAspect: '16 / 9',
   gallery: [{ src: '/media/….png', alt: '…' }],
   chapters: [
     {
       id: 'overview',
       heading: { zh: '概览', en: 'Overview' },
-      blocks: [
-        { type: 'paragraph', text: { zh: '…', en: '…' } },
-      ],
+      blocks: [{ type: 'paragraph', text: { zh: '…', en: '…' } }],
     },
     {
       id: 'gallery',
@@ -93,5 +92,9 @@ Showcase 是图片主导的项目 / 写作详情模版，复用 `components/bloc
       blocks: [{ type: 'paragraph', text: { zh: '…', en: '…' } }],
     },
   ],
-}
+});
+```
+
+```
+
 ```
