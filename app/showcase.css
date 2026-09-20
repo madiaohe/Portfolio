@@ -113,15 +113,15 @@
   line-height: var(--leading-body-zh);
 }
 
-/* Scroll autoplay sits 128px below the last chapter. The device shell sits at
-   the top of the sticky stage (not centered) so the perceived gap matches the
-   128px margin instead of adding half a viewport of empty stage space. */
+/* The sticky stage stays vertically centered for mid-screen playback; drop
+   the gallery margin so the device sits as close to the chapter as the
+   centering allows (stage top space is inherent to the centered design). */
 .showcase-gallery {
-  margin-top: var(--space-5xl);
+  margin-top: 0;
 }
 .showcase-gallery .scroll-autoplay-device__stage {
-  justify-content: flex-start;
-  /* Let the device shell span the full content column like the body text. */
+  /* Keep the device vertically centered so the animation starts mid-screen.
+     Let the shell span the full content column like the body text. */
   padding-left: 0;
   padding-right: 0;
 }
