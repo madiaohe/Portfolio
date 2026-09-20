@@ -122,15 +122,143 @@ export const projects: Project[] = [
     blocks: createProjectTemplateBlocks(),
   },
   {
-    slug: 'laminator-hmi',
-    status: 'draft',
+    slug: 'shaanxibeiren-hmi',
+    status: 'published',
     publishedAt: '2026-01-15',
-    title: { zh: '复合机 HMI', en: 'Laminator HMI' },
+    layout: 'showcase',
+    logo: {
+      src: '/media/shaanxibeiren-hmi/logo.png',
+      alt: 'Shaanxibeiren logo',
+    },
+    title: { zh: '陕西北人 HMI', en: 'Shaanxibeiren HMI' },
     description: {
-      zh: '复合机人机界面设计项目。',
-      en: 'An HMI design project for a laminating machine.',
+      zh: '陕西北人人机界面设计项目。',
+      en: 'An HMI design project for Shaanxibeiren.',
     },
     blocks: createProjectTemplateBlocks(),
+    facts: [
+      {
+        label: { zh: '时间', en: 'Date' },
+        value: { zh: '2026-01-15', en: '2026-01-15' },
+      },
+      {
+        label: { zh: '角色', en: 'Role' },
+        value: [
+          { zh: 'UI 设计师', en: 'UI Designer' },
+          { zh: 'UX 设计师', en: 'UX Designer' },
+        ],
+      },
+      {
+        label: { zh: '类型', en: 'Type' },
+        value: [
+          { zh: 'HMI', en: 'HMI' },
+          { zh: '工业设计', en: 'Industrial design' },
+          { zh: '交互设计', en: 'Interaction design' },
+        ],
+      },
+    ],
+    galleryAspect: '1366 / 768',
+    gallery: [
+      {
+        src: '/media/shaanxibeiren-hmi/01-overview.png',
+        alt: 'Shaanxibeiren HMI overview',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/02-overview-speed-settings.png',
+        alt: 'Shaanxibeiren HMI overview speed settings',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/03-production-preparation-parameters-a.png',
+        alt: 'Shaanxibeiren HMI production preparation parameters A',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/04-production-preparation-parameters-b.png',
+        alt: 'Shaanxibeiren HMI production preparation parameters B',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/05-production-preparation-recipe-parameters.png',
+        alt: 'Shaanxibeiren HMI production preparation recipe parameters',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/06-tension-settings-working-status.png',
+        alt: 'Shaanxibeiren HMI tension settings working status',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/07-tension-settings-parameter-b-tension-taper.png',
+        alt: 'Shaanxibeiren HMI tension settings parameter B tension taper',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/08-alarm-monitoring-current-alarms.png',
+        alt: 'Shaanxibeiren HMI alarm monitoring current alarms',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/09-system-management-date-time.png',
+        alt: 'Shaanxibeiren HMI system management date and time',
+      },
+      {
+        src: '/media/shaanxibeiren-hmi/10-system-management-user-management.png',
+        alt: 'Shaanxibeiren HMI system management user management',
+      },
+    ],
+    chapters: [
+      {
+        id: 'overview',
+        heading: { zh: '概览', en: 'Overview' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '这个项目聚焦陕西北人复合生产线的操作界面：总览页把涂胶、放卷、收卷与复合单元映射到设备结构上，并在对应位置直接呈现当前张力、设定张力、当前卷径等关键参数。顶部集中显示运行状态、当前配方、线速度、报警与用户信息，让操作者在进入生产前先掌握全线状态。',
+              en: 'This project focuses on the operating interface for the Shaanxibeiren laminating production line. The overview maps coating, unwinding, rewinding, and laminating units onto the equipment structure and shows key values—current tension, set tension, and roll diameter—directly beside them. The top bar centralises run status, active recipe, line speed, alarms, and user information so operators can grasp the full line before production.',
+            },
+          },
+        ],
+      },
+      {
+        id: 'gallery',
+        heading: { zh: '滚动浏览', en: 'Gallery' },
+        blocks: [{ type: 'gallery' }],
+      },
+      {
+        id: 'goals',
+        heading: { zh: '设计目标', en: 'Design goals' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '把分散在菜单中的生产准备、张力设定、报警处理与系统管理组织成清晰的操作路径：总览提供全线状态，子页面收纳高级参数，异常与维护信息保持可追踪。目标是降低学习成本，让操作者在不离开当前上下文的情况下完成检查、调整与确认。',
+              en: 'Organise production preparation, tension settings, alarm handling, and system management into a clear operating path: the overview shows the whole line, sub-pages hold advanced parameters, and maintenance information stays traceable. The goal is to reduce learning cost and let operators inspect, adjust, and confirm without losing their current context.',
+            },
+          },
+        ],
+      },
+      {
+        id: 'capabilities',
+        heading: { zh: '核心能力', en: 'Key capabilities' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '· 全线总览：设备示意图直接关联涂胶、放卷、收卷与复合单元，核心张力与卷径就近显示；\n· 生产准备：参数 A/B、配方参数分区管理，涂胶速度比率、摆辊位置与工艺参数集中维护；\n· 张力设定：工作状态与张力锥度曲线结合，支持卷径、报警、计长和清零等操作；\n· 报警监控：当前报警、历史报警、电机与 IO 状态分层呈现，报警故障号与伺服确认路径明确。',
+              en: '· Full-line overview: equipment diagrams link coating, unwinding, rewinding, and laminating units, with tension and roll diameter shown close to each unit;\n· Production preparation: parameters A/B and recipes are managed in sections, centralising coating speed ratios, swing-roll positions, and process values;\n· Tension settings: working status and tension-taper curves support roll diameter, alarms, length counters, and resets;\n· Alarm monitoring: current alarms, historical alarms, motor status, and IO states are layered, with clear paths to alarm codes and servo confirmation.',
+            },
+          },
+        ],
+      },
+      {
+        id: 'innovation',
+        heading: { zh: '设计语言与创新', en: 'Design language & innovation' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '界面使用浅色工业视觉，以蓝色作为主操作色，用状态色点标记关键单元；核心参数采用大号数值增强可读性，开关、分段按钮与弹窗让操作状态更明确。创新点在于「设备结构 + 参数面板」的双向组织：操作者既能从真实设备结构理解参数位置，也能从功能菜单进入详细设置，减少在总览、准备与维护之间的跳转成本。',
+              en: 'The interface uses a light industrial visual language with blue as the primary action colour and status dots marking key units. Large numeric values improve legibility, while toggles, segmented controls, and dialogs make states explicit. The key idea is a two-way structure of “equipment diagram + parameter panels”: operators can understand values from the physical machine layout or enter detailed settings from functional menus, reducing jumps between overview, preparation, and maintenance.',
+            },
+          },
+        ],
+      },
+    ],
   },
   {
     href: 'https://www.tesko.com.cn/',
@@ -298,14 +426,17 @@ export const projects: Project[] = [
               en: 'Schneider Electric is a long-standing leader in industrial automation and energy management. This project focuses on the human-machine interface (HMI) for industrial field devices: engineers need to discover, connect, configure, and self-test hardware such as IO drivers, IO equipment, wireless 4G/Wi-Fi, and VPN channels, both locally and remotely. In the past these tasks were scattered across multiple tools and dense parameter sheets — hard to learn and easy to break midway through a configuration.',
             },
           },
-          {
-            type: 'gallery',
-          },
-          {
-            type: 'heading',
-            id: 'goals',
-            text: { zh: '设计目标', en: 'Design goals' },
-          },
+        ],
+      },
+      {
+        id: 'gallery',
+        heading: { zh: '滚动浏览', en: 'Gallery' },
+        blocks: [{ type: 'gallery' }],
+      },
+      {
+        id: 'goals',
+        heading: { zh: '设计目标', en: 'Design goals' },
+        blocks: [
           {
             type: 'paragraph',
             text: {
@@ -313,11 +444,12 @@ export const projects: Project[] = [
               en: 'Fold complex device configuration into a clear, visual, guided flow: let engineers walk the full path from power-on to connect, configure, self-test, and go live within minutes, and make any failure visible, locatable, and recoverable instead of relying on experience and trial and error.',
             },
           },
-          {
-            type: 'heading',
-            id: 'capabilities',
-            text: { zh: '核心能力', en: 'Key capabilities' },
-          },
+        ],
+      },
+      {
+        id: 'capabilities',
+        heading: { zh: '核心能力', en: 'Key capabilities' },
+        blocks: [
           {
             type: 'paragraph',
             text: {
@@ -325,11 +457,12 @@ export const projects: Project[] = [
               en: '· Status-first visibility: the home screen separates online / offline / self-testing at a glance, with network and VPN states always visible;\n· Guided configuration: IO drivers, IO equipment, wireless 4G/Wi-Fi and VPN are configured step by step, reducing cognitive load;\n· Self-test and troubleshooting: offline self-test (COM2) surfaces faults early, so field visits are less about guessing;\n· Secure connectivity: Secure Connect and VPN are the default remote access path, making remote operations more controlled.',
             },
           },
-          {
-            type: 'heading',
-            id: 'innovation',
-            text: { zh: '设计语言与创新', en: 'Design language & innovation' },
-          },
+        ],
+      },
+      {
+        id: 'innovation',
+        heading: { zh: '设计语言与创新', en: 'Design language & innovation' },
+        blocks: [
           {
             type: 'paragraph',
             text: {
