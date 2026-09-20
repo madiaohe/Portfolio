@@ -13,7 +13,6 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  AnimatePresence,
   motion,
   MotionValue,
   useReducedMotion,
@@ -272,7 +271,6 @@ function FullscreenPreview({
   const [activeIndex, setActiveIndex] = useState(() =>
     Math.max(0, Math.min(initialIndex, lastIndex)),
   );
-  const [direction, setDirection] = useState(1);
   const activeImage = images[activeIndex];
 
   const selectIndex = useCallback(
@@ -280,7 +278,6 @@ function FullscreenPreview({
       setActiveIndex((currentIndex) => {
         const clampedIndex = Math.max(0, Math.min(nextIndex, lastIndex));
         if (clampedIndex === currentIndex) return currentIndex;
-        setDirection(clampedIndex > currentIndex ? 1 : -1);
         return clampedIndex;
       });
     },
@@ -295,7 +292,6 @@ function FullscreenPreview({
           Math.min(currentIndex + delta, lastIndex),
         );
         if (nextIndex === currentIndex) return currentIndex;
-        setDirection(delta > 0 ? 1 : -1);
         return nextIndex;
       });
     },
@@ -507,46 +503,42 @@ function FullscreenPreview({
             }}
           >
             <div className="scroll-autoplay-fullscreen__screen">
-              <AnimatePresence initial={false} mode="wait">
-                <motion.div
-                  key={activeImage.src}
-                  className="scroll-autoplay-fullscreen__frame"
-                  initial={
-                    reduceMotion
-                      ? { opacity: 1 }
-                      : {
-                          opacity: 0,
-                          x: direction > 0 ? '8%' : '-8%',
-                        }
-                  }
-                  animate={{ opacity: 1, x: '0%' }}
-                  exit={
-                    reduceMotion
-                      ? { opacity: 0 }
-                      : {
-                          opacity: 0,
-                          x: direction > 0 ? '-8%' : '8%',
-                        }
-                  }
-                  transition={
-                    reduceMotion
-                      ? { duration: 0 }
-                      : { duration: 0.2, ease: [0.22, 1, 0.36, 1] }
-                  }
-                >
-                  <Image
-                    fill
-                    src={activeImage.src}
-                    alt={activeImage.alt}
-                    draggable={false}
-                    sizes="(max-width: 640px) 92vw, 90vw"
-                    className={cn(
-                      'scroll-autoplay-fullscreen__image',
-                      imageClassName,
-                    )}
-                  />
-                </motion.div>
-              </AnimatePresence>
+              {/* All frames sit side by side; the strip slides so consecutive
+                  images stay joined during the transition, mirroring the
+                  inline scroll player (no fade, no dark gap between pages). */}
+              <motion.div
+                className="scroll-autoplay-fullscreen__strip"
+                animate={{ x: `-${activeIndex * 100}%` }}
+                transition={
+                  reduceMotion
+                    ? { duration: 0 }
+                    : {
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 34,
+                        mass: 0.7,
+                      }
+                }
+              >
+                {images.map((image) => (
+                  <div
+                    key={image.src}
+                    className="scroll-autoplay-fullscreen__frame"
+                  >
+                    <Image
+                      fill
+                      src={image.src}
+                      alt={image.alt}
+                      draggable={false}
+                      sizes="(max-width: 640px) 92vw, 90vw"
+                      className={cn(
+                        'scroll-autoplay-fullscreen__image',
+                        imageClassName,
+                      )}
+                    />
+                  </div>
+                ))}
+              </motion.div>
             </div>
           </motion.div>
 
