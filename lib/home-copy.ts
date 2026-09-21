@@ -14,9 +14,7 @@ const english = {
   profileEmailPrefix: ', or reach me via ',
   profileEmailLabel: 'email',
   profileSocialSuffix: '.',
-  socialBefore: 'You can see more of my work on ',
-  socialBetween: ' and more of my code on ',
-  socialAfter: '.',
+  copyright: '© {year} Xu Xianyu. All rights reserved.',
 };
 
 export const homeCopy: Record<
@@ -38,8 +36,6 @@ export const homeCopy: Record<
     profileEmailPrefix: ' 上找到我，或通过',
     profileEmailLabel: '电子邮件',
     profileSocialSuffix: '联系我。',
-    socialBefore: '你可以在 ',
-    socialBetween: ' 查看更多我的作品，在 ',
-    socialAfter: ' 查看更多我的代码。',
+    copyright: '© {year} Xu Xianyu 版权所有。',
   },
 };

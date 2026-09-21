@@ -10,6 +10,10 @@ import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 export function ReferenceHome() {
   const { language } = useSiteLanguage();
   const copy = homeCopy[language];
+  const copyright = copy.copyright.replace(
+    '{year}',
+    String(new Date().getFullYear()),
+  );
   const locale = language === 'zh' ? 'zh-CN' : 'en-US';
   const monthFormatter = new Intl.DateTimeFormat(locale, {
     month: 'short',
@@ -215,25 +219,7 @@ export function ReferenceHome() {
           ) : null}
 
           <footer className="minimal-section minimal-more">
-            <div className="minimal-muted">
-              {copy.socialBefore}
-              <a
-                href="https://twitter.com/emilkowalski"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Twitter
-              </a>
-              {copy.socialBetween}
-              <a
-                href="https://github.com/emilkowalski"
-                target="_blank"
-                rel="noreferrer"
-              >
-                GitHub
-              </a>
-              {copy.socialAfter}
-            </div>
+            <p className="minimal-muted">{copyright}</p>
           </footer>
         </main>
       </div>
