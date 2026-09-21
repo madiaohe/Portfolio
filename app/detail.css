@@ -152,9 +152,6 @@
   .detail-block {
     aspect-ratio: auto;
   }
-  .detail-prose h2 {
-    margin-top: var(--space-2xl);
-  }
   .detail-navigation {
     margin-top: var(--space-lg);
   }

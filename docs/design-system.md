@@ -48,7 +48,7 @@
 | `--space-md` | 24px | 段落间距、标题下间距、块内 padding |
 | `--space-lg` | 32px | 组件块外边距 |
 | `--space-xl` | 40px | 标题 → 组件块的过渡间距 |
-| `--space-2xl` | 48px | 移动端章节前分隔 |
+| `--space-2xl` | 48px | 较小区块分隔 |
 | `--space-3xl` | 64px | 章节前分隔（桌面） |
 | `--space-4xl` | 96px | 页尾/导航前 |
 | `--space-5xl` | 128px | 页面顶部留白 |
