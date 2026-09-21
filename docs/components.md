@@ -100,6 +100,8 @@ import { CapsuleInput } from '@/components/ui/capsule-input';
 
 外壳宽度与缩略图尺寸已参数化：`deviceWidth` 控制设备外壳最大宽度（数字为像素，也接受任意 CSS 长度），`thumbnailSize` 控制内联缩略图边长（同时驱动底部轨道高度与发牌步距），`fullscreenThumbnailSize` 控制全屏预览的缩略图边长。默认值分别为 `640`、`16` 与 `24`，项目页按需传入即可：
 
+滚动轨道默认高度是 `100vh + 33.333vh × (图片数 - 1)`，保证不同图片数量的页面拥有一致的每帧滚动距离。如需特殊布局，仍可通过 `scrollHeight` 覆盖总高度。
+
 ```tsx
 <ScrollAutoplayDevice
   images={[{ src, alt }, ...]}

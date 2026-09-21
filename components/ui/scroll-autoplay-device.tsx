@@ -42,6 +42,7 @@ type FullscreenCopy = {
 
 const INLINE_THUMBNAIL_LIMIT = 8;
 const INLINE_THUMBNAIL_VISIBLE_COUNT = 7;
+const SCROLL_DISTANCE_PER_FRAME = 33.333;
 
 function getAspectStyle(aspect: string) {
   const normalized = aspect.replace(':', ' / ');
@@ -61,6 +62,16 @@ function getDealtThumbnailCount(progress: number, count: number) {
   if (!count) return 0;
   const normalized = Math.max(0, Math.min(1, progress));
   return Math.max(0, Math.min(count, Math.ceil(normalized * count)));
+}
+
+function getDefaultScrollHeight(count: number) {
+  // The sticky viewport consumes the first 100vh, so allocate one consistent
+  // scroll distance per transition regardless of how many images the project
+  // supplies. This matches the original 4-image demo: 200vh total height.
+  const scrollDistance = Math.max(0, count - 1) * SCROLL_DISTANCE_PER_FRAME;
+  return scrollDistance
+    ? `calc(100vh + ${scrollDistance.toFixed(3)}vh)`
+    : '100vh';
 }
 
 function getFullscreenDealtThumbnailCount(activeIndex: number, count: number) {
@@ -855,7 +866,7 @@ function ScrollAutoplayDeviceStage({
 export function ScrollAutoplayDevice({
   images,
   aspect = '4:3',
-  scrollHeight = '200vh',
+  scrollHeight,
   caption,
   className,
   imageClassName,
@@ -866,6 +877,7 @@ export function ScrollAutoplayDevice({
 }: {
   images: ScrollAutoplayImage[];
   aspect?: string;
+  /** Total scroll track height; defaults to one viewport plus 33.333vh per transition. */
   scrollHeight?: string;
   caption?: string;
   className?: string;
@@ -889,7 +901,7 @@ export function ScrollAutoplayDevice({
       totalItems={images.length}
       style={
         {
-          height: scrollHeight,
+          height: scrollHeight ?? getDefaultScrollHeight(images.length),
           '--device-width': widthValue,
           '--thumb-size': `${thumbnailSize}px`,
         } as CSSProperties
