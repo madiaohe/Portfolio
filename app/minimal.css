@@ -262,6 +262,10 @@ html[data-minimal-theme='dark'] body:has(.minimal-site) {
 .minimal-home .minimal-directory {
   margin-bottom: 0;
 }
+.minimal-home .minimal-more {
+  /* Keep the copyright 128px below the Writing section's last row. */
+  margin-top: var(--space-5xl);
+}
 .minimal-home .minimal-directory > .minimal-heading {
   margin-bottom: 0 !important;
   padding-bottom: var(--space-2xs);
