@@ -316,17 +316,93 @@ export const projects: Project[] = [
     status: 'external',
     title: { zh: 'TESKO Web', en: 'TESKO Web' },
   },
-  {
+  createShowcaseProject({
     slug: 'tesko-hmi',
-    status: 'draft',
     publishedAt: '2025-12-01',
+    layout: 'showcase',
+    logo: {
+      src: '/media/tesko-hmi/logo.png',
+      alt: 'TESKO logo',
+    },
     title: { zh: 'TESKO HMI', en: 'TESKO HMI' },
     description: {
       zh: 'TESKO 人机界面设计项目。',
       en: 'An HMI design project for TESKO.',
     },
     blocks: createProjectTemplateBlocks(),
-  },
+    galleryAspect: '16 / 9',
+    gallery: [
+      {
+        src: '/media/tesko-hmi/01-work-page.png',
+        alt: 'TESKO HMI — work page',
+      },
+      {
+        src: '/media/tesko-hmi/02-alarm.png',
+        alt: 'TESKO HMI — alarm monitoring',
+      },
+      {
+        src: '/media/tesko-hmi/03-work-page-saw-blade-replacement-step-1.png',
+        alt: 'TESKO HMI — work page saw blade replacement step 1',
+      },
+      {
+        src: '/media/tesko-hmi/04-work-page-saw-blade-replacement-step-4.png',
+        alt: 'TESKO HMI — work page saw blade replacement step 4',
+      },
+      {
+        src: '/media/tesko-hmi/05-work-page-service-life.png',
+        alt: 'TESKO HMI — work page service life adjustment',
+      },
+      {
+        src: '/media/tesko-hmi/06-production-filling-step-1.png',
+        alt: 'TESKO HMI — production filling step 1',
+      },
+      {
+        src: '/media/tesko-hmi/07-production-filling-step-2.png',
+        alt: 'TESKO HMI — production filling step 2',
+      },
+      {
+        src: '/media/tesko-hmi/08-maintenance-bandsaw-blade-replacement-step-1.png',
+        alt: 'TESKO HMI — maintenance bandsaw blade replacement step 1',
+      },
+      {
+        src: '/media/tesko-hmi/09-maintenance-bandsaw-blade-replacement-step-2.png',
+        alt: 'TESKO HMI — maintenance bandsaw blade replacement step 2',
+      },
+      {
+        src: '/media/tesko-hmi/10-maintenance-saw-blade-replacement-step-2.png',
+        alt: 'TESKO HMI — maintenance saw blade replacement step 2',
+      },
+      {
+        src: '/media/tesko-hmi/11-maintenance-saw-blade-replacement-step-4-1.png',
+        alt: 'TESKO HMI — maintenance saw blade replacement step 4-1',
+      },
+      {
+        src: '/media/tesko-hmi/12-maintenance-coolant-replacement-step-2.png',
+        alt: 'TESKO HMI — maintenance coolant replacement step 2',
+      },
+    ],
+    chapters: [
+      {
+        id: 'overview',
+        heading: { zh: '概览', en: 'Overview' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '这个项目聚焦 TESKO 设备的 HMI：工作页集中呈现设备状态、报警与生产数据，并通过分步引导支持生产填料、锯片和锯带更换、切削液更换等日常操作与维护。',
+              en: 'This project focuses on the TESKO equipment HMI. The work page brings device status, alarms, and production data together, while step-by-step guidance supports production filling and routine maintenance such as saw blade, bandsaw blade, and coolant replacement.',
+            },
+          },
+        ],
+      },
+      {
+        id: 'gallery',
+        heading: { zh: '滚动浏览', en: 'Gallery' },
+        hideHeading: true,
+        blocks: [{ type: 'gallery' }],
+      },
+    ],
+  }),
   {
     slug: 'pack-pilot',
     status: 'draft',
