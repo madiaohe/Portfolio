@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <base href="./vendor/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>仁博 RCS · 油雾过滤控制系统原型</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232058a5'/%3E%3Ctext x='7' y='24' fill='white' font-family='Arial' font-weight='bold' font-size='24'%3ER%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css?v=20261030-monitor-calibration">
+  <link rel="stylesheet" href="../portfolio.css">
+</head>
+<body>
+  <main class="preview">
+    <div class="physical-size-badge" id="physical-size-badge" role="status" hidden></div>
+    <section class="physical-size-gate" id="physical-size-gate" hidden>
+      <h2>先校准显示器，再预览实物大小</h2>
+      <p>可直接使用你提供的 27 英寸、1920×1080 显示器参数，或用实体尺子对齐 100 mm。</p>
+      <button class="monitor-calibrate" data-monitor-calibrate type="button">按 27″ · 1920×1080 直接校准</button>
+      <button id="physical-calibration-start" type="button">开始尺子校准</button>
+      <p>未校准时不使用默认 DPI 猜测尺寸。</p>
+    </section>
+    <div class="screen-device" id="screen-device">
+      <div class="screen-stage" id="screen-stage">
+        <div class="hmi" id="hmi" aria-label="800×480 油雾过滤器控制屏">
+          <header class="hmi-header" id="hmi-header"></header>
+          <div class="hmi-body">
+            <nav class="side-nav" id="side-nav" aria-label="主导航"></nav>
+            <section class="page-content" id="page-content"></section>
+          </div>
+          <div id="modal-root"></div>
+          <div class="toast" id="toast" role="status" hidden></div>
+        </div>
+      </div>
+    </div>
+    <button class="preview-controller-toggle" id="preview-controller-toggle" type="button" aria-controls="preview-controller" aria-expanded="false">预览控制器</button>
+    <aside class="preview-controller" id="preview-controller" aria-label="预览控制器" aria-hidden="true" hidden>
+      <div class="preview-controller-header">
+        <div><span class="preview-kicker">RAINBOW / RCS</span><strong id="preview-version">交互原型 V3.1.0</strong></div>
+        <button class="preview-controller-close" id="preview-controller-close" type="button" aria-label="关闭预览控制器">×</button>
+      </div>
+      <div class="preview-controller-body">
+        <section class="preview-sizing" aria-labelledby="preview-sizing-title">
+          <div class="preview-controller-title" id="preview-sizing-title">画板 · 800 × 480 px</div>
+          <label class="scale-label">显示模式 <select id="preview-scale" aria-label="预览比例"><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option><option value="fit">适应窗口</option><option value="physical">物理尺寸</option></select></label>
+          <p class="preview-hint" id="logical-size-hint">百分比与适应窗口按像素缩放，不代表真实物理尺寸。</p>
+          <div id="physical-size-controls" hidden>
+            <form id="physical-diagonal-form">
+              <label class="physical-input-label" for="physical-diagonal">屏幕对角线 <span><input id="physical-diagonal" type="number" value="7" min="3" max="32" step="0.1" required aria-describedby="physical-dimensions"> 英寸</span></label>
+            </form>
+            <p class="physical-dimensions" id="physical-dimensions"></p>
+            <label class="scale-label physical-enclosure-label">设备外形 <select id="physical-enclosure" aria-label="设备外形"><option value="226x163">226 × 163 mm（资料第一组）</option><option value="203x149">203 × 149 mm（资料第二组）</option><option value="display">仅显示区（不显示外壳）</option></select></label>
+            <p class="physical-enclosure-dimensions" id="physical-enclosure-dimensions"></p>
+            <p class="preview-hint" id="physical-display-hint"></p>
+            <div class="physical-calibration">
+              <strong>当前显示器的实物基准</strong>
+              <p class="preview-hint">已知显示器为 27″、1920×1080，可直接计算，并计入当前系统和浏览器的像素比例。1920×1080 应为实际输出分辨率。</p>
+              <button class="monitor-calibrate" data-monitor-calibrate type="button">按 27″ · 1920×1080 直接校准</button>
+              <div class="physical-calibration-actions"><button id="physical-calibration-open" type="button">校准 / 重新校准</button><button id="physical-calibration-reset" type="button">清除校准</button></div>
+              <p class="physical-calibration-status" id="physical-calibration-status" role="status"></p>
+            </div>
+            <p class="preview-hint">校准保存在此浏览器。换显示器、系统缩放或浏览器缩放后，请重新测量校准。</p>
+            <p class="physical-overflow-hint" id="physical-overflow-hint" hidden>窗口不足，模型仍保持物理尺寸，可滚动查看；也可切换“适应窗口”。</p>
+          </div>
+        </section>
+        <div class="preview-controller-title">演示场景</div>
+        <div class="scenario-controls" aria-label="演示场景">
+          <button data-scenario="normal">正常运行</button>
+          <button data-scenario="warning" class="selected">运行报警</button>
+          <button data-scenario="fault">故障停机</button>
+        </div>
+        <div class="preview-controller-title pump-preview-title">回液泵状态</div>
+        <div class="scenario-controls" aria-label="回液泵状态演示">
+          <button data-pump-state="running" class="selected">泵运行</button>
+          <button data-pump-state="stopped">泵停止</button>
+          <button data-pump-state="fault">泵故障</button>
+        </div>
+        <div class="preview-controller-title reading-preview-title">入口压力／频率数据</div>
+        <div class="scenario-controls" aria-label="入口压力与频率数据演示">
+          <button data-reading-sample="normal" class="selected">正常读数</button>
+          <button data-reading-sample="zero">零值</button>
+          <button data-reading-sample="missing">无数据</button>
+        </div>
+        <div class="preview-controller-title reading-preview-title">监测数值</div>
+        <div class="scenario-controls" aria-label="运行参数数值演示">
+          <button data-monitor-sample="normal" class="selected">正常读数</button>
+          <button data-monitor-sample="zero">零值</button>
+          <button data-monitor-sample="missing">无数据</button>
+        </div>
+        <label class="scale-label">总运行时长示例 <select id="preview-total-hours" aria-label="历史累计运行时长"><option value="0">无历史时长</option><option value="12345">12,345 小时历史</option></select></label>
+        <section class="appearance-review" aria-labelledby="appearance-review-title">
+          <div class="preview-controller-title" id="appearance-review-title">视觉对比 · 仅评审</div>
+          <label class="scale-label">深色栏 <select id="preview-frame" aria-label="深色栏方案"><option value="baseline">深蓝灰（当前）</option><option value="navy">藏蓝</option><option value="graphite">石墨灰</option></select></label>
+          <label class="scale-label">回液泵 <select id="preview-pump" aria-label="回液泵图形方案"><option value="flow">管路流程（当前）</option><option value="compact">简化泵体与状态</option></select></label>
+          <p class="preview-hint">仅切换外观，不改变运行、参数或报警。选项尚未定稿，刷新恢复当前方案。</p>
+          <button class="appearance-reset" id="preview-appearance-reset" type="button">恢复当前外观</button>
+        </section>
+        <p class="preview-hint">场景只提供示例读数；压差颜色随用户阈值变化。演示暂以超过阈值进入下一档，不定义实际设备联锁。监测数值独立提供示例，不按启停推算传感器信号。</p>
+        <div class="preview-foot"><span><i></i>仅使用演示数据，未连接实际设备</span><span>演示密码：用户 1234 · 厂家 8888</span></div>
+      </div>
+    </aside>
+  </main>
+  <dialog class="display-calibration-dialog" id="display-calibration-dialog" aria-labelledby="display-calibration-title" aria-describedby="display-calibration-instructions">
+    <h2 id="display-calibration-title">设置当前显示器的物理比例</h2>
+    <section class="monitor-preset-calibration">
+      <strong>你的显示器：27″ · 1920×1080</strong>
+      <p>可以直接计算物理比例，已计入当前系统和浏览器缩放。请确认 1920×1080 是实际输出分辨率，而非缩放后的逻辑桌面尺寸。</p>
+      <button class="monitor-calibrate" data-monitor-calibrate type="button">按这组参数直接校准</button>
+    </section>
+    <h3>也可以用实体尺子校准</h3>
+    <p id="display-calibration-instructions">将实体尺子贴近显示器。拖动滑块或微调按钮，让两端刻线中心分别对齐尺子的 0 和 100 mm。核对后再保存。</p>
+    <p class="calibration-target">目标实物长度：100 mm = 10 cm</p>
+    <div class="calibration-ruler-viewport" id="calibration-ruler-viewport"><svg id="physical-reference" width="380" height="36" viewBox="0 0 380 36" role="img" aria-label="可调参考线：用实体尺子将两端刻线中心对齐到 100 毫米"><path id="physical-reference-path" d="M1 3v30M1 18h378M379 3v30" fill="none" stroke="currentColor" stroke-width="1"/></svg></div>
+    <p class="calibration-fit-warning" id="calibration-fit-warning" hidden>参考线未完整显示，请扩大窗口或先调短；完整显示后才可确认。</p>
+    <label class="calibration-range-label" for="calibration-ruler-width">调整参考线长度</label>
+    <input id="calibration-ruler-width" type="range" min="20" max="1600" step="0.25" value="378" aria-describedby="display-calibration-instructions">
+    <div class="calibration-fine-controls"><button id="calibration-shorter" type="button">− 微调短一点</button><button id="calibration-longer" type="button">＋ 微调长一点</button></div>
+    <p class="calibration-context-hint">保存只适用于当前显示器及当前系统 / 浏览器缩放。换显示器或调整缩放后，需要重新对齐。</p>
+    <div class="calibration-dialog-actions"><button id="calibration-cancel" type="button">取消</button><button id="calibration-confirm" type="button">已用尺子对齐 100 mm，保存</button></div>
+  </dialog>
+  <script src="../runtime.js"></script>
+  <script src="../portfolio.js"></script>
+</body>
+</html>

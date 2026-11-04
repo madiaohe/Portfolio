@@ -8,6 +8,9 @@
     "pnpm-lock.yaml",
     "yarn.lock",
     "bun.lock",
-    "bun.lockb"
+    "bun.lockb",
+    "public/prototypes/*/vendor/**",
+    "public/prototypes/*/index.html",
+    "public/prototypes/*/runtime.js"
   ]
 }

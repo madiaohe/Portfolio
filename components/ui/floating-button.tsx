@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import {
   Children,
+  Fragment,
   cloneElement,
   type MouseEventHandler,
   type ReactNode,
@@ -19,22 +20,45 @@ import type { CapsuleSize } from '@/components/ui/capsule-input';
 import { useDismiss } from '@/lib/hooks/use-dismiss';
 import { useHoverCapable } from '@/lib/hooks/use-hover-capable';
 import { cn } from '@/lib/utils';
+import { Tooltip } from '@/components/ui/tooltip';
+import { useHoverGesture } from '@/lib/hooks/use-hover-gesture';
 import './floating-input.css';
 
-export type FloatingActionPosition = 'top-left' | 'top' | 'top-right';
+export type FloatingActionPosition =
+  | 'top-left'
+  | 'top'
+  | 'top-right'
+  | 'left'
+  | 'right'
+  | 'end';
 
 export interface FloatingAction {
   id: string;
   /** Accessible name and tooltip for the icon button. */
   label: string;
   icon: ReactNode;
+  /** Custom control rendered in this toolbar slot, such as a segmented tab list. */
+  content?: ReactNode;
   /** Slot on the fan arc. Defaults by index: top-right, top, top-left. */
   position?: FloatingActionPosition;
-  onSelect?: () => void;
+  onSelect?: (trigger: HTMLButtonElement) => void;
+  controls?: string;
+  expanded?: boolean;
+  /** Visual group boundary in toolbar layout; omitted for the first action. */
+  separatorBefore?: boolean | 'inline';
   /** Toggled state, e.g. the active language. */
   active?: boolean;
   disabled?: boolean;
 }
+
+const TOOLBAR_SLOTS: FloatingActionPosition[] = [
+  'left',
+  'top-right',
+  'top-left',
+  'top',
+  'right',
+  'end',
+];
 
 const FAN_SLOTS: FloatingActionPosition[] = ['top-right', 'top', 'top-left'];
 
@@ -54,7 +78,13 @@ export interface FloatingButtonProps {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   onClick?: MouseEventHandler<HTMLButtonElement>;
-  /** Radial actions fanned out on hover, focus, or tap. */
+  /** Compact shared surface for larger action sets; fan remains the default. */
+  actionLayout?: 'fan' | 'toolbar';
+  /** Keep actions visible while an attached panel is in use. */
+  actionsOpen?: boolean;
+  /** Always show a toolbar without the bottom launcher. */
+  persistent?: boolean;
+  /** Actions revealed on hover, focus, or tap. */
   actions?: FloatingAction[];
 }
 
@@ -75,6 +105,9 @@ export function FloatingButton({
   onOpenChange,
   onClick,
   actions = [],
+  actionLayout = 'fan',
+  actionsOpen = false,
+  persistent = false,
 }: FloatingButtonProps) {
   const mounted = useSyncExternalStore(
     subscribeToBrowser,
@@ -99,10 +132,13 @@ export function FloatingButton({
   // the widget again (hover, tap, or re-entering from outside).
   const [dismissedByEscape, setDismissedByEscape] = useState(false);
 
+  const persistentToolbar = persistent && actionLayout === 'toolbar';
   const expanded = Boolean(children) && (open ?? internalOpen);
   const fanOpen =
     !disabled &&
-    ((canHover ? hovered : false) ||
+    (persistentToolbar ||
+      actionsOpen ||
+      (canHover ? hovered : false) ||
       tapOpen ||
       (focusWithin && keyboardFocusWithin && !dismissedByEscape));
 
@@ -112,6 +148,15 @@ export function FloatingButton({
   const contentId = useId();
   const fanId = useId();
   const hoverTimerRef = useRef<number | undefined>(undefined);
+
+  const focusReturnTarget = useCallback(() => {
+    const target =
+      triggerRef.current ??
+      scopeRef.current?.querySelector<HTMLButtonElement>(
+        '.floating-button__action[data-action="top"]',
+      );
+    target?.focus({ preventScroll: true });
+  }, []);
 
   const changeOpen = useCallback(
     (next: boolean) => {
@@ -185,8 +230,8 @@ export function FloatingButton({
     wasExpandedRef.current = expanded;
     if (!wasOpen || expanded || !closeViaEscapeRef.current) return;
     closeViaEscapeRef.current = false;
-    triggerRef.current?.focus({ preventScroll: true });
-  }, [expanded]);
+    focusReturnTarget();
+  }, [expanded, focusReturnTarget]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -207,12 +252,12 @@ export function FloatingButton({
         event.preventDefault();
         setDismissedByEscape(true);
         setTapOpen(false);
-        triggerRef.current?.focus({ preventScroll: true });
+        focusReturnTarget();
       }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [expanded, changeOpen, tapOpen, focusWithin]);
+  }, [expanded, changeOpen, tapOpen, focusWithin, focusReturnTarget]);
 
   const composer = children
     ? Children.map(children, (child) =>
@@ -221,6 +266,57 @@ export function FloatingButton({
           : child,
       )
     : children;
+
+  const positionedActions = actions.map((action, index) => ({
+    action,
+    position: action.position ?? FAN_SLOTS[index % FAN_SLOTS.length],
+  }));
+  if (actionLayout === 'toolbar')
+    positionedActions.sort(
+      (a, b) =>
+        TOOLBAR_SLOTS.indexOf(a.position) - TOOLBAR_SLOTS.indexOf(b.position),
+    );
+  const actionGroups: (typeof positionedActions)[] = [];
+  for (const item of positionedActions) {
+    if (
+      !actionGroups.length ||
+      (actionLayout === 'toolbar' && item.action.separatorBefore === true)
+    )
+      actionGroups.push([]);
+    actionGroups[actionGroups.length - 1].push(item);
+  }
+  function renderAction({
+    action,
+    position,
+  }: (typeof positionedActions)[number]) {
+    if (actionLayout === 'toolbar' && action.content !== undefined)
+      return (
+        <div key={action.id} className="floating-button__custom-action">
+          {action.content}
+        </div>
+      );
+    const button = (
+      <FloatingActionButton
+        key={action.id}
+        action={action}
+        position={position}
+        disabled={disabled || action.disabled}
+        visible={fanOpen && !expanded}
+        onSelect={(trigger) => {
+          setTapOpen(false);
+          action.onSelect?.(trigger);
+        }}
+      />
+    );
+    return actionLayout === 'toolbar' && action.separatorBefore === 'inline' ? (
+      <Fragment key={action.id}>
+        <span className="floating-button__separator" aria-hidden="true" />
+        {button}
+      </Fragment>
+    ) : (
+      button
+    );
+  }
 
   const layer = (
     <div
@@ -233,6 +329,13 @@ export function FloatingButton({
       data-state={expanded ? 'open' : 'closed'}
       data-fan={fanOpen && !expanded ? 'open' : 'closed'}
       data-disabled={disabled || undefined}
+      data-action-layout={actionLayout}
+      data-persistent-toolbar={persistentToolbar || undefined}
+      data-wide-fan={
+        actions.some(
+          (action) => action.position === 'left' || action.position === 'right',
+        ) || undefined
+      }
       onFocus={(event) => {
         const enteredFromOutside =
           !(event.relatedTarget instanceof Node) ||
@@ -259,6 +362,7 @@ export function FloatingButton({
         <fieldset
           ref={surfaceRef}
           className="floating-button__surface"
+          hidden={persistentToolbar && !expanded}
           aria-label={label}
           disabled={disabled}
           style={
@@ -272,36 +376,38 @@ export function FloatingButton({
           onMouseEnter={enterHover}
           onMouseLeave={leaveHover}
         >
-          <button
-            ref={triggerRef}
-            type="button"
-            className="floating-button__trigger"
-            data-slot="floating-button-trigger"
-            aria-label={label}
-            aria-expanded={actions.length ? fanOpen : undefined}
-            aria-controls={actions.length ? fanId : undefined}
-            aria-hidden={expanded || undefined}
-            inert={expanded}
-            disabled={disabled}
-            onClick={(event) => {
-              onClick?.(event);
-              if (event.defaultPrevented) return;
-              setDismissedByEscape(false);
-              setTapOpen((value) => !value);
-            }}
-          >
-            <span className="floating-button__icon" aria-hidden="true">
-              {icon ?? (
-                <Image
-                  src="/media/floating-agent-logo.svg"
-                  width={16}
-                  height={16}
-                  alt=""
-                  className="floating-input-logo"
-                />
-              )}
-            </span>
-          </button>
+          {!persistentToolbar && (
+            <button
+              ref={triggerRef}
+              type="button"
+              className="floating-button__trigger"
+              data-slot="floating-button-trigger"
+              aria-label={label}
+              aria-expanded={actions.length ? fanOpen : undefined}
+              aria-controls={actions.length ? fanId : undefined}
+              aria-hidden={expanded || undefined}
+              inert={expanded}
+              disabled={disabled}
+              onClick={(event) => {
+                onClick?.(event);
+                if (event.defaultPrevented) return;
+                setDismissedByEscape(false);
+                setTapOpen((value) => !value);
+              }}
+            >
+              <span className="floating-button__icon" aria-hidden="true">
+                {icon ?? (
+                  <Image
+                    src="/media/floating-agent-logo.svg"
+                    width={16}
+                    height={16}
+                    alt=""
+                    className="floating-input-logo"
+                  />
+                )}
+              </span>
+            </button>
+          )}
           {children && (
             <div
               id={contentId}
@@ -322,30 +428,24 @@ export function FloatingButton({
             className="floating-button__fan"
             onMouseEnter={enterHover}
             onMouseLeave={leaveHover}
-            aria-hidden={(!fanOpen || expanded) || undefined}
+            aria-hidden={!fanOpen || expanded || undefined}
             inert={!fanOpen || expanded}
           >
-            {actions.map((action, index) => (
-              <button
-                key={action.id}
-                type="button"
-                className="floating-button__action"
-                data-action={action.position ?? FAN_SLOTS[index % FAN_SLOTS.length]}
-                aria-label={action.label}
-                aria-pressed={action.active || undefined}
-                title={action.label}
-                disabled={disabled || action.disabled}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setTapOpen(false);
-                  action.onSelect?.();
-                }}
-              >
-                <span className="floating-button__action-icon" aria-hidden="true">
-                  {action.icon}
-                </span>
-              </button>
-            ))}
+            {actionLayout === 'toolbar'
+              ? actionGroups.map((group, index) => (
+                  <Fragment key={group[0].action.id}>
+                    {index > 0 && (
+                      <span
+                        className="floating-button__separator"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <div className="floating-button__action-group">
+                      {group.map(renderAction)}
+                    </div>
+                  </Fragment>
+                ))
+              : positionedActions.map(renderAction)}
           </fieldset>
         )}
       </div>
@@ -355,4 +455,68 @@ export function FloatingButton({
   if (placement === 'fixed')
     return mounted ? createPortal(layer, document.body) : null;
   return layer;
+}
+
+/** Controlled Tooltip keeps the button itself as the positioned element. */
+function FloatingActionButton({
+  action,
+  position,
+  disabled,
+  visible,
+  onSelect,
+}: {
+  action: FloatingAction;
+  position: FloatingActionPosition;
+  disabled?: boolean;
+  visible: boolean;
+  onSelect: (trigger: HTMLButtonElement) => void;
+}) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const tooltipId = useId();
+  const hover = useHoverGesture();
+  const [tipOpen, setTipOpen] = useState(false);
+  const showTip = visible && !disabled && tipOpen;
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        type="button"
+        className="floating-button__action"
+        data-action={position}
+        aria-label={action.label}
+        aria-describedby={showTip ? tooltipId : undefined}
+        aria-pressed={action.active || undefined}
+        aria-controls={action.controls}
+        aria-expanded={action.expanded}
+        disabled={disabled}
+        onPointerEnter={(event) => {
+          if (hover.enter(event)) setTipOpen(true);
+        }}
+        onPointerLeave={(event) => {
+          if (hover.leave(event)) setTipOpen(false);
+        }}
+        onFocus={(event) => {
+          if (event.currentTarget.matches(':focus-visible')) setTipOpen(true);
+        }}
+        onBlur={() => setTipOpen(false)}
+        onClick={(event) => {
+          event.stopPropagation();
+          setTipOpen(false);
+          onSelect(event.currentTarget);
+        }}
+      >
+        <span className="floating-button__action-icon" aria-hidden="true">
+          {action.icon}
+        </span>
+      </button>
+      <Tooltip
+        id={tooltipId}
+        anchorRef={buttonRef}
+        open={showTip}
+        onOpenChange={setTipOpen}
+        content={action.label}
+        side="top"
+      />
+    </>
+  );
 }

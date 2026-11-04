@@ -1,5 +1,8 @@
 # Emil homepage reference study
 
+> 历史资料：此文件记录 2026-09-08 的参考复刻快照，内容与部署描述仅对应当时状态。
+> 当前实现见 [项目概览](project-overview.md)。
+
 ## Purpose
 
 A faithful local reproduction of https://emilkowal.ski/ captured on 2026-09-08. The user selected fidelity over a loose redesign. Original reference identity and homepage copy are temporarily retained to make direct visual comparison possible.
@@ -24,18 +27,18 @@ The announcement is a dated snapshot, including its promotional countdown. Closi
 
 ## Measured layout
 
-| Property | Desktop | Mobile |
-| --- | --- | --- |
-| Reference viewport | 1440 × 1000 | 390 × 844 |
-| Outer max width | 692px | Full width |
-| Inline padding | 24px | 24px |
-| Content width | 644px | 342px |
-| Body typography | 16px / 24px | 16px / 24px |
-| Intro line height | 26.4px | 26.4px |
-| Header-to-main gap | 128px | 128px |
-| Section spacing | 128px | 64px |
-| Link group gap | 16px | 28px |
-| Row padding | 12px | 0px vertically |
+| Property           | Desktop     | Mobile         |
+| ------------------ | ----------- | -------------- |
+| Reference viewport | 1440 × 1000 | 390 × 844      |
+| Outer max width    | 692px       | Full width     |
+| Inline padding     | 24px        | 24px           |
+| Content width      | 644px       | 342px          |
+| Body typography    | 16px / 24px | 16px / 24px    |
+| Intro line height  | 26.4px      | 26.4px         |
+| Header-to-main gap | 128px       | 128px          |
+| Section spacing    | 128px       | 64px           |
+| Link group gap     | 16px        | 28px           |
+| Row padding        | 12px        | 0px vertically |
 
 The 640–767px breakpoint uses 128px outer vertical padding; 768px and above uses 64px, matching the source. Colors: background `#fdfdfc`, primary `#21201c`, secondary `#63635e`, row hover `#f5f4f4`.
 
@@ -56,4 +59,4 @@ These are reference-study assets and content. They are not represented as XIANYU
 - `components/blocks/site-header.tsx`: suppresses the former navigation and scroll listener only on `/`.
 
 Run `npm run dev`; the existing dev server is available at http://localhost:3010/.
-See `design-qa.md` and `output/playwright/emil/` for verification.
+See [historical QA](qa/legacy-design-qa.md) and repository-root `output/playwright/emil/` for verification.

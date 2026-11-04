@@ -1,3 +1,7 @@
+'use client';
+
+import { useContext } from 'react';
+import { ProjectNavigationContext } from '@/lib/project-navigation-context';
 import { CornerUpLeft } from 'lucide-react';
 import { HookSidebar } from '@/components/ui/hook-sidebar';
 
@@ -9,6 +13,7 @@ import { HookSidebar } from '@/components/ui/hook-sidebar';
 export function ArticleDirectory({
   backHref,
   backLabel,
+  clientBackNavigation = false,
   tocLabel,
   items,
   value,
@@ -16,17 +21,33 @@ export function ArticleDirectory({
 }: {
   backHref: string;
   backLabel: string;
+  clientBackNavigation?: boolean;
   tocLabel?: string;
   items: string[];
   value: number;
   onChange: (index: number) => void;
 }) {
+  const navigate = useContext(ProjectNavigationContext);
   return (
     <div className="article-directory">
-      {/* Native anchor keeps this cross-route link working in the Vinext production bundle. */}
+      {/* Preserve native navigation by default; prototype notes use the persistent client layout. */}
       <a
         className="inline-flex items-center gap-1 text-[14px] leading-5"
         href={backHref}
+        onClick={(event) => {
+          if (
+            clientBackNavigation &&
+            navigate &&
+            !event.metaKey &&
+            !event.ctrlKey &&
+            !event.shiftKey &&
+            !event.altKey &&
+            event.button === 0
+          ) {
+            event.preventDefault();
+            navigate(backHref);
+          }
+        }}
       >
         <CornerUpLeft
           size={14}

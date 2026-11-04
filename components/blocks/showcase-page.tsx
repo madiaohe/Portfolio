@@ -46,6 +46,7 @@ export function ShowcasePage({
   tocLabel,
   collection,
   hrefPrefix,
+  clientBackNavigation = false,
 }: {
   item: ShowcaseItem;
   backHref: string;
@@ -53,6 +54,7 @@ export function ShowcasePage({
   tocLabel: LocalizedText;
   collection: readonly DetailPagerItem[];
   hrefPrefix: string;
+  clientBackNavigation?: boolean;
 }) {
   const { language } = useSiteLanguage();
   const reduced = useReducedMotion() ?? false;
@@ -119,6 +121,7 @@ export function ShowcasePage({
       <div className="detail-shell showcase-shell">
         <aside className="detail-aside">
           <ArticleDirectory
+            clientBackNavigation={clientBackNavigation}
             backHref={backHref}
             backLabel={backLabel[language]}
             tocLabel={tocLabel[language]}

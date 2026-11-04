@@ -1,0 +1,125 @@
+.project-experience {
+  min-height: 100dvh;
+  background: var(--background);
+  color: var(--foreground);
+}
+.project-experience__demo {
+  position: relative;
+  height: 100dvh;
+  padding: var(--space-md) var(--space-md) var(--space-4xl);
+}
+.project-experience__demo[hidden] {
+  display: none;
+}
+.project-experience__viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.project-experience__viewport iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.project-experience__loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: var(--text-meta);
+  color: var(--muted-foreground);
+}
+/* The global instance stays mounted; this page reuses the same console with project actions. */
+body:has(.project-experience)
+  .site-quick-actions:not(.site-quick-actions--project) {
+  display: none;
+}
+.project-experience .article-directory > a {
+  display: none;
+}
+.project-experience__scenarios {
+  position: fixed;
+  left: 50%;
+  bottom: calc(
+    var(--space-4xl) + var(--space-3xs) + env(safe-area-inset-bottom)
+  );
+  transform: translateX(-50%);
+  z-index: 90;
+}
+.project-experience__scenarios button,
+.project-experience__scenarios select {
+  min-height: calc(var(--space-xl) + var(--space-3xs));
+  padding: var(--space-2xs) var(--space-xs);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  color: var(--foreground);
+  font: inherit;
+  font-size: var(--text-meta);
+  line-height: var(--leading-meta);
+  cursor: pointer;
+}
+.project-experience__scenarios button:hover {
+  background: var(--muted);
+}
+.project-experience__scenarios :is(button, select):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+.project-experience__scenario-panel {
+  width: min(280px, calc(100vw - var(--space-lg)));
+  padding: var(--space-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  color: var(--foreground);
+}
+.project-experience__scenario-panel[hidden] {
+  display: none;
+}
+.project-experience__scenario-panel label {
+  display: block;
+  margin-bottom: var(--space-2xs);
+  font-size: var(--text-meta);
+}
+.project-experience__scenario-panel select {
+  display: block;
+  width: 100%;
+  margin-bottom: var(--space-xs);
+}
+.project-experience__scenario-panel button {
+  display: inline-flex;
+  gap: var(--space-2xs);
+  align-items: center;
+}
+.project-experience__scenario-panel p {
+  margin: var(--space-xs) 0 0;
+  font-size: var(--text-caption);
+  line-height: var(--leading-meta);
+  color: var(--muted-foreground);
+}
+@media (max-width: 640px) {
+  .project-experience__demo {
+    padding: var(--space-2xs) var(--space-2xs) var(--space-4xl);
+  }
+}
+
+@media (pointer: coarse) {
+  .project-experience__scenarios {
+    bottom: calc(
+      var(--space-4xl) + var(--space-3xs) + env(safe-area-inset-bottom)
+    );
+  }
+}
+
+@media (max-width: 520px) {
+  .project-experience__demo {
+    padding-bottom: calc(var(--space-5xl) + var(--space-lg));
+  }
+  .project-experience__scenarios {
+    bottom: calc(
+      var(--space-5xl) + var(--space-lg) + env(safe-area-inset-bottom)
+    );
+  }
+}

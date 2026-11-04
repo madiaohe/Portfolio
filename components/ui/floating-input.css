@@ -99,8 +99,8 @@ html[data-minimal-theme='dark'] .floating-input-logo {
   caret-color: var(--foreground);
   /* A thin, translucent scrollbar so multiline scrolling stays subtle. */
   scrollbar-width: thin;
-  scrollbar-color:
-    color-mix(in srgb, var(--muted-foreground) 35%, transparent) transparent;
+  scrollbar-color: color-mix(in srgb, var(--muted-foreground) 35%, transparent)
+    transparent;
 }
 
 .capsule-input [data-slot='capsule-input-field']::-webkit-scrollbar {
@@ -319,7 +319,9 @@ html[data-minimal-theme='dark'] .floating-input-logo {
   }
 }
 
-.floating-button[data-state='closed']:has(.floating-button__surface :focus-visible) {
+.floating-button[data-state='closed']:has(
+    .floating-button__surface :focus-visible
+  ) {
   --floating-button-bottom: -20px;
 }
 .floating-button[data-state='closed']
@@ -343,7 +345,6 @@ html[data-minimal-theme='dark'] .floating-input-logo {
     opacity 100ms ease,
     visibility 100ms;
 }
-
 
 /* The action fan: three circular buttons radiate from the launcher centre.
    The fan sits above the launcher; each button gathers over the centre when
@@ -420,8 +421,7 @@ html[data-minimal-theme='dark'] .floating-input-logo {
 }
 
 /* Arc slots: language top-right, AI top, theme top-left. */
-.floating-button[data-fan='open']
-  .floating-button__action[data-action='top'] {
+.floating-button[data-fan='open'] .floating-button__action[data-action='top'] {
   transform: translate(-50%, 0) scale(1);
 }
 .floating-button[data-fan='open']
@@ -466,7 +466,8 @@ html[data-minimal-theme='dark'] .floating-input-logo {
 }
 
 html[data-minimal-theme='dark']
-  .floating-button__action-icon .floating-input-logo {
+  .floating-button__action-icon
+  .floating-input-logo {
   opacity: 0.85;
 }
 
@@ -517,7 +518,10 @@ html[data-minimal-theme='dark']
 /* Keep the visible hit target usable on touch screens and above the home indicator. */
 @media (pointer: coarse) {
   .floating-button[data-state='closed'] {
-    --floating-button-bottom: max(-12px, calc(env(safe-area-inset-bottom, 0px) - 12px));
+    --floating-button-bottom: max(
+      -12px,
+      calc(env(safe-area-inset-bottom, 0px) - 12px)
+    );
   }
   .floating-button__trigger {
     height: 44px;
@@ -537,4 +541,163 @@ html[data-minimal-theme='dark']
   .capsule-input * {
     transition: none !important;
   }
+}
+
+/* Five-action project console: preserve the original three-slot fan elsewhere. */
+.floating-button[data-wide-fan] .floating-button__fan {
+  --fan-radius: 112px;
+  --fan-offset: 80px;
+  width: calc(var(--fan-radius) * 2 + 48px);
+}
+.floating-button__action[data-action='left'],
+.floating-button__action[data-action='right'] {
+  bottom: -26px;
+}
+.floating-button[data-fan='closed']
+  .floating-button__action[data-action='left'],
+.floating-button[data-fan='closed']
+  .floating-button__action[data-action='right'] {
+  transform: translate(-50%, -24px) scale(0.6);
+}
+.floating-button[data-fan='open'] .floating-button__action[data-action='left'] {
+  transform: translate(calc(-50% - var(--fan-radius)), 0) scale(1);
+}
+.floating-button[data-fan='open']
+  .floating-button__action[data-action='right'] {
+  transform: translate(calc(-50% + var(--fan-radius)), 0) scale(1);
+}
+
+/* Project actions share one calm surface, with DOM order matching visual order. */
+.floating-button[data-action-layout='toolbar'] .floating-button__fan {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  width: max-content;
+  height: auto;
+  bottom: calc(var(--floating-button-bottom) + 56px + var(--space-xs));
+  padding: var(--space-3xs);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, var(--space-2xs)) scale(0.96);
+  transition:
+    opacity 180ms ease,
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 180ms;
+}
+/* Keep pointer travel between the edge launcher and toolbar continuous. */
+.floating-button[data-action-layout='toolbar'] .floating-button__fan::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: var(--space-sm);
+}
+.floating-button[data-action-layout='toolbar'][data-state='closed'][data-fan='open']
+  .floating-button__fan {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0) scale(1);
+}
+.floating-button[data-action-layout='toolbar'][data-fan]
+  .floating-button__action[data-action] {
+  position: relative;
+  inset: auto;
+  flex: 0 0 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  opacity: 1;
+  transform: none;
+  transition: background 160ms ease;
+}
+.floating-button[data-action-layout='toolbar']
+  .floating-button__action:enabled:hover,
+.floating-button[data-action-layout='toolbar']
+  .floating-button__action[aria-pressed='true'] {
+  background: var(--muted);
+}
+
+.floating-button__separator {
+  flex: 0 0 1px;
+  height: var(--space-md);
+  background: var(--border);
+  pointer-events: none;
+}
+
+.floating-button[data-action-layout='toolbar'] .floating-button__fan {
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: calc(100% - var(--space-sm));
+}
+.floating-button__action-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  flex: 0 0 auto;
+}
+.floating-button__custom-action {
+  display: flex;
+  align-items: center;
+}
+.floating-button__view-tabs {
+  flex: 0 0 auto;
+  gap: 0;
+}
+.floating-button__view-tabs [data-slot='tabs-list'] {
+  gap: var(--space-2xs);
+  height: auto;
+  padding: var(--space-3xs);
+  border-radius: 999px;
+}
+.floating-button__view-tabs [data-slot='tabs-trigger'] {
+  min-width: var(--space-4xl);
+  min-height: calc(var(--space-xl) + var(--space-3xs));
+  height: auto;
+  padding: 0 var(--space-sm);
+  border-radius: 999px;
+  font-size: var(--text-caption);
+  line-height: var(--leading-meta);
+  font-weight: var(--font-weight-medium);
+}
+@media (max-width: 520px) {
+  .floating-button[data-action-layout='toolbar'] .floating-button__fan {
+    border-radius: var(--space-md);
+  }
+  .floating-button[data-action-layout='toolbar']
+    .floating-button__fan
+    > .floating-button__separator:nth-last-child(2) {
+    display: none;
+  }
+  .floating-button[data-action-layout='toolbar']
+    .floating-button__action-group:last-child {
+    flex-basis: 100%;
+    justify-content: center;
+    padding-top: var(--space-3xs);
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* Leave space around the text switcher instead of squeezing it between icons. */
+.floating-button__action-group:has(.floating-button__view-tabs) {
+  gap: var(--space-2xs);
+}
+.floating-button__custom-action:has(.floating-button__view-tabs) {
+  padding-inline: 0;
+}
+
+/* All vertical group separators have the same space on either side. */
+.floating-button[data-action-layout='toolbar'] .floating-button__fan {
+  gap: var(--space-2xs);
+}
+.floating-button__surface[hidden] {
+  display: none;
+}
+.floating-button[data-persistent-toolbar] .floating-button__fan {
+  bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
 }

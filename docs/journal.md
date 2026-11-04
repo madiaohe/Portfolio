@@ -1,6 +1,6 @@
 # Journal
 
-The Journal is local preview content. All three articles are illustrative samples, with a visible sample notice on each detail page. Replace both the writing and the notices before treating the articles as published personal writing.
+The Journal is local preview content. The current article is an illustrative sample, with a visible sample notice on each detail page. Replace both the writing and the notices before treating the articles as published personal writing.
 
 ## Editing articles
 
@@ -8,7 +8,7 @@ The Journal is local preview content. All three articles are illustrative sample
 - Markdown bodies: `content/journal/*.md`.
 - Body imports and slug mapping: `lib/journal.ts`.
 - Index: `app/journal/page.tsx`.
-- Additional list-only sample rows: `lib/journal-list-entries.ts`. The index has 15 rows: 3 existing article links and 12 image-preview buttons, with no additional detail routes. Images are reused and deduplicated in the preview stage.
+- Additional list-only sample rows: `lib/journal-list-entries.ts`. The index has 13 rows: 1 existing article link and 12 image-preview buttons, with no additional detail routes. Images are reused and deduplicated in the preview stage.
 - Detail route: `app/journal/[slug]/page.tsx`.
 - Shared Journal styles: `app/journal/journal.css`.
 
@@ -22,8 +22,8 @@ Required `preview` metadata supplies the pinned index image for each entry. Hove
 
 Routes include article titles and descriptions, support direct loading, and return 404 for unknown slugs. No CMS, search, analytics, signup or external publishing has been added.
 
-## Validation
+## Historical validation
 
 - TypeScript, lint and the production build passed.
 - Local HTTP checks: index and all three articles return 200; an unknown slug returns 404.
-- Reading-layout update: native browser checks covered desktop, 320px and 390px layouts, section anchors, next article, and return-to-index navigation. Evidence and comparison limits are recorded in `design-qa.md`.
+- Reading-layout update: native browser checks covered desktop, 320px and 390px layouts, section anchors, next article, and return-to-index navigation. Evidence and comparison limits are recorded in [historical QA](qa/legacy-design-qa.md). These checks describe the earlier version; follow [validation rules](validation.md) for current changes.

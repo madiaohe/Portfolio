@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import {
   Bot,
+  Home,
+  SlidersHorizontal,
   Check,
   Eye,
   FileText,
@@ -191,6 +193,8 @@ function FloatingInputDemo({
   theme: 'light' | 'dark';
   toggleTheme: () => void;
 }) {
+  const [projectActions, setProjectActions] = useState(false);
+  const [projectView, setProjectView] = useState('prototype');
   const [value, setValue] = useState('');
   const [voiceActive, setVoiceActive] = useState(false);
   const [submitted, setSubmitted] = useState('');
@@ -263,8 +267,20 @@ function FloatingInputDemo({
   return (
     <div className="gallery-demo gallery-floating-input-demo ui-scope">
       {feedback}
+      <label className="inline-flex items-center gap-xs text-meta">
+        <input
+          type="checkbox"
+          checked={projectActions}
+          onChange={(event) => setProjectActions(event.target.checked)}
+        />
+        {zh
+          ? '项目工具条（含原型控制台）'
+          : 'Project toolbar (with prototype controls)'}
+      </label>
       <FloatingButton
         placement="contained"
+        actionLayout={projectActions ? 'toolbar' : 'fan'}
+        persistent={projectActions}
         label={zh ? '快捷操作' : 'Quick actions'}
         actionsLabel={zh ? '快捷操作' : 'Quick actions'}
         open={composerOpen}
@@ -273,8 +289,74 @@ function FloatingInputDemo({
           if (!open) setVoiceActive(false);
         }}
         actions={[
+          ...(projectActions
+            ? [
+                {
+                  id: 'home',
+                  position: 'left' as const,
+                  label: zh ? '返回首页（演示）' : 'Back to home (demo)',
+                  icon: <Home size={16} aria-hidden="true" />,
+                  onSelect: () =>
+                    setSubmitted(
+                      zh ? '返回首页（演示）' : 'Back to home (demo)',
+                    ),
+                },
+                {
+                  id: 'prototype-controls',
+                  separatorBefore: 'inline' as const,
+                  position: 'end' as const,
+                  label: zh
+                    ? '原型控制台（演示）'
+                    : 'Prototype controls (demo)',
+                  icon: <SlidersHorizontal size={16} aria-hidden="true" />,
+                  onSelect: () =>
+                    setSubmitted(
+                      zh
+                        ? '打开原型控制台（演示）'
+                        : 'Open prototype controls (demo)',
+                    ),
+                },
+                {
+                  id: 'project-view',
+                  separatorBefore: true,
+                  position: 'right' as const,
+                  label: zh ? '项目视图（演示）' : 'Project view (demo)',
+                  icon: null,
+                  content: (
+                    <Tabs
+                      className="floating-button__view-tabs"
+                      value={projectView}
+                      onValueChange={setProjectView}
+                    >
+                      <TabsList
+                        aria-label={
+                          zh ? '项目视图（演示）' : 'Project view (demo)'
+                        }
+                      >
+                        <TabsTrigger value="prototype">
+                          {zh ? '原型' : 'Prototype'}
+                        </TabsTrigger>
+                        <TabsTrigger value="notes">
+                          {zh ? '说明' : 'Notes'}
+                        </TabsTrigger>
+                      </TabsList>
+                      <TabsContent
+                        value="prototype"
+                        className="visually-hidden"
+                      >
+                        {zh ? '原型视图演示' : 'Prototype view demo'}
+                      </TabsContent>
+                      <TabsContent value="notes" className="visually-hidden">
+                        {zh ? '说明视图演示' : 'Notes view demo'}
+                      </TabsContent>
+                    </Tabs>
+                  ),
+                },
+              ]
+            : []),
           {
             id: 'language',
+            separatorBefore: projectActions,
             position: 'top-right',
             label: languageLabel,
             active: language === 'zh',
@@ -283,6 +365,7 @@ function FloatingInputDemo({
           },
           {
             id: 'ai',
+            separatorBefore: projectActions,
             position: 'top',
             label: aiLabel,
             icon: (
@@ -1004,6 +1087,7 @@ const ARTICLE_DEMO_SECTIONS = [
 ];
 
 function ArticleDirectoryDemo({ zh }: { zh: boolean }) {
+  const [clientBackNavigation, setClientBackNavigation] = useState(false);
   const reduce = useReducedMotion() ?? false;
   const [active, setActive] = useState(0);
   const paneRef = useRef<HTMLDivElement>(null);
@@ -1048,6 +1132,7 @@ function ArticleDirectoryDemo({ zh }: { zh: boolean }) {
     <>
       <aside className="article-directory-demo__aside">
         <ArticleDirectory
+          clientBackNavigation={clientBackNavigation}
           backHref="/"
           backLabel={zh ? '返回' : 'Back'}
           tocLabel={zh ? '文章目录' : 'Table of contents'}
@@ -1061,6 +1146,16 @@ function ArticleDirectoryDemo({ zh }: { zh: boolean }) {
         className="article-directory-demo__pane"
         aria-label={zh ? '演示正文' : 'Article demo'}
       >
+        <label className="inline-flex items-center gap-xs text-meta">
+          <input
+            type="checkbox"
+            checked={clientBackNavigation}
+            onChange={(event) => setClientBackNavigation(event.target.checked)}
+          />
+          {zh
+            ? '使用客户端返回导航（原型项目）'
+            : 'Client-side back navigation (prototype projects)'}
+        </label>
         {ARTICLE_DEMO_SECTIONS.map((section, index) => (
           <section
             key={section.en}

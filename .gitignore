@@ -40,6 +40,5 @@ next-env.d.ts
 /.output/
 /.nitro/
 
-# local agent instructions and QA artifacts
-/AGENTS.md
+# local artifacts
 /artifacts/

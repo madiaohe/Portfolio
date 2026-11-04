@@ -1,0 +1,18 @@
+{
+  "project": "20261019无锡仁博智能油雾过滤",
+  "revision": "99d6bc4187f0c74f6d5cda146287b19018a5e923",
+  "dirty": false,
+  "sha256": {
+    "app.js": "b4adb63833980ffaab64c920db020a60f3020e822458282b1ff4c246599c9c99",
+    "assets/icons/LICENSE-tabler.txt": "b740a1d46122672da62833e97f7e7c8a13fa85cbc7445b584b297cc00dde93db",
+    "assets/icons/circuit-ammeter.svg": "b57b2549dc9a7c17478aefdf216d4a848be8c3c96bd567fa31ec75203c8261e2",
+    "assets/icons/circuit-motor.svg": "a8daeab57af1c5bf391a51ebed85bf62c0da5fa4a05cf48301ee1a117b1dff24",
+    "assets/icons/circuit-voltmeter.svg": "b1c705a8d9fd241eb67dd275437b05dcef5b5ea249333aa31063af55a02520bb",
+    "assets/icons/volume.svg": "1c2d4ffadf15616b7d27fcc66d28df9d5a43f34537ffc4da35c9d4c84c406450",
+    "assets/icons/wind.svg": "4914d4e264b6da11bc8d3498e6dbba1485b4c8544f52a511a4935a5ba1943c9b",
+    "assets/rainbow-logo.png": "8cc6fa9a911999858345c8e25f5806e34cd755ba7251793c0fbd29a550718f1e",
+    "assets/rainbow-logo.svg": "80764b75921bd5a0678400122d83124222a8eb801b4a0f05baaa5817d3cca7f0",
+    "index.html": "f54920ef485759959d6539a15da665e4bae34dd3bc43861eb86d547ef4eb8ff4",
+    "styles.css": "342bf0eba14cc08076df1cf7b00b0bf948f8ddd8f3e724605165e7bfe79ac757"
+  }
+}

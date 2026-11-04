@@ -10,6 +10,12 @@ import type {
   WritingBlock,
 } from './writing';
 
+export type ProjectPrototype = {
+  src: string;
+  width: number;
+  height: number;
+};
+
 export type PublishedProject = {
   slug: string;
   publishedAt: string;
@@ -17,6 +23,7 @@ export type PublishedProject = {
   // 'article' (default) uses DetailPage; 'showcase' uses the image-led
   // ShowcasePage. Swap this field to switch templates without moving data.
   layout?: DetailLayout;
+  prototype?: ProjectPrototype;
   title: LocalizedText;
   description?: LocalizedText;
   blocks: WritingBlock[];
@@ -165,6 +172,82 @@ function createProjectTemplateBlocks(): WritingBlock[] {
 }
 
 export const projects: Project[] = [
+  createShowcaseProject({
+    slug: 'renbo-oil-mist',
+    publishedAt: '2026-10-19',
+    layout: 'showcase',
+    title: { zh: '仁博智能油雾过滤', en: 'Renbo Oil Mist Filtration' },
+    description: {
+      zh: '面向油雾过滤设备的 800 × 480 触屏交互原型，涵盖运行监测、启停控制、报警与分级参数设置。',
+      en: 'An 800 × 480 touchscreen prototype for oil mist filtration, with monitoring, start/stop controls, alarms and role-based settings.',
+    },
+    prototype: {
+      src: '/prototypes/renbo-oil-mist/index.html',
+      width: 800,
+      height: 480,
+    },
+    blocks: [],
+    facts: {
+      type: [
+        { zh: 'HMI', en: 'HMI' },
+        { zh: '交互原型', en: 'Interactive prototype' },
+      ],
+    },
+    chapters: [
+      {
+        id: 'overview',
+        heading: { zh: '项目概览', en: 'Overview' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '将设备运行监测、启停、报警和参数设置组织在固定的 800 × 480 横屏中。主界面集中呈现入口压力、频率、各路压差与回液泵状态，让操作者从当前设备状态出发完成操作。',
+              en: 'Monitoring, controls, alarms and settings share a fixed 800 × 480 landscape screen. The home view brings inlet pressure, frequency, differential-pressure channels and pump status together, so operations start from the current equipment state.',
+            },
+          },
+        ],
+      },
+      {
+        id: 'interaction',
+        heading: { zh: '交互设计', en: 'Interaction design' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '启动与停止分别提供明确的动作入口，并依据运行、停止、故障及远程模式更新可用状态。报警既保留持续入口，也提供当前状态与复位路径；用户和厂家通过不同演示身份访问参数设置。',
+              en: 'Separate start and stop actions reflect running, stopped, fault and remote-control states. Alarms have a persistent entry, current-state feedback and a reset path. User and manufacturer demo roles expose different parameter settings.',
+            },
+          },
+        ],
+      },
+      {
+        id: 'try-it',
+        heading: { zh: '建议体验路径', en: 'Try it' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '先在主界面停止并重新启动设备，再使用屏幕外的场景切换体验运行报警与故障停机，进入报警页面查看反馈。参数设置可使用演示密码：用户 1234、厂家 8888。原型支持中文、英文和日文。',
+              en: 'Stop and restart the equipment from the home screen, then switch to the warning and fault scenarios and inspect the alarm page. Demo passwords are 1234 for users and 8888 for manufacturers. The HMI supports Chinese, English and Japanese.',
+            },
+          },
+        ],
+      },
+      {
+        id: 'scope',
+        heading: { zh: '演示范围', en: 'Demo scope' },
+        blocks: [
+          {
+            type: 'paragraph',
+            text: {
+              zh: '本作品展示前端交互与模拟状态，未连接真实设备或生产服务。演示身份不代表真实权限认证，读数与场景不用于推断设备实际联锁。“重新开始”恢复演示初始状态。',
+              en: 'This frontend prototype uses simulated states and is not connected to equipment or production services. Demo roles are not production authentication, and readings do not establish real equipment interlocks. Restart restores the initial demo state.',
+            },
+          },
+        ],
+      },
+    ],
+  }),
   {
     slug: 'smart-indoor-climate',
     publishedAt: '2026-07-14',

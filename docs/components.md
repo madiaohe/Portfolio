@@ -38,7 +38,7 @@ components/
 
 `FloatingButton`（`components/ui/floating-button.tsx`）和 `CapsuleInput`（`components/ui/capsule-input.tsx`）是两个独立 UI 组件，在 `/components#floating-button` 与 `/components#capsule-input` 的 Components 分类中预览。
 
-- `FloatingButton` 默认固定在视口底部居中，露出 60 × 56px 按钮的顶部 28px；悬停上浮 4px，键盘聚焦上浮 8px。触屏露出至少 44px，并适配底部安全区。以按钮为圆心向上扇形展开 `actions` 里的圆形动作按钮（默认语言右上、AI 上方、主题左上）：悬停显示、移开收起，触屏点击展开/再点收起，键盘聚焦同样展开；Esc 收起扇区。`placement="contained"` 用于有定位的裁切容器。支持 `open` / `defaultOpen` / `onOpenChange`、自定义 `icon`、`label`、`actions`、`disabled` 和独立 `onClick`。
+- `FloatingButton` 默认固定在视口底部居中，露出 60 × 56px 按钮的顶部 28px；悬停上浮 4px，键盘聚焦上浮 8px。触屏露出至少 44px，并适配底部安全区。以按钮为圆心向上扇形展开 `actions` 里的圆形动作按钮（默认语言右上、AI 上方、主题左上）：悬停显示、移开收起，触屏点击展开/再点收起，键盘聚焦同样展开；Esc 收起扇区。`placement="contained"` 用于有定位的裁切容器。项目控制台额外使用 `left` / `right` 两个槽位，并以 `actionLayout="toolbar"` 展示五动作胶囊工具条；默认 `actionLayout="fan"` 保留三动作扇区。支持 `open` / `defaultOpen` / `onOpenChange`、自定义 `icon`、`label`、`actions`、`disabled` 和独立 `onClick`。
 - 点击动作后展开为 224 × 48px 胶囊输入框（`children`），通过真实宽度、高度和底部位置过渡实现动画；展开会聚焦首个输入控件；Esc 收起并返回按钮焦点，保留草稿；输入为空时点击外部收起。收起内容保持挂载但使用 `inert` 隔离，草稿不会因切换状态丢失。
 - `CapsuleInput` 是会随文字自动展开的输入胶囊，支持受控与非受控值、`inputRef`、自定义 icon、禁用/只读、IME 保护和回车提交，默认 `enterKeyHint="send"` 让移动键盘显示发送键（可覆盖）。右侧是语音与发送两个圆形按钮：语音为幽灵圆（`onVoiceClick` 未传入时禁用），发送为实心圆 + 上箭头（`type="submit"`，内容为空时禁用，可传 `sendLabel` / `sendIcon` 覆盖）。`onSubmit` 收到去除首尾空白的非空字符串，清空由调用方决定。
 - **两阶段展开**：单行时胶囊以中心为轴向两端变宽（默认 224px → 最大 550px，与首页内容列同宽，可用 `minWidth` / `maxWidth` 调整，并受所在容器宽度限制）；到达最大宽度后文字换行，胶囊向上增高，变成文字在上、底部一行 logo 左 + 语音/发送右的布局（`data-multiline`）。Shift+Enter 插入换行、Enter 提交。
@@ -165,3 +165,49 @@ Testimonial2 预览使用明确标记的占位文字；实际展示时传入真�
 Notion Mention Link 默认通过同源 API 读取标题、描述、图片和站点图标。对内容固定或不希望在预览时发起网络请求的场景，可传入可信的 `metadata`；首页使用预设信息，组件预览页演示实时读取。
 
 Floating Agent 现在只在组件页作为 Blocks 演示（contained + `entryMode="launcher"`）。组件页通过 `entryMode="launcher"` 先显示 56px 圆形入口，并使用 `/public/media/floating-agent-logo.svg`；点击后直接展开到组件内容区宽度的单行工具栏，不保留窄输入栏中间状态，也不渲染权限授予控件。展开栏统一使用 16px 图标、32px 点击区和 4px 控件间距，输入文字与相邻控件保持 8px 视觉间距。输入为空时点击悬浮栏外部会自动折叠；已有输入内容时保持展开。折叠时内容会先快速淡出，外壳再通过真实宽度过渡恢复到 56px 圆形，不使用横向缩放；Logo 位于独立图层中，在收缩开始时淡入并旋转 360°。全站底部浮窗由 SiteQuickActions 接管（fixed 底部居中，语言 / AI / 主题扇形动作，AI 展开自动增长的 CapsuleInput）；原 FloatingAgent 从首页移除，保留在组件页作为 Blocks 演示。输入多行文字时工具栏会自动增高，发送第一条消息后才显示叠层并向上展开完整对话。当前响应为本地模拟，后续接入模型时只需替换 `onSubmit` 之后的模拟回复逻辑。
+
+## 交互项目说明的返回导航
+
+`ArticleDirectory`、`DetailPage` 和 `ShowcasePage` 支持可选的
+`clientBackNavigation`（默认 `false`）。原型项目说明页设为 `true`，
+返回体验时保留父布局内 iframe 的操作状态；其他详情继续使用原生链接。
+运行容器属于项目路由的专属实现，见 [原型接入规范](prototypes.md)。
+
+## 项目悬浮控制台
+
+`SiteQuickActions` 可接收 `project={{ showingAbout, onToggle }}`，在原有语言、AI、
+主题三项外添加「返回首页」与「原型 / 说明」切换，沿用同一 FloatingButton，并设置 `actionLayout="toolbar"` 将项目操作集中在单一胶囊表面。
+项目页不再显示独立顶部导航。普通页面不传该参数，保留原有三项操作。
+`/components#floating-button` 中可勾选「项目工具条（含原型控制台）」检查水平工具条和原型控制台动作；
+示例中的首页和切换动作只显示反馈，不实际离开工作台。
+
+FloatingButton 的动作按钮复用 `Tooltip`：鼠标悬浮或键盘聚焦时在按钮上方显示中英文说明，
+不再叠加浏览器原生 `title`。Tooltip 使用按钮本身定位、Portal 展示并限制在视口内；
+点击、失焦、移出或关闭控制台后收起，触屏点击直接执行动作。
+工具条中的 DOM 顺序与从左到右的视觉顺序一致：返回｜语言、主题｜AI 输入｜项目视图｜控制器。
+
+`SiteQuickActions.project` 可提供 `controlsOpen`、`controlsId`、`onToggleControls(trigger)`，
+仅原型视图显示工具条末尾的「原型控制台」。`FloatingButton.actionsOpen` 在面板打开时
+保持工具条可见，动作的 `controls` / `expanded` 对应 ARIA 关系；`onSelect` 收到按钮
+元素，用于面板关闭后的焦点返回。工具条额外支持末尾 `end` 槽位。组件工作台的对应开关同步展示该动作（仅演示反馈）。
+
+工具条通过 `FloatingAction.separatorBefore` 标记组间分割线（首项忽略）。项目工具条
+从左到右为「返回首页｜语言、明暗｜打开输入框｜原型/说明 tabs｜控制器」，
+三个非交互分割线不进入键盘顺序。包含文字 tabs 时，窄屏按下文规则分行，保持操作目标尺寸。
+
+## 工具条中的项目视图 Tabs
+
+项目视图槽位通过 `FloatingAction.content` 组合现有 Tabs / TabsList / TabsTrigger，
+同时展示「原型 / 说明」文字和当前选中背景；原图标切换动作移除。Tab 的
+`aria-controls` 关联项目实际内容面板，支持左右方向键切换，保留 iframe 状态。
+工具条按 `separatorBefore` 形成动作组，桌面保持分组横排，520px 以下将最后的
+项目 tabs / 控制器组移至第二行。组件工作台包含同款 tabs 演示。
+
+项目视图 tabs 的每项最小宽度为 `--space-4xl`（96px），文字左右留 `--space-sm`，
+两项之间留 `--space-2xs`。tabs 与控制器之间也提供分割线，所有分割线两侧统一
+使用 `--space-2xs` 间隔；520px 以下沿用两行布局。
+
+项目页使用 `FloatingButton.persistent` 常显工具条，不渲染底部启动按钮。AI 输入仍可
+展开，Escape 关闭后恢复工具条并返回输入动作焦点。普通页面不传该参数，保留原行为。
+`separatorBefore: 'inline'` 在同一动作组内插入分割线，适用于 tabs 与控制器，
+避免窄屏时把控制器额外拆成第三行。组件工作台的项目示例也默认显示工具条。

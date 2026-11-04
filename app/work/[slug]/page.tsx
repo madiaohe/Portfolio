@@ -28,6 +28,7 @@ export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
+  if (project.prototype) return null;
   return project.layout === 'showcase' ? (
     <ProjectShowcase project={project} />
   ) : (

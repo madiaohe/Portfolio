@@ -30,6 +30,7 @@ export function DetailPage({
   tocLabel,
   collection,
   hrefPrefix,
+  clientBackNavigation = false,
 }: {
   item: DetailItem;
   backHref: string;
@@ -37,6 +38,7 @@ export function DetailPage({
   tocLabel: LocalizedText;
   collection: readonly DetailPagerItem[];
   hrefPrefix: string;
+  clientBackNavigation?: boolean;
 }) {
   const { language } = useSiteLanguage();
   const headings = useMemo(
@@ -119,6 +121,7 @@ export function DetailPage({
       <div className="detail-shell">
         <aside className="detail-aside">
           <ArticleDirectory
+            clientBackNavigation={clientBackNavigation}
             backHref={backHref}
             backLabel={backLabel[language]}
             tocLabel={tocLabel[language]}

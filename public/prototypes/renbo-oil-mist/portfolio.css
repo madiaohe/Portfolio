@@ -1,0 +1,24 @@
+/* Integration-only presentation. Device styles remain in vendor/styles.css. */
+:root,
+body {
+  min-width: 0;
+  margin: 0;
+  background: transparent;
+}
+body {
+  overflow: hidden;
+}
+.preview {
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview-controller-toggle,
+.preview-controller {
+  display: none !important;
+}

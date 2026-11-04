@@ -8,8 +8,15 @@ export function ProjectShowcase({ project }: { project: PublishedProject }) {
   return (
     <ShowcasePage
       item={project}
-      backHref="/#projects-heading"
-      backLabel={{ zh: '返回', en: 'Back' }}
+      clientBackNavigation={Boolean(project.prototype)}
+      backHref={
+        project.prototype ? `/work/${project.slug}` : '/#projects-heading'
+      }
+      backLabel={
+        project.prototype
+          ? { zh: '体验原型', en: 'Try prototype' }
+          : { zh: '返回', en: 'Back' }
+      }
       tocLabel={{ zh: '章节', en: 'Chapters' }}
       collection={projectPagerItems}
       hrefPrefix="/work/"
