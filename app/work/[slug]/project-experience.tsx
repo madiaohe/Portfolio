@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { RotateCcw } from 'lucide-react';
+import { ProjectControls } from './project-controls';
 import { SiteQuickActions } from '@/components/blocks/site-quick-actions';
 import { useDismiss } from '@/lib/hooks/use-dismiss';
 import { ProjectNavigationContext } from '@/lib/project-navigation-context';
@@ -58,7 +58,7 @@ export function ProjectExperience({
   const zh = language === 'zh';
   const rootRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
-  const scenesRef = useRef<HTMLDivElement>(null);
+  const scenesRef = useRef<HTMLDialogElement>(null);
   const scenesButton = useRef<HTMLButtonElement>(null);
   const [scenesOpen, setScenesOpen] = useState(false);
   const dismissScenes = useCallback(() => {
@@ -77,7 +77,7 @@ export function ProjectExperience({
     if (!scenesOpen) return;
     const frame = requestAnimationFrame(() =>
       scenesRef.current
-        ?.querySelector('select')
+        ?.querySelector<HTMLInputElement>('input:checked')
         ?.focus({ preventScroll: true }),
     );
     return () => cancelAnimationFrame(frame);
@@ -251,51 +251,24 @@ export function ProjectExperience({
               }}
             />
           </div>
-          <div ref={scenesRef} className="project-experience__scenarios">
-            <section
-              id="project-scenario-panel"
-              className="project-experience__scenario-panel"
-              hidden={!scenesOpen}
-              aria-label={zh ? '原型控制台' : 'Prototype controls'}
-            >
-              <label htmlFor="project-scenario-select">
-                {zh ? '演示场景' : 'Scenario'}
-              </label>
-              <select
-                id="project-scenario-select"
-                value={scenario}
-                onChange={(event) => {
-                  setScenario(event.target.value);
-                  send('scenario', event.target.value);
-                }}
-              >
-                <option value="normal">
-                  {zh ? '正常运行' : 'Normal operation'}
-                </option>
-                <option value="warning">{zh ? '运行报警' : 'Warning'}</option>
-                <option value="fault">
-                  {zh ? '故障停机' : 'Fault shutdown'}
-                </option>
-              </select>
-              <button
-                type="button"
-                onClick={() => {
-                  setLoaded(false);
-                  setArtboard(null);
-                  setScenario('normal');
-                  setGeneration((value) => value + 1);
-                }}
-              >
-                <RotateCcw size={16} aria-hidden="true" />
-                {zh ? '重新开始' : 'Restart'}
-              </button>
-              <p>
-                {zh
-                  ? '模拟数据 · 未连接设备。演示密码：用户 1234，厂家 8888。'
-                  : 'Simulated data · No equipment connection. Demo passwords: user 1234, manufacturer 8888.'}
-              </p>
-            </section>
-          </div>
+          <ProjectControls
+            open={scenesOpen}
+            panelRef={scenesRef}
+            triggerRef={scenesButton}
+            zh={zh}
+            scenario={scenario}
+            onScenarioChange={(value) => {
+              setScenario(value);
+              send('scenario', value);
+            }}
+            onRestart={() => {
+              setLoaded(false);
+              setArtboard(null);
+              setScenario('normal');
+              setGeneration((value) => value + 1);
+            }}
+            onClose={dismissScenes}
+          />
         </main>
         <div
           id="project-notes-panel"
