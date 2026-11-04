@@ -16,6 +16,31 @@ import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 import type { ProjectPrototype } from '@/lib/projects';
 import type { LocalizedText } from '@/lib/writing';
 
+type Artboard = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  shadow: string;
+  borderRadius: string;
+};
+
+function isArtboard(value: unknown): value is Artboard {
+  if (!value || typeof value !== 'object') return false;
+  const board = value as Partial<Artboard>;
+  return (
+    [board.x, board.y, board.width, board.height].every(
+      (number) => typeof number === 'number' && Number.isFinite(number),
+    ) &&
+    board.width! > 0 &&
+    board.height! > 0 &&
+    typeof board.shadow === 'string' &&
+    CSS.supports('box-shadow', board.shadow) &&
+    typeof board.borderRadius === 'string' &&
+    CSS.supports('border-radius', board.borderRadius)
+  );
+}
+
 export function ProjectExperience({
   slug,
   title,
@@ -60,6 +85,7 @@ export function ProjectExperience({
   const [generation, setGeneration] = useState(0);
   const [scenario, setScenario] = useState('normal');
   const [loaded, setLoaded] = useState(false);
+  const [artboard, setArtboard] = useState<Artboard | null>(null);
 
   useEffect(() => {
     document.title = `${title[language]}${about ? (language === 'zh' ? ' — 项目说明' : ' — Project notes') : ''} — Xu Xianyu`;
@@ -102,13 +128,13 @@ export function ProjectExperience({
     function onMessage(event: MessageEvent) {
       if (
         event.source !== frameRef.current?.contentWindow ||
-        event.origin !== window.location.origin
+        event.origin !== window.location.origin ||
+        event.data?.channel !== 'portfolio-prototype'
       )
         return;
-      if (
-        event.data?.channel === 'portfolio-prototype' &&
-        event.data.type === 'ready'
-      ) {
+      if (event.data.type === 'artboard' && isArtboard(event.data.value))
+        setArtboard(event.data.value);
+      if (event.data.type === 'ready') {
         setLoaded(true);
         post('language');
         if (rootRef.current)
@@ -188,6 +214,20 @@ export function ProjectExperience({
             tabIndex={0}
             className="project-experience__viewport"
           >
+            {artboard && (
+              <div
+                className="project-experience__artboard-shadow"
+                aria-hidden="true"
+                style={{
+                  left: artboard.x,
+                  top: artboard.y,
+                  width: artboard.width,
+                  height: artboard.height,
+                  boxShadow: artboard.shadow,
+                  borderRadius: artboard.borderRadius,
+                }}
+              />
+            )}
             {!loaded && (
               <output className="project-experience__loading">
                 {zh ? '正在加载原型…' : 'Loading prototype…'}
@@ -201,6 +241,7 @@ export function ProjectExperience({
               allow="fullscreen"
               onLoad={() => {
                 setLoaded(true);
+                send('initialize', language);
                 send('language', language);
                 if (rootRef.current)
                   send(
@@ -240,6 +281,7 @@ export function ProjectExperience({
                 type="button"
                 onClick={() => {
                   setLoaded(false);
+                  setArtboard(null);
                   setScenario('normal');
                   setGeneration((value) => value + 1);
                 }}

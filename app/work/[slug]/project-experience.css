@@ -22,6 +22,12 @@
   height: 100%;
   border: 0;
 }
+/* Paint above the iframe's canvas, with an empty, non-interactive center. */
+.project-experience__artboard-shadow {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
 .project-experience__loading {
   position: absolute;
   inset: 0;

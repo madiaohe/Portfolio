@@ -73,7 +73,7 @@ export function SiteQuickActions({
                         value="prototype"
                         aria-controls="project-prototype-panel"
                       >
-                        {zh ? '原型' : 'Prototype'}
+                        {zh ? '交互' : 'Demo'}
                       </TabsTrigger>
                       <TabsTrigger
                         id="project-notes-tab"

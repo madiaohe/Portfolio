@@ -334,7 +334,7 @@ function FloatingInputDemo({
                         }
                       >
                         <TabsTrigger value="prototype">
-                          {zh ? '原型' : 'Prototype'}
+                          {zh ? '交互' : 'Demo'}
                         </TabsTrigger>
                         <TabsTrigger value="notes">
                           {zh ? '说明' : 'Notes'}

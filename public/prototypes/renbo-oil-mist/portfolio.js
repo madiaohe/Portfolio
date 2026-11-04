@@ -19,6 +19,32 @@
   }
   const initialLanguage = new URLSearchParams(location.search).get('language');
   language(initialLanguage);
+
+  // Preserve the upstream shadow, but let the parent paint it beyond the iframe.
+  const artboard = document.getElementById('screen-stage');
+  const artboardStyle = getComputedStyle(artboard);
+  const shadow = artboardStyle.boxShadow;
+  const borderRadius = artboardStyle.borderRadius;
+  artboard.dataset.portfolioShadow = '';
+  let boundsFrame;
+  function reportArtboard() {
+    cancelAnimationFrame(boundsFrame);
+    boundsFrame = requestAnimationFrame(() => {
+      const { x, y, width, height } = artboard.getBoundingClientRect();
+      if (!width || !height || !innerWidth || !innerHeight) return;
+      window.parent.postMessage(
+        {
+          channel: 'portfolio-prototype',
+          type: 'artboard',
+          value: { x, y, width, height, shadow, borderRadius },
+        },
+        location.origin,
+      );
+    });
+  }
+  new ResizeObserver(reportArtboard).observe(artboard);
+  window.addEventListener('resize', reportArtboard);
+  window.visualViewport?.addEventListener('resize', reportArtboard);
   window.addEventListener(
     'keydown',
     (event) => {
@@ -44,6 +70,7 @@
         { channel: 'portfolio-prototype', type: 'ready' },
         location.origin,
       );
+      reportArtboard();
     }
     if (
       message.type === 'background' &&

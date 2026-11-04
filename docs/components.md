@@ -198,7 +198,7 @@ FloatingButton 的动作按钮复用 `Tooltip`：鼠标悬浮或键盘聚焦时�
 ## 工具条中的项目视图 Tabs
 
 项目视图槽位通过 `FloatingAction.content` 组合现有 Tabs / TabsList / TabsTrigger，
-同时展示「原型 / 说明」文字和当前选中背景；原图标切换动作移除。Tab 的
+同时展示中文「交互 / 说明」、英文「Demo / Notes」和当前选中背景；原图标切换动作移除。Tab 的
 `aria-controls` 关联项目实际内容面板，支持左右方向键切换，保留 iframe 状态。
 工具条按 `separatorBefore` 形成动作组，桌面保持分组横排，520px 以下将最后的
 项目 tabs / 控制器组移至第二行。组件工作台包含同款 tabs 演示。

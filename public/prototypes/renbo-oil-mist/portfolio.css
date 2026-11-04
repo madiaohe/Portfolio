@@ -18,6 +18,10 @@ body {
   align-items: center;
   justify-content: center;
 }
+/* The original resize routine writes an inline shadow on every viewport change. */
+.screen-stage[data-portfolio-shadow] {
+  box-shadow: none !important;
+}
 .preview-controller-toggle,
 .preview-controller {
   display: none !important;
