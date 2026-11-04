@@ -14,6 +14,7 @@
 | [组件说明](components.md)             | ui / blocks 边界、组件 API、工作台与接入流程      |
 | [组件来源](component-sources.md)      | 第三方来源、本地修改；许可证位于 `docs/licenses/` |
 | [Showcase 模版](showcase-template.md) | 项目与写作详情的数据契约、章节和画廊              |
+| [交互项目模板](project-template.md)   | Demo / Notes 页面骨架、项目配置及接入步骤         |
 | [Journal](journal.md)                 | Markdown 正文、元数据、slug 映射与阅读页          |
 | [验证规范](validation.md)             | 常用命令、按改动选择检查、验证记录要求            |
 | [部署说明](deployment.md)             | 生产分支、Netlify 配置、单分支推送与备份          |

@@ -63,4 +63,5 @@ Portfolio 是 Xu Xianyu 的个人作品与写作网站，延续当前简洁的�
 `app/showcase.css`，不要为每个项目复制整套页面。
 
 有原型的项目以 `/work/[slug]` 为体验入口，说明独立在 `/work/[slug]/about`。
+新项目使用 [交互项目模板](project-template.md) 的 `createInteractiveProject()`；
 原型快照和运行容器维护方式见 [原型接入规范](prototypes.md)。

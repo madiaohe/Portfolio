@@ -15,7 +15,8 @@ import {
   Sun,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ProjectControls } from '@/components/blocks/project-controls';
 import { PromptInput } from '@/components/ui/prompt-input';
 import { FloatingButton } from '@/components/ui/floating-button';
 import { CapsuleInput } from '@/components/ui/capsule-input';
@@ -178,6 +179,18 @@ function PromptInputDemo() {
 
 import type { ReactNode } from 'react';
 
+const DEMO_PROJECT_SCENARIOS = [
+  { value: 'overview', label: { zh: '默认视图', en: 'Default view' } },
+  {
+    value: 'empty',
+    label: { zh: '空状态', en: 'Empty state' },
+    description: {
+      zh: '另一种项目场景的示例',
+      en: 'An alternative project scene.',
+    },
+  },
+];
+
 function FloatingInputDemo({
   floating,
   zh,
@@ -199,6 +212,11 @@ function FloatingInputDemo({
   const [voiceActive, setVoiceActive] = useState(false);
   const [submitted, setSubmitted] = useState('');
   const [composerOpen, setComposerOpen] = useState(false);
+  const [controlsOpen, setControlsOpen] = useState(false);
+  const controlsTrigger = useRef<HTMLButtonElement>(null);
+  const [withScenarios, setWithScenarios] = useState(true);
+  const [demoScenario, setDemoScenario] = useState('overview');
+  const closeControls = useCallback(() => setControlsOpen(false), []);
   const input = (
     <CapsuleInput
       value={value}
@@ -271,21 +289,41 @@ function FloatingInputDemo({
         <input
           type="checkbox"
           checked={projectActions}
-          onChange={(event) => setProjectActions(event.target.checked)}
+          onChange={(event) => {
+            setProjectActions(event.target.checked);
+            closeControls();
+          }}
         />
         {zh
           ? '项目工具条（含原型控制台）'
           : 'Project toolbar (with prototype controls)'}
       </label>
+      {projectActions && (
+        <label className="inline-flex items-center gap-xs text-meta">
+          <input
+            type="checkbox"
+            checked={withScenarios}
+            onChange={(event) => {
+              setWithScenarios(event.target.checked);
+              setDemoScenario('overview');
+            }}
+          />
+          {zh
+            ? '配置示例场景（关闭后仅保留重置）'
+            : 'Example scenes (off: restart only)'}
+        </label>
+      )}
       <FloatingButton
         placement="contained"
         actionLayout={projectActions ? 'toolbar' : 'fan'}
         persistent={projectActions}
+        actionsOpen={controlsOpen}
         label={zh ? '快捷操作' : 'Quick actions'}
         actionsLabel={zh ? '快捷操作' : 'Quick actions'}
         open={composerOpen}
         onOpenChange={(open) => {
           setComposerOpen(open);
+          if (open) closeControls();
           if (!open) setVoiceActive(false);
         }}
         actions={[
@@ -309,12 +347,13 @@ function FloatingInputDemo({
                     ? '原型控制台（演示）'
                     : 'Prototype controls (demo)',
                   icon: <SlidersHorizontal size={16} aria-hidden="true" />,
-                  onSelect: () =>
-                    setSubmitted(
-                      zh
-                        ? '打开原型控制台（演示）'
-                        : 'Open prototype controls (demo)',
-                    ),
+                  controls: 'gallery-prototype-controls',
+                  expanded: controlsOpen,
+                  active: controlsOpen,
+                  onSelect: (trigger: HTMLButtonElement) => {
+                    controlsTrigger.current = trigger;
+                    setControlsOpen((value) => !value);
+                  },
                 },
                 {
                   id: 'project-view',
@@ -395,6 +434,23 @@ function FloatingInputDemo({
       >
         {input}
       </FloatingButton>
+      <ProjectControls
+        id="gallery-prototype-controls"
+        open={projectActions && controlsOpen}
+        controls={{ scenarios: withScenarios ? DEMO_PROJECT_SCENARIOS : [] }}
+        triggerRef={controlsTrigger}
+        zh={zh}
+        scenario={demoScenario}
+        onScenarioChange={(value) => {
+          setDemoScenario(value);
+          setSubmitted(value);
+        }}
+        onRestart={() => {
+          setDemoScenario('overview');
+          setSubmitted(zh ? '已重置演示' : 'Demo restarted');
+        }}
+        onClose={closeControls}
+      />
     </div>
   );
 }

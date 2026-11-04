@@ -25,7 +25,7 @@
 | Git、分支、备份与 Netlify 发布     | [部署说明](docs/deployment.md)                                         |
 | 计划、进度与后续事项               | [计划索引](docs/plans/README.md)                                       |
 
-可交互项目接入与独立说明页见 [原型接入规范](docs/prototypes.md)。
+新建交互项目先读 [项目模板](docs/project-template.md)，接入细节见 [原型接入规范](docs/prototypes.md)。
 
 完整文档目录及历史资料状态见 [docs/README.md](docs/README.md)。
 具体规则和实现细节维护在对应主题文档；计划和验证记录分别放入 `docs/plans/`

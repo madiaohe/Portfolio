@@ -20,6 +20,7 @@ export default async function ProjectLayout({
   if (!project?.prototype) return children;
   return (
     <ProjectExperience
+      key={slug}
       slug={slug}
       title={project.title}
       prototype={project.prototype}

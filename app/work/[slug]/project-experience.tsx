@@ -8,9 +8,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { ProjectControls } from './project-controls';
+import { ProjectControls } from '@/components/blocks/project-controls';
 import { SiteQuickActions } from '@/components/blocks/site-quick-actions';
-import { useDismiss } from '@/lib/hooks/use-dismiss';
 import { ProjectNavigationContext } from '@/lib/project-navigation-context';
 import { useSiteLanguage } from '@/lib/hooks/use-site-language';
 import type { ProjectPrototype } from '@/lib/projects';
@@ -58,32 +57,14 @@ export function ProjectExperience({
   const zh = language === 'zh';
   const rootRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
-  const scenesRef = useRef<HTMLDialogElement>(null);
   const scenesButton = useRef<HTMLButtonElement>(null);
   const [scenesOpen, setScenesOpen] = useState(false);
-  const dismissScenes = useCallback(() => {
-    if (scenesRef.current?.contains(document.activeElement))
-      scenesButton.current?.focus({ preventScroll: true });
-    setScenesOpen(false);
-  }, []);
-  const ignoreScenesTrigger = useCallback(
-    (target: Element) => Boolean(scenesButton.current?.contains(target)),
-    [],
-  );
-  useDismiss(scenesOpen, dismissScenes, scenesRef, {
-    ignore: ignoreScenesTrigger,
-  });
-  useEffect(() => {
-    if (!scenesOpen) return;
-    const frame = requestAnimationFrame(() =>
-      scenesRef.current
-        ?.querySelector<HTMLInputElement>('input:checked')
-        ?.focus({ preventScroll: true }),
-    );
-    return () => cancelAnimationFrame(frame);
-  }, [scenesOpen]);
+  const dismissScenes = useCallback(() => setScenesOpen(false), []);
+  const initialScenario = prototype.controls?.scenarios?.[0]?.value ?? '';
+  const selectedScenario = useRef(initialScenario);
+  const initializedFrame = useRef<Window | null>(null);
   const [generation, setGeneration] = useState(0);
-  const [scenario, setScenario] = useState('normal');
+  const [scenario, setScenario] = useState(initialScenario);
   const [loaded, setLoaded] = useState(false);
   const [artboard, setArtboard] = useState<Artboard | null>(null);
 
@@ -135,6 +116,11 @@ export function ProjectExperience({
       if (event.data.type === 'artboard' && isArtboard(event.data.value))
         setArtboard(event.data.value);
       if (event.data.type === 'ready') {
+        if (initializedFrame.current !== event.source) {
+          initializedFrame.current = frameRef.current?.contentWindow ?? null;
+          if (selectedScenario.current)
+            post('scenario', selectedScenario.current);
+        }
         setLoaded(true);
         post('language');
         if (rootRef.current)
@@ -253,18 +239,21 @@ export function ProjectExperience({
           </div>
           <ProjectControls
             open={scenesOpen}
-            panelRef={scenesRef}
+            id="project-scenario-panel"
+            controls={prototype.controls ?? {}}
             triggerRef={scenesButton}
             zh={zh}
             scenario={scenario}
             onScenarioChange={(value) => {
+              selectedScenario.current = value;
               setScenario(value);
               send('scenario', value);
             }}
             onRestart={() => {
               setLoaded(false);
               setArtboard(null);
-              setScenario('normal');
+              selectedScenario.current = initialScenario;
+              setScenario(initialScenario);
               setGeneration((value) => value + 1);
             }}
             onClose={dismissScenes}

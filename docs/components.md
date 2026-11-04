@@ -179,7 +179,7 @@ Floating Agent 现在只在组件页作为 Blocks 演示（contained + `entryMod
 主题三项外添加「返回首页」与「原型 / 说明」切换，沿用同一 FloatingButton，并设置 `actionLayout="toolbar"` 将项目操作集中在单一胶囊表面。
 项目页不再显示独立顶部导航。普通页面不传该参数，保留原有三项操作。
 `/components#floating-button` 中可勾选「项目工具条（含原型控制台）」检查水平工具条和原型控制台动作；
-示例中的首页和切换动作只显示反馈，不实际离开工作台。
+示例中的首页和切换动作只显示反馈，不实际离开工作台；控制器打开实际的共享面板。
 
 FloatingButton 的动作按钮复用 `Tooltip`：鼠标悬浮或键盘聚焦时在按钮上方显示中英文说明，
 不再叠加浏览器原生 `title`。Tooltip 使用按钮本身定位、Portal 展示并限制在视口内；
@@ -189,7 +189,7 @@ FloatingButton 的动作按钮复用 `Tooltip`：鼠标悬浮或键盘聚焦时�
 `SiteQuickActions.project` 可提供 `controlsOpen`、`controlsId`、`onToggleControls(trigger)`，
 仅原型视图显示工具条末尾的「原型控制台」。`FloatingButton.actionsOpen` 在面板打开时
 保持工具条可见，动作的 `controls` / `expanded` 对应 ARIA 关系；`onSelect` 收到按钮
-元素，用于面板关闭后的焦点返回。工具条额外支持末尾 `end` 槽位。组件工作台的对应开关同步展示该动作（仅演示反馈）。
+元素，用于面板关闭后的焦点返回。工具条额外支持末尾 `end` 槽位。
 
 工具条通过 `FloatingAction.separatorBefore` 标记组间分割线（首项忽略）。项目工具条
 从左到右为「返回首页｜语言、明暗｜打开输入框｜原型/说明 tabs｜控制器」，
@@ -211,3 +211,11 @@ FloatingButton 的动作按钮复用 `Tooltip`：鼠标悬浮或键盘聚焦时�
 展开，Escape 关闭后恢复工具条并返回输入动作焦点。普通页面不传该参数，保留原行为。
 `separatorBefore: 'inline'` 在同一动作组内插入分割线，适用于 tabs 与控制器，
 避免窄屏时把控制器额外拆成第三行。组件工作台的项目示例也默认显示工具条。
+
+## 项目控制面板与模板
+
+`components/blocks/project-controls.tsx` 及同名 CSS 提供共享控制面板，接收
+`ProjectPrototypeControls` 数据、当前场景、按钮 ref 和受控开关/动作回调。
+组件管理定位、关闭、初始聚焦、焦点返回及单选键盘行为；场景、描述和演示密码按配置显示。
+工作台项目工具条包含两场景示例，并可关闭场景配置来检查仅重置状态；未配置密码时不显示密码区。
+项目路由通过 `createInteractiveProject()` 复用完整体验，见 [交互项目模板](project-template.md)。

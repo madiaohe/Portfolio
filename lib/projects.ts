@@ -10,10 +10,22 @@ import type {
   WritingBlock,
 } from './writing';
 
+export type ProjectPrototypeControls = {
+  /** The first scene is also the initial scene after loading or restarting. */
+  scenarios?: {
+    value: string;
+    label: LocalizedText;
+    description?: LocalizedText;
+  }[];
+  /** Public demo credentials only. Never put real credentials in project data. */
+  credentials?: { label: LocalizedText; value: string }[];
+};
+
 export type ProjectPrototype = {
   src: string;
   width: number;
   height: number;
+  controls?: ProjectPrototypeControls;
 };
 
 export type PublishedProject = {
@@ -128,6 +140,46 @@ function createShowcaseProject(
   };
 }
 
+export type InteractiveProjectInput = Omit<
+  ShowcaseProjectInput,
+  'layout' | 'blocks' | 'prototype' | 'chapters'
+> & {
+  prototype: ProjectPrototype;
+  chapters: ShowcaseChapter[];
+};
+
+/** Shared Demo / Notes template. All project-specific controls live in data. */
+export function createInteractiveProject(
+  project: InteractiveProjectInput,
+): PublishedProject {
+  const { src, width, height, controls } = project.prototype;
+  if (
+    !src.startsWith('/prototypes/') ||
+    !Number.isFinite(width) ||
+    !Number.isFinite(height) ||
+    width <= 0 ||
+    height <= 0
+  )
+    throw new Error(`Invalid prototype configuration for ${project.slug}`);
+  const values = controls?.scenarios?.map((scene) => scene.value) ?? [];
+  if (
+    values.some((value) => !value.trim()) ||
+    new Set(values).size !== values.length
+  )
+    throw new Error(
+      `Scenario values must be non-empty and unique: ${project.slug}`,
+    );
+  return createShowcaseProject({
+    ...project,
+    layout: 'showcase',
+    blocks: [],
+    facts: {
+      type: [{ zh: '交互原型', en: 'Interactive prototype' }],
+      ...project.facts,
+    },
+  });
+}
+
 function createProjectTemplateBlocks(): WritingBlock[] {
   return [
     {
@@ -172,10 +224,9 @@ function createProjectTemplateBlocks(): WritingBlock[] {
 }
 
 export const projects: Project[] = [
-  createShowcaseProject({
+  createInteractiveProject({
     slug: 'renbo-oil-mist',
     publishedAt: '2026-10-19',
-    layout: 'showcase',
     title: { zh: '仁博智能油雾过滤', en: 'Renbo Oil Mist Filtration' },
     description: {
       zh: '面向油雾过滤设备的 800 × 480 触屏交互原型，涵盖运行监测、启停控制、报警与分级参数设置。',
@@ -185,8 +236,39 @@ export const projects: Project[] = [
       src: '/prototypes/renbo-oil-mist/index.html',
       width: 800,
       height: 480,
+      controls: {
+        scenarios: [
+          {
+            value: 'normal',
+            label: { zh: '正常运行', en: 'Normal operation' },
+            description: {
+              zh: '查看设备稳定运行时的状态',
+              en: 'Steady equipment operation.',
+            },
+          },
+          {
+            value: 'warning',
+            label: { zh: '运行报警', en: 'Warning' },
+            description: {
+              zh: '设备继续运行，提示异常读数',
+              en: 'Running with a warning.',
+            },
+          },
+          {
+            value: 'fault',
+            label: { zh: '故障停机', en: 'Fault shutdown' },
+            description: {
+              zh: '查看故障停机与报警反馈',
+              en: 'Stopped after a fault.',
+            },
+          },
+        ],
+        credentials: [
+          { label: { zh: '用户', en: 'User' }, value: '1234' },
+          { label: { zh: '厂家', en: 'Factory' }, value: '8888' },
+        ],
+      },
     },
-    blocks: [],
     facts: {
       type: [
         { zh: 'HMI', en: 'HMI' },

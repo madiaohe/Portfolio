@@ -3,6 +3,7 @@
 Showcase 是图片主导的项目 / 写作详情模版，复用 `components/blocks/showcase-page.tsx`
 与 `app/showcase.css`。数据里把 `layout` 设为 `'showcase'` 即可套用；当前参考实现是
 `lib/projects.ts` 的 `schneider-electric` 条目，新项目照它的结构填数据即可。
+需要「交互 / 说明」双视图的项目，使用 [交互项目模板](project-template.md)。
 
 ## 数据契约（`Project` / `PublishedWritingArticle`）
 
