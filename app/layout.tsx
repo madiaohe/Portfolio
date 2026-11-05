@@ -1,6 +1,7 @@
 import { SiteHeader } from '@/components/blocks/site-header';
 import { SiteQuickActions } from '@/components/blocks/site-quick-actions';
 import { SiteLanguageProvider } from '@/components/blocks/site-language-provider';
+import Script from 'next/script';
 import './globals.css';
 import './components.css';
 
@@ -12,7 +13,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
+        {/* Let Vinext initialize the theme before hydration without claiming a raw script node. */}
+        <Script
+          id="xianyu-theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(()=>{let theme;try{theme=localStorage.getItem('xianyu-theme')}catch{}document.documentElement.dataset.minimalTheme=theme==='light'||theme==='dark'?theme:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'})()`,
           }}
