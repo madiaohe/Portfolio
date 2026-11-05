@@ -52,8 +52,14 @@
 线上浏览器另发现 React #418；通过 recoverable-error 组件栈定位到
 `html > head > script`，清除该脚本的 hydration 节点后错误消失。将主题初始化
 改为 `next/script` 的 `beforeInteractive`，保留首屏应用主题，同时让 Vinext
-在头部管理该脚本，避免 React 对裸脚本的接管不匹配。最终部署再复查文章、
-旧文章及首页的首次加载与主题。
+在头部管理该脚本，避免 React 对裸脚本的接管不匹配。
+
+最终部署 `1910c74`（部署 ID `6aec0d987afa3c78a67c66ff`）状态为 ready，已切换
+`https://xuxianyu.netlify.app`。使用无调试拦截的新浏览器上下文，直达新文章、
+旧文章及首页均返回 200，中文导航和深色主题正常，主题脚本只出现一次，
+三页的 `pageerror` 均为零。首页再次进入新文章正常，390px 页面无横向溢出，
+11 个主章节和 3 个表格完整。证据：
+`output/playwright/article-elements-live-final-390-dark.png`。
 
 未对文章中的研究观点、行业样本和引用标准开展事实核查。
 Obsidian 与网站之间尚无自动同步；后续修改需更新仓库正文并重新发布。
