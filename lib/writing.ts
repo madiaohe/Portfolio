@@ -1,4 +1,5 @@
 import type { HomeLanguage } from './home-copy';
+import elementsWithoutStructure from '../content/writing/elements-without-structure.md?raw';
 
 export type LocalizedText = Record<HomeLanguage, string>;
 
@@ -74,6 +75,8 @@ export type PublishedWritingArticle = {
   title: LocalizedText;
   description: LocalizedText;
   blocks: WritingBlock[];
+  /** Original Markdown; its language stays independent of the site controls. */
+  markdown?: { body: string; language: HomeLanguage };
   cover?: ShowcaseCover;
   logo?: ShowcaseLogo;
   gallery?: ShowcaseGalleryImage[];
@@ -96,6 +99,20 @@ export type DraftWritingArticle = {
 export type WritingArticle = PublishedWritingArticle | DraftWritingArticle;
 
 export const writingArticles: WritingArticle[] = [
+  {
+    slug: 'elements-without-structure',
+    publishedAt: '2026-11-03',
+    title: {
+      zh: '有元素，没有结构：装备制造业人机界面困境的系统性分析',
+      en: '有元素，没有结构：装备制造业人机界面困境的系统性分析',
+    },
+    description: {
+      zh: '从 300 多家 OEM 的项目经验出发，梳理装备制造业 HMI 的界面现象、生产方式、经济约束与产业结构。',
+      en: 'An analysis of HMI challenges in equipment manufacturing, from interface symptoms to economic constraints and industry structure. Written in Chinese.',
+    },
+    blocks: [],
+    markdown: { body: elementsWithoutStructure, language: 'zh' },
+  },
   {
     slug: 'the-chaos-of-manufacturing-hmi',
     publishedAt: '2026-09-19',

@@ -1,5 +1,29 @@
 # Showcase 页面模版
 
+## Markdown 写作
+
+首页「文章」的数据仍由 `lib/writing.ts` 维护，Markdown 正文放在
+`content/writing/*.md`，通过 `?raw` 导入。普通文章复用 `DetailPage`，不需要
+改成 Showcase 或放入示例 Journal。
+
+- 在 `writingArticles` 顶部加入文章的唯一 `slug`、原文日期、标题与摘要。
+- `blocks` 设为 `[]`，设置 `markdown: { body: importedMarkdown, language: 'zh' }`；
+  未提供 Markdown 的既有文章继续使用 `blocks`。
+- 单语言文章保留原文，标题的 `zh` / `en` 可以相同，不自动翻译正文。
+  `markdown.language` 声明正文语言，站点语言切换仍控制导航与日期。
+- 正文不包含 YAML 笔记属性和重复的文章总标题；用 `##` 标记主章节，`###`
+  标记小节。主章节自动进入目录，并生成可直接访问的锚点。
+- 支持普通 Markdown、GFM 表格、列表、引用、代码块及图片；不执行 HTML 或 MDX。
+  表格和代码块在窄屏内独立横向滚动。
+- 从 Obsidian 导入时检查附件、`[[双链]]`、`![[嵌入]]` 和本地路径，必要时复制
+  公开附件到 `public/media/` 并转成标准 Markdown 链接。检查正文中是否混入
+  与文章无关的私人信息或连接凭据，只清理网站副本，保留原笔记。
+
+新增条目会自动进入首页列表和文章翻页。检查本地效果后，按
+[部署说明](deployment.md) 推送生产分支；修改 Obsidian 原笔记不会自动更新网站。
+
+## Showcase 数据
+
 Showcase 是图片主导的项目 / 写作详情模版，复用 `components/blocks/showcase-page.tsx`
 与 `app/showcase.css`。数据里把 `layout` 设为 `'showcase'` 即可套用；当前参考实现是
 `lib/projects.ts` 的 `schneider-electric` 条目，新项目照它的结构填数据即可。

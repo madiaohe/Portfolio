@@ -30,6 +30,11 @@ components/
 
 页面专属实现放在对应路由附近：`app/reference-home.tsx`、`app/writing/[slug]/writing-article.tsx`、`app/components/component-gallery.tsx`，以及 About、Contact、Journal 路由中的页面实现。文章目录、项目章节导航等绑定具体页面的组件也留在对应路由内。
 
+`DetailPage` 支持既有 `blocks` 与可选的 `markdown: { body, language }`；Markdown
+正文沿用现有文章壳、目录、主题及翻页，表格使用 `remark-gfm` 渲染并可横向滚动。
+章节锚点提取复用 `lib/markdown-headings.ts`，也供 Journal 使用。接入步骤见
+[文章模版](showcase-template.md#markdown-写作)。
+
 共享 Hooks 统一位于 `lib/hooks/`，包括站点语言、主题与 Popover 定位；经历数据位于 `lib/about-experiences.ts`。模块私有的辅助逻辑可以就近放置，例如 FloatingAgent 的定制输入框。
 
 启动 `npm run dev` 后打开 `/components`，按「独立组件 / Blocks」两组查看现有交互示例、禁用状态和调用方式。预览页支持中英文、深浅主题，生产环境返回 404。
