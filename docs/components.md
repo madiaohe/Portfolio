@@ -191,8 +191,8 @@ FloatingButton 的动作按钮复用 `Tooltip`：鼠标悬浮或键盘聚焦时�
 点击、失焦、移出或关闭控制台后收起，触屏点击直接执行动作。
 工具条中的 DOM 顺序与从左到右的视觉顺序一致：返回｜语言、主题｜AI 输入｜项目视图｜控制器。
 
-`SiteQuickActions.project` 可提供 `controlsOpen`、`controlsId`、`onToggleControls(trigger)`，
-仅原型视图显示工具条末尾的「原型控制台」。`FloatingButton.actionsOpen` 在面板打开时
+`SiteQuickActions.project` 可提供 `controlsOpen`、`controlsId`、`onToggleControls(trigger)`。
+传入回调的项目在原型视图显示工具条末尾的「原型控制台」。`FloatingButton.actionsOpen` 在面板打开时
 保持工具条可见，动作的 `controls` / `expanded` 对应 ARIA 关系；`onSelect` 收到按钮
 元素，用于面板关闭后的焦点返回。工具条额外支持末尾 `end` 槽位。
 

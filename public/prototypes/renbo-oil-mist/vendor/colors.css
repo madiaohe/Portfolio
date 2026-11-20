@@ -1,0 +1,101 @@
+/* Renbo color specification v0.5. The independent preview uses all roles; the business
+   prototype consumes the approved frame and alarm-banner colors.
+   Initial values were sampled from the existing prototype. The header and
+   navigation now use the approved navy colors; see docs/colors.md.
+   Keep distinct meanings independent, even when their values match. */
+[data-renbo-colors] {
+  /* Identity and surfaces. */
+  --color-brand: #2058a5;
+  --color-surface-canvas: #eaf0f5;
+  --color-surface-card: #ffffff;
+  --color-surface-header: #0b1f3a;
+  --color-surface-nav: var(--color-surface-header);
+  --color-surface-subtle: #f7f9fc;
+  --color-text-primary: #20344e;
+  --color-text-secondary: #75869b;
+  --color-text-readout: #203d60;
+  --color-text-inverse: #ffffff;
+  --color-text-on-dark: #d6e2e8;
+  --color-border: #dce4ed;
+  --color-border-on-dark: #536570;
+  --color-divider-on-dark: #01060d;
+
+  /* Actions and selection. Hover/pressed initially share the existing default
+     action color: new shades can be agreed later without changing semantics. */
+  --color-action-primary: #245da5;
+  --color-action-hover: #245da5;
+  --color-action-pressed: #245da5;
+  --color-action-text: #ffffff;
+  --color-action-secondary-text: #4a6687;
+  --color-action-secondary-border: #ccdae9;
+  --color-selection-bg: #edf4fd;
+  --color-selection-text: #205da9;
+  --color-selection-border: #7fa6d8;
+  --color-selection-strong: #3f7bc6;
+  --color-focus: #50a8ff;
+
+  /* Equipment status. Status text, surface, outline and indicator have their
+     own roles; do not use one foreground for every kind of mark. */
+  --color-status-running-text: #18845e;
+  --color-status-running-bg: #e2efe9;
+  --color-status-running-border: #cbded4;
+  --color-status-warning-text: #82571f;
+  --color-status-warning-bg: #f5ead6;
+  --color-status-warning-border: #d1ab62;
+  --color-status-warning-indicator: #c18d37;
+  --color-status-fault-text: #b33b49;
+  --color-status-fault-bg: #f8dce0;
+  --color-status-fault-border: #e5a5aa;
+  --color-status-fault-strong: #ca414b;
+  --color-status-stopped-text: #75869b;
+  --color-status-stopped-bg: #edf2f7;
+  --color-status-stopped-border: #dce4ed;
+
+  /* Approved alarm-banner colors. Keep separate from gauge, indicator and
+     record colors so each status surface can be adjusted independently. */
+  --color-alarm-warning-bg: #ffd633;
+  --color-alarm-warning-text: #241800;
+  --color-alarm-warning-border: transparent;
+  --color-alarm-warning-divider: var(--color-alarm-warning-text);
+  --color-alarm-fault-bg: #e02020;
+  --color-alarm-fault-text: #ffffff;
+  --color-alarm-fault-border: #980b0b;
+  --color-alarm-fault-divider: var(--color-alarm-fault-border);
+
+  --color-disabled-text: #7f8d9d;
+  --color-disabled-bg: #e3e9ef;
+  --color-disabled-border: #c8d2dc;
+  --color-disabled-indicator: #b3bfcb;
+
+  /* Commands are deliberately independent of equipment status. */
+  --color-control-start: #238264;
+  --color-control-stop: #c94753;
+  --color-control-disabled-bg: #42515a;
+  --color-control-disabled-text: #aab7be;
+
+  /* Editable fields and validation. */
+  --color-input-bg: #f6f9fd;
+  --color-input-text: #27588f;
+  --color-input-border: #d6e1ed;
+  --color-input-error-text: #bc4250;
+  --color-input-error-bg: #fff4f4;
+  --color-input-error-border: #bc4250;
+
+  /* Data visualization and material illustration. */
+  --color-chart-value: #3c77bb;
+  --color-chart-track: #e8eef5;
+  --color-chart-tick: #9eb2c8;
+  --color-chart-gradient-start: #759ecc;
+  --color-chart-gradient-end: #356ba9;
+  --color-chart-pointer: #2058a5;
+  --color-material-oil: #b78135;
+  --color-equipment-outline: #60788f;
+  --color-overlay: #152b4980;
+}
+
+/* The original frame and its pale dividers remain available for comparison. */
+[data-renbo-colors][data-frame-palette='baseline'] {
+  --color-surface-header: #243640;
+  --color-surface-nav: #1f303b;
+  --color-divider-on-dark: #536570;
+}

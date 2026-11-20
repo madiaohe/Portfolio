@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,7 +14,10 @@ const source = path.resolve(sourceRoot, 'prototype');
 const target = fileURLToPath(
   new URL('../public/prototypes/renbo-oil-mist/', import.meta.url),
 );
+const originalHtml = await readFile(path.join(source, 'index.html'), 'utf8');
 const files = ['index.html', 'styles.css', 'app.js'];
+if (originalHtml.includes('href="colors.css')) files.push('colors.css');
+
 async function assets(directory) {
   for (const entry of await readdir(path.join(source, directory), {
     withFileTypes: true,
@@ -25,34 +28,24 @@ async function assets(directory) {
   }
 }
 await assets('assets');
-const hashes = {};
-for (const file of files.sort()) {
-  const data = await readFile(path.join(source, file));
-  const destination = path.join(target, 'vendor', file);
-  await mkdir(path.dirname(destination), { recursive: true });
-  await writeFile(destination, data);
-  hashes[file] = createHash('sha256').update(data).digest('hex');
-}
-// Embedded previews already resize with their viewport. Re-focusing the iframe must
-// not cancel a power-button press through the original display-calibration listener.
-const script = await readFile(path.join(source, 'app.js'), 'utf8');
+const sources = new Map(
+  await Promise.all(
+    files
+      .sort()
+      .map(async (file) => [file, await readFile(path.join(source, file))]),
+  ),
+);
+const script = sources.get('app.js').toString('utf8');
 const minimumHeight = 'Math.max(240,window.innerHeight-28)';
 if (!script.includes(minimumHeight))
   throw new Error(
     'Review the upstream fit sizing before importing this version.',
   );
-const focusResize = "  window.addEventListener('focus',resize);";
-if (script.split(focusResize).length !== 2)
-  throw new Error(
-    'Review the upstream focus/resize adapter before importing this version.',
-  );
-await writeFile(
-  path.join(target, 'runtime.js'),
-  script
-    .replace(focusResize, '')
-    .replace(minimumHeight, 'Math.max(1,window.innerHeight-28)'),
-);
-const html = (await readFile(path.join(source, 'index.html'), 'utf8'))
+// Older branches resize on focus, which can cancel the initial power-button press.
+const runtime = script
+  .replace("  window.addEventListener('focus',resize);", '')
+  .replace(minimumHeight, 'Math.max(1,window.innerHeight-28)');
+const html = originalHtml
   .replace('<head>', '<head>\n  <base href="./vendor/">')
   .replace(
     '</head>',
@@ -60,26 +53,32 @@ const html = (await readFile(path.join(source, 'index.html'), 'utf8'))
   )
   .replace(/src="app\.js[^"]*"/, 'src="../runtime.js"')
   .replace('</body>', '  <script src="../portfolio.js"></script>\n</body>');
+const git = (...args) =>
+  execFileSync('git', ['-C', sourceRoot, ...args], { encoding: 'utf8' }).trim();
+const snapshot = {
+  project: path.basename(path.resolve(sourceRoot)),
+  branch: git('branch', '--show-current') || null,
+  revision: git('rev-parse', 'HEAD'),
+  dirty: Boolean(git('status', '--porcelain', '--', 'prototype')),
+  sha256: Object.fromEntries(
+    Array.from(sources, ([file, data]) => [
+      file,
+      createHash('sha256').update(data).digest('hex'),
+    ]),
+  ),
+};
+
+const vendor = path.join(target, 'vendor');
+await rm(vendor, { recursive: true, force: true });
+for (const [file, data] of sources) {
+  const destination = path.join(vendor, file);
+  await mkdir(path.dirname(destination), { recursive: true });
+  await writeFile(destination, data);
+}
+await writeFile(path.join(target, 'runtime.js'), runtime);
 await writeFile(path.join(target, 'index.html'), html);
 await writeFile(
   path.join(target, 'snapshot.json'),
-  JSON.stringify(
-    {
-      project: path.basename(path.resolve(sourceRoot)),
-      revision: execFileSync('git', ['-C', sourceRoot, 'rev-parse', 'HEAD'], {
-        encoding: 'utf8',
-      }).trim(),
-      dirty: Boolean(
-        execFileSync(
-          'git',
-          ['-C', sourceRoot, 'status', '--porcelain', '--', 'prototype'],
-          { encoding: 'utf8' },
-        ).trim(),
-      ),
-      sha256: hashes,
-    },
-    null,
-    2,
-  ) + '\n',
+  JSON.stringify(snapshot, null, 2) + '\n',
 );
 console.log(`Imported ${files.length} files to ${target}`);

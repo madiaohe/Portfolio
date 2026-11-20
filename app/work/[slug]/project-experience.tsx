@@ -60,7 +60,9 @@ export function ProjectExperience({
   const scenesButton = useRef<HTMLButtonElement>(null);
   const [scenesOpen, setScenesOpen] = useState(false);
   const dismissScenes = useCallback(() => setScenesOpen(false), []);
-  const initialScenario = prototype.controls?.scenarios?.[0]?.value ?? '';
+  const controlsEnabled = prototype.controls !== false;
+  const controls = prototype.controls || undefined;
+  const initialScenario = controls?.scenarios?.[0]?.value ?? '';
   const selectedScenario = useRef(initialScenario);
   const initializedFrame = useRef<Window | null>(null);
   const [generation, setGeneration] = useState(0);
@@ -157,6 +159,8 @@ export function ProjectExperience({
   }, []);
 
   useEffect(() => {
+    if (!controlsEnabled) return;
+
     function onMessage(event: MessageEvent) {
       if (
         event.source === frameRef.current?.contentWindow &&
@@ -176,7 +180,7 @@ export function ProjectExperience({
       window.removeEventListener('message', onMessage);
       window.removeEventListener('blur', onBlur);
     };
-  }, []);
+  }, [controlsEnabled]);
 
   return (
     <ProjectNavigationContext.Provider value={navigate}>
@@ -237,27 +241,29 @@ export function ProjectExperience({
               }}
             />
           </div>
-          <ProjectControls
-            open={scenesOpen}
-            id="project-scenario-panel"
-            controls={prototype.controls ?? {}}
-            triggerRef={scenesButton}
-            zh={zh}
-            scenario={scenario}
-            onScenarioChange={(value) => {
-              selectedScenario.current = value;
-              setScenario(value);
-              send('scenario', value);
-            }}
-            onRestart={() => {
-              setLoaded(false);
-              setArtboard(null);
-              selectedScenario.current = initialScenario;
-              setScenario(initialScenario);
-              setGeneration((value) => value + 1);
-            }}
-            onClose={dismissScenes}
-          />
+          {controlsEnabled && (
+            <ProjectControls
+              open={scenesOpen}
+              id="project-scenario-panel"
+              controls={controls ?? {}}
+              triggerRef={scenesButton}
+              zh={zh}
+              scenario={scenario}
+              onScenarioChange={(value) => {
+                selectedScenario.current = value;
+                setScenario(value);
+                send('scenario', value);
+              }}
+              onRestart={() => {
+                setLoaded(false);
+                setArtboard(null);
+                selectedScenario.current = initialScenario;
+                setScenario(initialScenario);
+                setGeneration((value) => value + 1);
+              }}
+              onClose={dismissScenes}
+            />
+          )}
         </main>
         <div
           id="project-notes-panel"
@@ -273,10 +279,12 @@ export function ProjectExperience({
             showingAbout: about,
             controlsOpen: scenesOpen,
             controlsId: 'project-scenario-panel',
-            onToggleControls: (trigger) => {
-              scenesButton.current = trigger;
-              setScenesOpen((value) => !value);
-            },
+            onToggleControls: controlsEnabled
+              ? (trigger) => {
+                  scenesButton.current = trigger;
+                  setScenesOpen((value) => !value);
+                }
+              : undefined,
             onToggle: () => {
               setScenesOpen(false);
               navigate(about ? `/work/${slug}` : `/work/${slug}/about`);

@@ -25,7 +25,7 @@ export type ProjectPrototype = {
   src: string;
   width: number;
   height: number;
-  controls?: ProjectPrototypeControls;
+  controls?: ProjectPrototypeControls | false;
 };
 
 export type PublishedProject = {
@@ -161,7 +161,8 @@ export function createInteractiveProject(
     height <= 0
   )
     throw new Error(`Invalid prototype configuration for ${project.slug}`);
-  const values = controls?.scenarios?.map((scene) => scene.value) ?? [];
+  const values =
+    (controls || undefined)?.scenarios?.map((scene) => scene.value) ?? [];
   if (
     values.some((value) => !value.trim()) ||
     new Set(values).size !== values.length
@@ -236,38 +237,7 @@ export const projects: Project[] = [
       src: '/prototypes/renbo-oil-mist/index.html',
       width: 800,
       height: 480,
-      controls: {
-        scenarios: [
-          {
-            value: 'normal',
-            label: { zh: '正常运行', en: 'Normal operation' },
-            description: {
-              zh: '查看设备稳定运行时的状态',
-              en: 'Steady equipment operation.',
-            },
-          },
-          {
-            value: 'warning',
-            label: { zh: '运行报警', en: 'Warning' },
-            description: {
-              zh: '设备继续运行，提示异常读数',
-              en: 'Running with a warning.',
-            },
-          },
-          {
-            value: 'fault',
-            label: { zh: '故障停机', en: 'Fault shutdown' },
-            description: {
-              zh: '查看故障停机与报警反馈',
-              en: 'Stopped after a fault.',
-            },
-          },
-        ],
-        credentials: [
-          { label: { zh: '用户', en: 'User' }, value: '1234' },
-          { label: { zh: '厂家', en: 'Factory' }, value: '8888' },
-        ],
-      },
+      controls: false,
     },
     facts: {
       type: [
@@ -296,8 +266,8 @@ export const projects: Project[] = [
           {
             type: 'paragraph',
             text: {
-              zh: '启动与停止分别提供明确的动作入口，并依据运行、停止、故障及远程模式更新可用状态。报警既保留持续入口，也提供当前状态与复位路径；用户和厂家通过不同演示身份访问参数设置。',
-              en: 'Separate start and stop actions reflect running, stopped, fault and remote-control states. Alarms have a persistent entry, current-state feedback and a reset path. User and manufacturer demo roles expose different parameter settings.',
+              zh: '底部启停按钮随设备状态切换操作。按下即可开始停机，启动需要确认。顶部报警摘要和底部导航都能进入报警页查看历史并复位。用户参数可直接编辑，高级参数需要输入演示密码。',
+              en: 'The bottom control changes with the equipment state. Pressing Stop begins shutdown, and starting requires confirmation. The header summary and bottom navigation both open the alarm page for history and reset. User parameters are directly editable, and advanced settings require a demo password.',
             },
           },
         ],
@@ -309,8 +279,8 @@ export const projects: Project[] = [
           {
             type: 'paragraph',
             text: {
-              zh: '先在主界面停止并重新启动设备，再使用屏幕外的场景切换体验运行报警与故障停机，进入报警页面查看反馈。参数设置可使用演示密码：用户 1234、厂家 8888。原型支持中文、英文和日文。',
-              en: 'Stop and restart the equipment from the home screen, then switch to the warning and fault scenarios and inspect the alarm page. Demo passwords are 1234 for users and 8888 for manufacturers. The HMI supports Chinese, English and Japanese.',
+              zh: '原型打开时处于运行报警状态。点击顶部报警摘要可查看详情，也可以用底部按钮体验停机与确认启动。进入高级参数时使用演示密码 8888。原型支持中文、英文和日文。',
+              en: 'The equipment opens in a running alarm state. Select the alarm summary to see details, or use the bottom control to try stopping and confirming a restart. Use the demo password 8888 to open advanced settings. The HMI supports Chinese, English and Japanese.',
             },
           },
         ],
@@ -322,8 +292,8 @@ export const projects: Project[] = [
           {
             type: 'paragraph',
             text: {
-              zh: '本作品展示前端交互与模拟状态，未连接真实设备或生产服务。演示身份不代表真实权限认证，读数与场景不用于推断设备实际联锁。“重新开始”恢复演示初始状态。',
-              en: 'This frontend prototype uses simulated states and is not connected to equipment or production services. Demo roles are not production authentication, and readings do not establish real equipment interlocks. Restart restores the initial demo state.',
+              zh: '本作品展示前端交互与模拟状态，未连接真实设备或生产服务。演示身份不代表真实权限认证，读数与场景不用于推断设备实际联锁。刷新页面会回到初始报警场景。',
+              en: 'This frontend prototype uses simulated states and is not connected to equipment or production services. Demo roles are not production authentication, and readings do not establish real equipment interlocks. Reloading the page restores the initial alarm state.',
             },
           },
         ],

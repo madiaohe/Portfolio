@@ -3,11 +3,7 @@
   const scale = document.getElementById('preview-scale');
   scale.value = 'fit';
   scale.dispatchEvent(new Event('change'));
-  document.querySelector('[data-scenario="normal"]').click();
-  document.querySelector('[data-page="alarms"]').click();
-  document.querySelector('[data-action="reset-alarm"]').click();
-  document.querySelector('[data-page="home"]').click();
-  document.getElementById('toast').hidden = true;
+  document.querySelector('[data-scenario="warning"]').click();
 
   function language(value) {
     const lang = value === 'zh' ? 'zh-CN' : 'en';

@@ -32,6 +32,31 @@ export type ShowcaseItem = {
   chapters?: ShowcaseChapter[];
 };
 
+function getChapterScrollPositions(chapters: ShowcaseChapter[]) {
+  const readingLine = 160;
+  const scrollTop = window.scrollY;
+  const positions = chapters.map(({ id }) => {
+    const chapter = document.getElementById(id);
+    return chapter
+      ? chapter.getBoundingClientRect().top + scrollTop - readingLine
+      : null;
+  });
+  const scrollRoot = document.scrollingElement;
+  if (!scrollRoot) return positions;
+
+  // Keep individual chapters reachable when their usual reading positions
+  // extend past the scrollbar's end.
+  const maxScroll = scrollRoot.scrollHeight - scrollRoot.clientHeight;
+  const lastPosition = positions[positions.length - 1];
+  if (maxScroll <= 0 || lastPosition == null || lastPosition <= maxScroll)
+    return positions;
+
+  const scale = maxScroll / lastPosition;
+  return positions.map((position) =>
+    position === null ? null : position * scale,
+  );
+}
+
 /**
  * Image-led template shared by projects and writing articles: a scroll-linked
  * chapter directory on the left (fixed on wide viewports, like DetailPage),
@@ -65,12 +90,14 @@ export function ShowcasePage({
   const handleChapterChange = (index: number) => {
     const chapter = chapters[index];
     if (!chapter) return;
+    const position = getChapterScrollPositions(chapters)[index];
+    if (position == null) return;
     setActiveIndex(index);
-    document.getElementById(chapter.id)?.scrollIntoView({
+    window.scrollTo({
+      top: Math.ceil(position),
       behavior: reduced ? 'auto' : 'smooth',
-      block: 'start',
     });
-    history.replaceState(null, '', `#${chapter.id}`);
+    history.replaceState(history.state, '', `#${chapter.id}`);
   };
 
   useEffect(() => {
@@ -83,22 +110,13 @@ export function ShowcasePage({
     const updateActiveChapter = () => {
       window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(() => {
-        const targets = chapters
-          .map(({ id }) => document.getElementById(id))
-          .filter((node): node is HTMLElement => node !== null);
-        if (!targets.length) return;
-
-        const threshold = window.scrollY + 160;
-        const current = targets.reduce(
-          (active, node) => (node.offsetTop <= threshold ? node : active),
-          targets[0],
+        const scrollTop = window.scrollY;
+        const current = getChapterScrollPositions(chapters).reduce<number>(
+          (active, position, index) =>
+            position !== null && position <= scrollTop + 1 ? index : active,
+          0,
         );
-        setActiveIndex(
-          Math.max(
-            0,
-            targets.findIndex((node) => node === current),
-          ),
-        );
+        setActiveIndex(current);
       });
     };
 
@@ -110,7 +128,7 @@ export function ShowcasePage({
       window.removeEventListener('scroll', updateActiveChapter);
       window.removeEventListener('resize', updateActiveChapter);
     };
-  }, [chapters]);
+  }, [chapters, language]);
 
   return (
     <div
