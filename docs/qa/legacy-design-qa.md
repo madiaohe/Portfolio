@@ -135,11 +135,11 @@ No actionable P0/P1/P2 findings remain in the requested two-component flow.
 
 ## Source and implementation evidence
 
-- Source visual truth: the three user screenshots, preserved at `output/floating-input-20260915/source-default.png`, `source-hover.png`, and `source-expanded.png`. Original input paths were `/var/folders/hn/h5y4d6y956g0rnrdn_wn5mnh0000gn/T/codex-clipboard-8027b14e-3635-4281-99c5-ae05293b0614.png`, `codex-clipboard-a716a558-7914-485a-9e72-112bdadd9dfd.png`, and `codex-clipboard-cba7af03-fbfa-4701-8f87-1ae5736157b7.png` in that order.
+- Source visual truth: the three user screenshots, preserved at `docs/qa/history/floating-input-20260915/source-default.png`, `docs/qa/history/floating-input-20260915/source-hover.png`, and `docs/qa/history/floating-input-20260915/source-expanded.png`. Original input paths were `/var/folders/hn/h5y4d6y956g0rnrdn_wn5mnh0000gn/T/codex-clipboard-8027b14e-3635-4281-99c5-ae05293b0614.png`, `codex-clipboard-a716a558-7914-485a-9e72-112bdadd9dfd.png`, and `codex-clipboard-cba7af03-fbfa-4701-8f87-1ae5736157b7.png` in that order.
 - Routes: `http://localhost:4173/components#floating-button` and `http://localhost:4173/components#capsule-input`.
-- Browser-rendered implementation screenshots: `output/floating-input-20260915/default-desktop.png`, `hover-desktop.png`, `expanded-desktop.png`, `capsule-light-desktop.png`, `capsule-dark-desktop.png`, `capsule-dark-mobile.png`, `floating-light-mobile.png`, and `floating-dark-mobile.png`.
-- Full-view comparison: `output/floating-input-20260915/full-comparison.png`. The surrounding article/Floating Agent pages in the references are context; the requested components are now in their own Components entries. This comparison is not a claim that the surrounding pages match.
-- Focused comparison: `output/floating-input-20260915/focused-comparison.png`, opened with the full-view comparison and reopened after the last shape correction. It places the actual source and implementation crops side by side for all three states.
+- Browser-rendered implementation screenshots: `docs/qa/history/floating-input-20260915/default-desktop.png`, `docs/qa/history/floating-input-20260915/hover-desktop.png`, `docs/qa/history/floating-input-20260915/expanded-desktop.png`, `docs/qa/history/floating-input-20260915/capsule-light-desktop.png`, `docs/qa/history/floating-input-20260915/capsule-dark-desktop.png`, `docs/qa/history/floating-input-20260915/capsule-dark-mobile.png`, `docs/qa/history/floating-input-20260915/floating-light-mobile.png`, and `docs/qa/history/floating-input-20260915/floating-dark-mobile.png`.
+- Full-view comparison: `docs/qa/history/floating-input-20260915/full-comparison.png`. The surrounding article/Floating Agent pages in the references are context; the requested components are now in their own Components entries. This comparison is not a claim that the surrounding pages match.
+- Focused comparison: `docs/qa/history/floating-input-20260915/focused-comparison.png`, opened with the full-view comparison and reopened after the last shape correction. It places the actual source and implementation crops side by side for all three states.
 
 ## Normalization and states
 
@@ -171,7 +171,7 @@ No actionable P0/P1/P2 findings remain in the requested two-component flow.
 ## Comparison history
 
 1. [P2 fixed] The clipped launcher's button originally extended beyond the visible edge, making the center click unreliable. Its pointer target now matches the visible 28px region; repeated opening and closing succeeded.
-2. [P2 fixed] The initial focus outline was too dark and heavy for the reference. It now uses a subtle 1px theme-blended outline; post-fix evidence is `expanded-desktop.png` and the focused comparison.
+2. [P2 fixed] The initial focus outline was too dark and heavy for the reference. It now uses a subtle 1px theme-blended outline; post-fix evidence is `docs/qa/history/floating-input-20260915/expanded-desktop.png` and the focused comparison.
 3. [P2 fixed] The initial launcher radius made the visible top look too circular. A 22px radius restores the reference's flatter rounded top. Revised default/hover screenshots and the final focused comparison confirm the correction.
 
 ## Remaining coverage limits
@@ -275,7 +275,7 @@ final result: passed
 
 ## Comparison target
 
-- Source visual truth: `output/playwright/writing-benji-reference-20260913/reference-desktop.png`, captured from `https://benji.org/drawesome` at 1280 × 900 pixels.
+- Source visual truth: `docs/qa/history/writing-benji-reference-20260913/reference-desktop.png`, captured from `https://benji.org/drawesome` at 1280 × 900 pixels.
 - Implementation evidence: `artifacts/writing-detail-qa/implementation-desktop-1280.jpg` and `artifacts/writing-detail-qa/implementation-mobile.jpg`.
 - Combined comparison: `artifacts/writing-detail-qa/comparison-desktop.jpg`, with the full views and enlarged navigation/header regions shown together.
 - State: English, light theme, top of page. Chinese, dark theme, directory jump, active-section highlight, and mobile collapse were checked separately.
@@ -356,20 +356,20 @@ The goal is an intentional adaptation of Benji Taylor's homepage spacing system,
 
 ### Source visual truth
 
-- Desktop: `output/playwright/benji-spacing-audit-20260911/07-benji-desktop-viewport.png`
-- Mobile: `output/playwright/benji-spacing-audit-20260911/05-benji-mobile-viewport.png`
-- Focused writing list: `output/playwright/home-spacing-redesign-20260911/08-reference-writing.png`
+- Desktop: `docs/qa/history/benji-spacing-audit-20260911/07-benji-desktop-viewport.png`
+- Mobile: `docs/qa/history/benji-spacing-audit-20260911/05-benji-mobile-viewport.png`
+- Focused writing list: `docs/qa/history/home-spacing-redesign-20260911/08-reference-writing.png`
 
 ### Implementation evidence
 
-- Desktop viewport: `output/playwright/home-spacing-redesign-20260911/10-desktop-final-viewport.png`
-- Desktop viewport after the requested 128px top-inset adjustment: `output/playwright/home-spacing-redesign-20260911/12-desktop-top-128.png`
-- Desktop full page: `output/playwright/home-spacing-redesign-20260911/07-desktop-en-light-final.png`
-- Mobile viewport: `output/playwright/home-spacing-redesign-20260911/11-mobile-final-viewport.png`
-- Mobile English light full page: `output/playwright/home-spacing-redesign-20260911/03-mobile-en-light.png`
-- Mobile Chinese dark full page: `output/playwright/home-spacing-redesign-20260911/04-mobile-zh-dark.png`
-- Focused writing list: `output/playwright/home-spacing-redesign-20260911/09-implementation-writing.png`
-- Writing hover state: `output/playwright/home-spacing-redesign-20260911/05-writing-row-hover.png`
+- Desktop viewport: `docs/qa/history/home-spacing-redesign-20260911/10-desktop-final-viewport.png`
+- Desktop viewport after the requested 128px top-inset adjustment: `docs/qa/history/home-spacing-redesign-20260911/12-desktop-top-128.png`
+- Desktop full page: `docs/qa/history/home-spacing-redesign-20260911/07-desktop-en-light-final.png`
+- Mobile viewport: `docs/qa/history/home-spacing-redesign-20260911/11-mobile-final-viewport.png`
+- Mobile English light full page: `docs/qa/history/home-spacing-redesign-20260911/03-mobile-en-light.png`
+- Mobile Chinese dark full page: `docs/qa/history/home-spacing-redesign-20260911/04-mobile-zh-dark.png`
+- Focused writing list: `docs/qa/history/home-spacing-redesign-20260911/09-implementation-writing.png`
+- Writing hover state: `docs/qa/history/home-spacing-redesign-20260911/05-writing-row-hover.png`
 
 ## Normalization
 

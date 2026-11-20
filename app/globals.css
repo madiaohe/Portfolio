@@ -1,14 +1,6 @@
 :root {
   --content-max-width: 1280px;
   --page-inline: 32px;
-  --space-content-group: clamp(24px, 2.22vw, 32px);
-  --space-content-block: clamp(40px, 3.89vw, 56px);
-  --space-section-internal: clamp(64px, 5.56vw, 80px);
-  --space-hero-to-work: clamp(32px, 3.33vw, 48px);
-  --space-work-to-principles: clamp(112px, 12.22vw, 176px);
-  --space-principles-to-footer: clamp(96px, 11.11vw, 160px);
-  --space-footer-top: clamp(72px, 6.67vw, 96px);
-  --space-footer-bottom: clamp(32px, 3.33vw, 48px);
   color-scheme: light;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -41,18 +33,6 @@ body {
   margin: 0;
   background: #ffffff;
   color: #111111;
-}
-
-.home {
-  position: relative;
-  z-index: 1;
-  overflow: clip;
-  padding-bottom: calc(
-    var(--space-principles-to-footer) + var(--space-footer-top) +
-      var(--space-footer-bottom)
-  );
-  border-radius: 0 0 clamp(14px, 1.4vw, 20px) clamp(14px, 1.4vw, 20px);
-  background: #ffffff;
 }
 
 a {
@@ -131,70 +111,6 @@ a {
   border-radius: 2px;
   outline: 1px solid currentColor;
   outline-offset: 5px;
-}
-
-.hero {
-  width: 100%;
-  max-width: var(--content-max-width);
-  margin-inline: auto;
-  padding: 88px var(--page-inline) 0;
-}
-
-.hero__frame {
-  height: clamp(520px, 68svh, 720px);
-  overflow: hidden;
-  background: #e6e6e2;
-}
-
-.hero__video {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-}
-
-.home-section {
-  width: 100%;
-  max-width: var(--content-max-width);
-  min-height: 1px;
-  margin-inline: auto;
-  padding-inline: var(--page-inline);
-}
-
-.home-section--principles {
-  margin-top: var(--space-work-to-principles);
-}
-
-.design-principles__layout {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  align-items: start;
-  padding-top: 24px;
-  border-top: 1px solid rgba(17, 17, 17, 0.14);
-}
-
-.design-principles h2,
-.design-principles__list {
-  margin: 0;
-}
-
-.design-principles h2 {
-  color: #ff5b1f;
-  font-size: clamp(18px, 1.67vw, 24px);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-
-.design-principles__list {
-  padding: 0;
-  list-style: none;
-  font-size: clamp(48px, 4.4vw, 68px);
-  font-weight: 400;
-  line-height: 1.08;
-  letter-spacing: -0.045em;
 }
 
 .contact-scene {
@@ -474,30 +390,6 @@ a {
   .site-header__logo,
   .site-header__nav a {
     font-size: 12px;
-  }
-
-  .hero {
-    padding: 68px var(--page-inline) 0;
-  }
-
-  .hero__frame {
-    height: auto;
-    aspect-ratio: 4 / 3;
-  }
-
-  .design-principles {
-    padding-top: 0;
-  }
-
-  .design-principles__layout {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    padding-top: 18px;
-  }
-
-  .design-principles__list {
-    font-size: clamp(40px, 12vw, 48px);
-    line-height: 1.08;
   }
 
   .contact-row {

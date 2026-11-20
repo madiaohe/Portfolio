@@ -1373,8 +1373,8 @@ export function ComponentGallery() {
 function ScrollAutoplayDemo({ zh }: { zh: boolean }) {
   const IMAGES = [
     {
-      src: '/media/work-categories/digital-products.png',
-      alt: 'Digital products',
+      src: '/media/shaanxibeiren-hmi/01-overview.png',
+      alt: zh ? '陕北人印刷设备总览' : 'Shaanxi Beiren press overview',
     },
     { src: '/media/work-categories/brand-systems.png', alt: 'Brand systems' },
     { src: '/media/work-categories/experiments.png', alt: 'Experiments' },

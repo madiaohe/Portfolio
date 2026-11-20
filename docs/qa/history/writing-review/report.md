@@ -10,35 +10,35 @@
 
 1. Sonner 开篇：作者身份后直接进入背景与问题。文字结构清楚；截图仅记录媒体的瞬间画面，不评价其完整播放效果。
 
-![01 开篇](/Users/xianyu/Workspace/IDEA/portfolio/output/playwright/writing-review/01-toast-opening.png)
+![01 开篇](01-toast-opening.png)
 
 2. 命名段落：章节标题、行内代码、词典式解释。模块与命名话题关联明确，是按内容定制表达的实例。
 
-![02 命名](/Users/xianyu/Workspace/IDEA/portfolio/output/playwright/writing-review/02-naming.png)
+![02 命名](02-naming.png)
 
 3. 动画演示：文字给出操作任务，两个演示支持对照，图注指出观察重点。点击 Add toast 已产生通知；没有逐项验证所有演示或手势。
 
-![03 演示](/Users/xianyu/Workspace/IDEA/portfolio/output/playwright/writing-review/03-demo.png)
+![03 演示](03-demo.png)
 
 4. 实现说明：行内代码使用等宽字、浅背景和 1px 边框；独立代码块承载完整片段。两者层级清晰，不能把行内代码视为任意关键词的装饰高亮。
 
-![04 代码](/Users/xianyu/Workspace/IDEA/portfolio/output/playwright/writing-review/04-code.png)
+![04 代码](04-code.png)
 
 5. 引用：大字号衬线文字、来源署名和外链形成阅读停顿。来源可追溯；引用样式与自己的结论应保持语义区别。
 
-![05 引用](/Users/xianyu/Workspace/IDEA/portfolio/output/playwright/writing-review/05-quote.png)
+![05 引用](05-quote.png)
 
 6. Developing Taste 开篇：显式标题、正文、引用。结构清楚，说明标题呈现与模块组合并非所有文章一致。
 
-![06 标题](/Users/xianyu/Workspace/IDEA/portfolio/output/playwright/writing-review/06-taste-opening.png)
+![06 标题](06-taste-opening.png)
 
 7. Developing Taste 结尾：编号尾注在前，Previous / Next 在后。正文编号链接可进入尾注区，存在返回引用位置的按钮；本次未完整验证返回滚动结束的位置。
 
-![07 尾注与导航](/Users/xianyu/Workspace/IDEA/portfolio/output/playwright/writing-review/07-footnotes.png)
+![07 尾注与导航](07-footnotes.png)
 
 8. Friction 开篇：直接以短段落展开观点。轻量表达成立，不依赖视频、代码或交互模块。
 
-![08 短文](/Users/xianyu/Workspace/IDEA/portfolio/output/playwright/writing-review/08-friction.png)
+![08 短文](08-friction.png)
 
 ## 适用于 Xu Xianyu 的规划
 

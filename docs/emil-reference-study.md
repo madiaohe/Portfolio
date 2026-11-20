@@ -45,7 +45,7 @@ The 640–767px breakpoint uses 128px outer vertical padding; 768px and above us
 ## Source assets
 
 - `public/fonts/reference-sans.woff2`: https://emilkowal.ski/_next/static/media/0336a89fb4e7fc1d-s.p.woff2
-- `public/icons/reference-close.svg`: exported from the source announcement button.
+- `public/icons/reference-close.svg` in the historical snapshot: exported from the source announcement button.
 - `public/favicon.ico`: https://emilkowal.ski/favicon.ico
 - Font features: `cv01`, `ss03`; original fallback metrics retained.
 
@@ -59,4 +59,4 @@ These are reference-study assets and content. They are not represented as XIANYU
 - `components/blocks/site-header.tsx`: suppresses the former navigation and scroll listener only on `/`.
 
 Run `npm run dev`; the existing dev server is available at http://localhost:3010/.
-See [historical QA](qa/legacy-design-qa.md) and repository-root `output/playwright/emil/` for verification.
+See [historical QA](qa/legacy-design-qa.md) and the [original captures](https://github.com/madiaohe/Portfolio/tree/2741d1e9ed5029507e2680c69b29799357713a61/output/playwright/emil).

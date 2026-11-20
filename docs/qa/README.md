@@ -37,5 +37,7 @@
 - [历史设计与交互 QA](legacy-design-qa.md)：原根目录 `design-qa.md`，
   保留早期验证过程与限制，仅供追溯，不表示当前版本已通过检查。
 
-历史记录里的源码、截图和 `output/` 路径均相对仓库根目录；部分临时证据可能
-只存在于原本的本地环境。
+- [早期站点结构分析](history/structure-review/report.md)与[写作详情分析](history/writing-review/report.md)
+- [首页间距审阅](history/benji-spacing-audit-20260911/report.md)与[组件接入 QA](history/component-kit/report.md)
+
+历史记录里的源码和标为 `output/` 或 `artifacts/` 的路径均相对仓库根目录。两处目录用于本地验证，部分截图只存在于当时的工作环境。随仓库保存的早期截图位于 `docs/qa/history/`。
